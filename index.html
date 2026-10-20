@@ -1,14 +1,21 @@
 <!doctype html><html><head><style id="rs-boot-css">html.rs-boot body{visibility:hidden}html.rs-boot{background:#f4f5f7}html.rs-boot::before{content:"جارٍ التحميل…";position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font:600 16px system-ui,sans-serif;color:#667085;z-index:99999;visibility:visible}@media (prefers-color-scheme:dark){html.rs-boot{background:#0f1218}html.rs-boot::before{color:#98a2b3}}</style><script>document.documentElement.classList.add("rs-boot");window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot")};setTimeout(window.__rsReveal,6000);</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.tpl-pane-gap{margin:0}#pane-tpl>input#tplSearch,#pane-tpl>select#tplMode{width:100%;margin:0 0 8px}.tpl-ic{display:flex;gap:var(--sp-2);margin-bottom:8px;flex-wrap:wrap}.tpl-ic i{display:block;width:30px;height:30px;font-style:normal}.tpl-ic svg{width:100%;height:100%;display:block}
-</style><script>/* Android bridge: يحوّل تنزيلات المتصفح إلى حفظ/مشاركة أصلية */
+</style><script>/* Android bridge v2: حفظ الفيديو والصور في المعرض، ومشاركة بقية الملفات */
 (function(){var C=window.Capacitor;if(!C||!C.isNativePlatform||!C.isNativePlatform())return;
-var FS=C.Plugins.Filesystem,SH=C.Plugins.Share,CH=3*1024*1024;
+var FS=C.Plugins.Filesystem,SH=C.Plugins.Share,MD=C.Plugins.Media,CH=3*1024*1024,AL='Rassam';
 function b64(b){return new Promise(function(ok,no){var r=new FileReader();r.onload=function(){ok(String(r.result).split(',')[1]||'')};r.onerror=no;r.readAsDataURL(b)})}
+async function album(){var r=await MD.getAlbums(),f=(r.albums||[]).filter(function(a){return a.name===AL})[0];
+if(!f){await MD.createAlbum({name:AL});r=await MD.getAlbums();f=(r.albums||[]).filter(function(a){return a.name===AL})[0]}return f&&f.identifier}
 async function save(h,name){var blob=await (await fetch(h)).blob(),first=true;
 for(var o=0;o<blob.size||first;o+=CH){var d=await b64(blob.slice(o,o+CH));
 if(first){await FS.writeFile({path:name,data:d,directory:'CACHE'});first=false}
 else await FS.appendFile({path:name,data:d,directory:'CACHE'});if(!blob.size)break}
 var u=await FS.getUri({path:name,directory:'CACHE'});
+var isV=/\.(mp4|webm|mov|mkv)$/i.test(name)||blob.type.indexOf('video/')===0,isI=/\.(png|jpe?g|webp|gif)$/i.test(name);
+if((isV||isI)&&MD){try{var id=await album(),op={path:u.uri,albumIdentifier:id};
+if(isV)await MD.saveVideo(op);else await MD.savePhoto(op);
+alert('تم الحفظ في المعرض داخل ألبوم '+AL);return}catch(x){console.warn('gallery save failed',x);alert('تعذّر الحفظ في المعرض، سأفتح المشاركة بدلاً منه.\n'+(x&&x.message||x))}}
 await SH.share({title:name,url:u.uri,dialogTitle:'حفظ أو مشاركة الملف'})}
+var AP=C.Plugins.App;if(AP&&AP.addListener)AP.addListener('backButton',function(){if(confirm('هل تريد الخروج من التطبيق؟'))AP.exitApp()});
 document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[download]');if(!a)return;
 var h=a.getAttribute('href')||'';if(!/^(blob|data):/.test(h))return;e.preventDefault();e.stopPropagation();
 var n=(a.getAttribute('download')||'file').replace(/[\\\/:*?"<>|]+/g,'_');
