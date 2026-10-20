@@ -1,0 +1,6 @@
+{
+  "appId": "com.rassam.sabbura",
+  "appName": "رسام السبورة",
+  "webDir": "www",
+  "server": { "androidScheme": "https" }
+}
