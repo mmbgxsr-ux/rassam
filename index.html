@@ -20,7 +20,7 @@ document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&
 var h=a.getAttribute('href')||'';if(!/^(blob|data):/.test(h))return;e.preventDefault();e.stopPropagation();
 var n=(a.getAttribute('download')||'file').replace(/[\\\/:*?"<>|]+/g,'_');
 save(h,n).catch(function(x){if(x&&/cancel/i.test(String(x.message||x)))return;alert('تعذّر حفظ الملف: '+(x&&x.message||x))})},true)})();
-</script></head><body>
+</script><style id="rs-perf-contain">.tl-in,.tb,.scb,.trb,.ab{contain:layout style}</style></head><body>
 <svg id="rs-icons" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-add" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol><symbol id="i-props" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol><symbol id="i-scene" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M16 4v16M3 9h5M3 15h5M16 9h5M16 15h5"/></symbol><symbol id="i-audio" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></symbol><symbol id="i-tpl" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></symbol><symbol id="i-ws" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol><symbol id="i-qz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/></symbol><symbol id="i-ta" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></symbol><symbol id="i-tg" viewBox="0 0 24 24"><path d="M3 12V4h8l9 9-8 8z"/><path d="M7.5 8h.01"/></symbol><symbol id="i-ai" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></symbol><symbol id="i-brand" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></symbol><symbol id="i-assets" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol><symbol id="i-present" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M10.5 8l4 2-4 2z"/></symbol><symbol id="i-focus" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol><symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l12 8-12 8z" fill="currentColor"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-undo" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 1 2.5 5.8M4 5v7h7"/></symbol></svg>
 
 <title>رسّام السبورة</title>
@@ -2276,7 +2276,7 @@ function load(rawIn){
 /* المرحلة 1 (أداء): تأجيل تحويل الحالة كاملة إلى JSON وكتابتها في التخزين، بدل تنفيذها مع كل تعديل */
 var _svT=0;
 function saveNow(){if(_svT){clearTimeout(_svT);_svT=0;}saveLS(stateSig());asShow();}
-function save(){asLive=true;asVer++;asDirty=true;if(!_svT)_svT=setTimeout(saveNow,700);asShow();}
+function save(){asLive=true;asVer++;asDirty=true;if(!_svT)_svT=setTimeout(saveNow,2000);asShow();}
 function cs(){return scenes[cur]||scenes[clamp(cur,0,scenes.length-1)]||scenes[0];}
 function snm(sc,k){return sc.name||('المشهد '+(k+1));}
 function get(id){for(var k=0;k<scenes.length;k++){var a=scenes[k].items;for(var i=0;i<a.length;i++){if(a[i].id===id)return a[i];}}return null;}
@@ -2432,7 +2432,13 @@ function build(it,sc){
   setTf(it);
 }
 /*PERF-PATCH*/
-var _incRec=[],_sk=null,_skR=0;
+var _incRec=[],_sk=null,_skR=0,_sigT=0;
+function _defer(f){requestAnimationFrame(function(){setTimeout(f,0);});}
+function schedSig(){clearTimeout(_sigT);_sigT=setTimeout(function step(){
+  var t0=performance.now(),i,r,left=0;
+  for(i=0;i<_incRec.length;i++){r=_incRec[i];if(r.sig===null){if(performance.now()-t0>8){left=1;break;}r.sig=scSig(r.sc);}}
+  if(left)_sigT=setTimeout(step,50);
+},1500);}
 function scSig(sc){
   var s=JSON.stringify(sc,function(k,v){return k.charAt(0)==='_'?undefined:v;}),x='',i,it;
   for(i=0;i<sc.items.length;i++){it=sc.items[i];x+=(it._src?it._src.length+it._src.slice(-12):0)+','+(it._svg?it._svg.length:0)+';';}
@@ -2445,7 +2451,7 @@ function incBuildScene(sc,sig,anchor){
   itemsG.insertBefore(sg,anchor||null); /* لازم يكون داخل الصفحة قبل القياس (getBBox) */
   sc._sg=sg;sc._cam=cam;sc._bg=bg;sg.id='sg-'+sc.id;cam.id='cm-'+sc.id;
   sc.items.forEach(function(it){build(it,sc);});
-  var r={sc:sc,sg:sg,dn:[].slice.call(defs.childNodes,d0),sig:sig||scSig(sc)};
+  var r={sc:sc,sg:sg,dn:[].slice.call(defs.childNodes,d0),sig:sig||null};
   sc._rec=r;return r;
 }
 function buildAll(){
@@ -2453,10 +2459,11 @@ function buildAll(){
   while(defs.firstChild)defs.removeChild(defs.firstChild);
   _incRec=[];
   scenes.forEach(function(sc){_incRec.push(incBuildScene(sc,null,null));});
+  schedSig();
 }
 function buildAllInc(){
   var ok=_incRec.length>0,i;
-  for(i=0;ok&&i<_incRec.length;i++)if(_incRec[i].sg.parentNode!==itemsG)ok=false;
+  for(i=0;ok&&i<_incRec.length;i++)if(_incRec[i].sg.parentNode!==itemsG||_incRec[i].sig===null)ok=false;
   if(!ok){buildAll();return;}
   var next=[];
   scenes.forEach(function(sc){
@@ -3130,8 +3137,8 @@ function tlEnd(){
   if(!tlAct)return;
   var a=tlAct;tlAct=null;
   if(a.type==='cm'){audioChanged();}
-  else if(a.type==='rs'){edited();renderProps();}
-  else if(a.type==='mv'){if(a.moved){edited();renderProps();}}
+  else if(a.type==='rs'){_defer(function(){edited();renderProps();});}
+  else if(a.type==='mv'){if(a.moved){_defer(function(){edited();renderProps();});}}
   else{if(a.type==='seek'&&_sk){var e2=_sk;_sk=null;seekTo(e2);}handOn=false;render();}
 }
 tl.addEventListener('pointerup',tlEnd);
@@ -3169,7 +3176,7 @@ function renderScenes(){
     while(cs0.length>scenes.length)bar0.removeChild(cs0.pop());
     while(cs0.length<scenes.length){
       var nb=document.createElement('button');nb.className='chip';
-      nb.innerHTML='<canvas class="scth" width="128" height="72" aria-hidden="true"></canvas><span></span>';
+      nb.innerHTML='<canvas class="scth" width="96" height="54" aria-hidden="true"></canvas><span></span>';
       bar0.insertBefore(nb,add0);cs0.push(nb);
     }
     cs0.forEach(function(b,k){
@@ -3182,7 +3189,7 @@ function renderScenes(){
     schedThumbs();return;
   }
   $('#scenesBar').innerHTML=scenes.map(function(sc,k){
-    return '<button class="chip" data-scene="'+k+'" aria-pressed="'+(k===cur)+'"><canvas class="scth" width="128" height="72" data-k="'+k+'" aria-hidden="true"></canvas><span>'+esc(snm(sc,k))+'</span></button>';
+    return '<button class="chip" data-scene="'+k+'" aria-pressed="'+(k===cur)+'"><canvas class="scth" width="96" height="54" data-k="'+k+'" aria-hidden="true"></canvas><span>'+esc(snm(sc,k))+'</span></button>';
   }).join('')+'<button class="chip add" data-addscene="1">+ مشهد</button>';
   schedThumbs();
 }
