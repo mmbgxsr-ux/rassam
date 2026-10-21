@@ -1,7 +1,7 @@
 set -e
 mkdir -p www out assets
 cp -f index.html www/index.html
-npm install
+npm install --no-audit --no-fund --prefer-offline
 [ -d android ] || npx cap add android
 
 # تجهيز www: الخطوط والمكتبات + زر الرجوع + تسجيل الصوت + إذن الميكروفون
@@ -32,6 +32,12 @@ public class MainActivity extends BridgeActivity {
 JAVA
 
 npx cap sync android
+# تسريع Gradle: ذاكرة أكبر + تشغيل متوازي + كاش البناء
+GP=android/gradle.properties
+touch "$GP"
+sed -i '/^org.gradle.jvmargs/d;/^org.gradle.parallel/d;/^org.gradle.caching/d;/^org.gradle.daemon/d' "$GP"
+printf '\norg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8\norg.gradle.parallel=true\norg.gradle.caching=true\norg.gradle.daemon=false\n' >> "$GP"
+
 cd android
 chmod +x gradlew
 if [ -n "$KS_B64" ] && [ -n "$KS_PASS" ]; then
