@@ -16,6 +16,7 @@
     "@capacitor/core": "^7.0.0",
     "@capacitor/filesystem": "^7.0.0",
     "@capacitor/share": "^7.0.0",
+    "@capacitor/splash-screen": "^7.0.0",
     "@ffmpeg/core": "0.12.6",
     "@ffmpeg/ffmpeg": "0.12.10",
     "@fontsource/aref-ruqaa": "^5.0.0",
