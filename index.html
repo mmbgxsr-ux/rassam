@@ -1,4 +1,4 @@
-<!doctype html><html><head><style id="rs-boot-css">html.rs-boot body{visibility:hidden}html.rs-boot{background:#f4f5f7}html.rs-boot::before{content:"جارٍ التحميل…";position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font:600 16px system-ui,sans-serif;color:#667085;z-index:99999;visibility:visible}@media (prefers-color-scheme:dark){html.rs-boot{background:#0f1218}html.rs-boot::before{color:#98a2b3}}</style><script>document.documentElement.classList.add("rs-boot");window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot")};setTimeout(window.__rsReveal,6000);</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.tpl-pane-gap{margin:0}#pane-tpl>input#tplSearch,#pane-tpl>select#tplMode{width:100%;margin:0 0 8px}.tpl-ic{display:flex;gap:var(--sp-2);margin-bottom:8px;flex-wrap:wrap}.tpl-ic i{display:block;width:30px;height:30px;font-style:normal}.tpl-ic svg{width:100%;height:100%;display:block}
+<!doctype html><html><head><style id="rs-boot-css">html.rs-boot body{visibility:hidden}html.rs-boot{background:#f4f5f7}html.rs-boot::before{content:"جارٍ التحميل…";position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font:600 16px system-ui,sans-serif;color:#667085;z-index:99999;visibility:visible}@media (prefers-color-scheme:dark){html.rs-boot{background:#0f1218}html.rs-boot::before{color:#98a2b3}}</style><script>window.__idle=function(f){var d=0,g=function(){if(d)return;d=1;try{f()}catch(e){console.warn("idle task failed",e)}};if(window.requestIdleCallback)requestIdleCallback(g,{timeout:1200});else setTimeout(g,300);setTimeout(g,2000)};document.documentElement.classList.add("rs-boot");window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot")};setTimeout(window.__rsReveal,6000);</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.tpl-pane-gap{margin:0}#pane-tpl>input#tplSearch,#pane-tpl>select#tplMode{width:100%;margin:0 0 8px}.tpl-ic{display:flex;gap:var(--sp-2);margin-bottom:8px;flex-wrap:wrap}.tpl-ic i{display:block;width:30px;height:30px;font-style:normal}.tpl-ic svg{width:100%;height:100%;display:block}
 </style><script>/* Android bridge v2: حفظ الفيديو والصور في المعرض، ومشاركة بقية الملفات */
 (function(){var C=window.Capacitor;if(!C||!C.isNativePlatform||!C.isNativePlatform())return;
 var FS=C.Plugins.Filesystem,SH=C.Plugins.Share,MD=C.Plugins.Media,CH=3*1024*1024,AL='Rassam';
@@ -513,6 +513,12 @@ input[type=color]{width:100%;height:40px;padding:2px;border:1px solid var(--line
           <label class="btn" for="pjFile" style="cursor:pointer;display:inline-flex;align-items:center">فتح مشروع من ملف</label>
           <input type="file" id="pjFile" accept=".json,application/json" hidden>
         </div>
+        <div class="row" style="flex-wrap:wrap">
+          <button class="btn primary" id="bkSave" type="button">نسخة احتياطية كاملة (مع الصوت)</button>
+          <label class="btn" for="bkFile" style="cursor:pointer;display:inline-flex;align-items:center">استرجاع نسخة كاملة</label>
+          <input type="file" id="bkFile" hidden>
+        </div>
+        <p class="note" id="bkMsg" role="status">النسخة الكاملة (ملف .rsbak) تحفظ كل المشاريع والصور والرسومات والتعليق الصوتي والموسيقى والإعدادات. الاسترجاع يستبدل كل ما في التطبيق الحالي.</p>
         <div class="row" style="flex-wrap:wrap;align-items:center">
           <button class="btn" id="npBtn" type="button">مشروع جديد</button>
           <select id="npStart" aria-label="بداية المشروع الجديد"><option value="blank">يبدأ بمشهد فارغ</option><option value="frame">مشهد فارغ مع المقدمة والخاتمة</option><option value="sample">المثال التوضيحي</option></select>
@@ -3429,13 +3435,14 @@ function addClip(file,kind){
   if(!a){setAudioMsg('تشغيل الصوت غير متاح في هذا المتصفح.');return;}
   setAudioMsg('جارٍ قراءة الملف...');
   file.arrayBuffer().then(function(buf){
-    return a.decodeAudioData(buf.slice(0)).then(function(b){
+    setAudioMsg('جارٍ فك ترميز الصوت. الملفات الكبيرة تحتاج بعض الوقت...');
+    return new Promise(function(r){setTimeout(r,30);}).then(function(){return a.decodeAudioData(buf.slice(0));}).then(function(b){
       var c={id:newId('a'),name:file.name.replace(/\.[^.]+$/,'').slice(0,40),kind:kind,
         start:kind==='voice'?Math.round(cs()._s*10)/10:0,vol:kind==='music'?0.4:1,loop:kind==='music',dur:b.duration};
       bufs[c.id]=b;clips.push(c);selClip=c.id;
-      idbPut(c.id,buf);
       setAudioMsg('');
       audioChanged();setTab('audio');
+      setTimeout(function(){idbPut(c.id,buf);},80);
     });
   }).catch(function(){setAudioMsg('تعذّر فتح هذا الملف. جرّب ملف MP3 أو WAV آخر.');});
 }
@@ -3489,15 +3496,19 @@ function initAudio(){
   renderClipList();renderClipProps();
   var a=ensureAC();
   if(!a||!clips.length)return;
-  clips.forEach(function(c){
+  var list=clips.slice(),n=list.length,k=0;
+  setAudioMsg('جارٍ تحميل الصوت 0/'+n+'...');
+  (function next(){
+    var c=list[k];
+    if(!c){setAudioMsg('');timeline();renderTimeline();renderClipList();return;}
     idbGet(c.id).then(function(buf){
       if(!buf)return;
-      return a.decodeAudioData(buf.slice(0)).then(function(b){
-        bufs[c.id]=b;c.dur=b.duration;
-        timeline();renderTimeline();renderClipList();
-      });
-    }).catch(function(){});
-  });
+      return a.decodeAudioData(buf).then(function(b){bufs[c.id]=b;c.dur=b.duration;});
+    }).catch(function(){}).then(function(){
+      k++;setAudioMsg(k<n?'جارٍ تحميل الصوت '+k+'/'+n+'...':'');
+      setTimeout(next,0);
+    });
+  })();
 }
 
 /* video export: يرسم الإطارات على Canvas بنفس منطق المعاينة */
@@ -3880,7 +3891,7 @@ function exportVideo(){
       master.connect(dest);
       dest.stream.getAudioTracks().forEach(function(tr){stream.addTrack(tr);});
     }
-    mr=new MediaRecorder(stream,mime?{mimeType:mime,videoBitsPerSecond:w*h>=800000?4000000:2000000,audioBitsPerSecond:128000}:undefined);
+    mr=new MediaRecorder(stream,mime?{mimeType:mime,videoBitsPerSecond:w*h>=800000?8000000:4000000,audioBitsPerSecond:128000}:undefined);
   }catch(e){
     if(dest&&master){try{master.disconnect(dest);}catch(x){}}
     exMsg('تعذّر بدء التسجيل على هذا الجهاز.');return;
@@ -3962,7 +3973,7 @@ async function exportFast(auto,maxSec){
     var err=null,vc=null,vcodec='avc',acf=null,acodec='aac',k,cf,sp;
     var vcs=[['avc','avc1.64002A'],['avc','avc1.4D002A'],['avc','avc1.42002A'],['vp9','vp09.00.50.08']];
     for(k=0;k<vcs.length&&!vc;k++){
-      cf={codec:vcs[k][1],width:w,height:h,bitrate:w*h>=800000?5000000:2500000,framerate:fps};
+      cf={codec:vcs[k][1],width:w,height:h,bitrate:w*h>=800000?8000000:4000000,framerate:fps};
       try{sp=await VideoEncoder.isConfigSupported(cf);if(sp.supported){vc=cf;vcodec=vcs[k][0];}}catch(x){}
     }
     if(!vc)throw new Error('المتصفح لا يدعم ترميز الفيديو بهذه الدقة');
@@ -8023,6 +8034,94 @@ renderScenePane=function(){
 $('#pane-scene').addEventListener('input',function(e){if(e.target.id==='narrTx'){cs().narr=e.target.value.slice(0,300);edited();}});
 $('#pane-scene').addEventListener('change',function(e){if(e.target.id==='spkOn')spkOn=e.target.checked;});
 
+/* نسخة احتياطية كاملة: ملف واحد (.rsbak) فيه localStorage وكل IndexedDB (الصوت والصور والرسومات) */
+var BK_MAGIC='RSBK1\n',BK_LAST='rs-bk-last';
+function bkMsg(m){var e=$('#bkMsg');if(e)e.textContent=m;}
+function bkLastTxt(){try{var t=+localStorage.getItem(BK_LAST);return t?' آخر نسخة كاملة: '+new Date(t).toLocaleString('ar-EG')+'.':'';}catch(e){return '';}}
+function bkReadIdb(){
+  return idb().then(function(db){return new Promise(function(res,rej){
+    var out=[],rq=db.transaction('a','readonly').objectStore('a').openCursor();
+    rq.onsuccess=function(e){var c=e.target.result;if(c){out.push([c.key,c.value]);c.continue();}else res(out);};
+    rq.onerror=function(){rej(rq.error);};
+  });});
+}
+$('#bkSave').addEventListener('click',function(){
+  bkMsg('جارٍ تجهيز النسخة الاحتياطية...');
+  try{saveNow();}catch(e){}
+  bkReadIdb().then(function(ents){
+    var ls={},idx=[],parts=[],i,k,now=Date.now();
+    try{localStorage.setItem(BK_LAST,String(now));}catch(e){}
+    for(i=0;i<localStorage.length;i++){k=localStorage.key(i);if(k==='rassam-run')continue;ls[k]=localStorage.getItem(k);}
+    ents.forEach(function(en){
+      var key=en[0],v=en[1];
+      if(key==='auto:cur')return;
+      if(v instanceof ArrayBuffer){idx.push({k:key,t:'b',n:v.byteLength});parts.push(v);}
+      else if(ArrayBuffer.isView(v)){var u=new Uint8Array(v.buffer,v.byteOffset,v.byteLength);idx.push({k:key,t:'b',n:u.byteLength});parts.push(u);}
+      else if(typeof Blob!=='undefined'&&v instanceof Blob){idx.push({k:key,t:'B',n:v.size,m:v.type});parts.push(v);}
+      else idx.push({k:key,t:'j',v:v});
+    });
+    var hdr=new TextEncoder().encode(JSON.stringify({app:'rassam-sabbura',v:1,ts:now,ls:ls,idb:idx}));
+    var len=new Uint8Array(4);new DataView(len.buffer).setUint32(0,hdr.length,true);
+    var blob=new Blob([BK_MAGIC,len,hdr].concat(parts),{type:'application/octet-stream'});
+    var d=new Date(now),pad=function(x){return x<10?'0'+x:''+x;};
+    var name='rassam-backup-'+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'.rsbak';
+    plainDownload(blob,name);
+    bkMsg('تم تجهيز النسخة ('+(blob.size/1048576).toFixed(1)+' ميغابايت): '+idx.length+' ملف مرفق.'+bkLastTxt()+' احفظها خارج التطبيق (Drive أو ملفاتك).');
+  }).catch(function(){bkMsg('تعذّر تجهيز النسخة الاحتياطية.');});
+});
+$('#bkFile').addEventListener('change',function(){
+  var f=this.files&&this.files[0];this.value='';
+  if(!f)return;
+  bkMsg('جارٍ قراءة النسخة...');
+  var ml=BK_MAGIC.length;
+  f.slice(0,ml+4).arrayBuffer().then(function(b0){
+    var u=new Uint8Array(b0),m='',i;
+    for(i=0;i<ml;i++)m+=String.fromCharCode(u[i]||0);
+    if(m!==BK_MAGIC)throw new Error('magic');
+    var hl=new DataView(b0,ml,4).getUint32(0,true);
+    if(hl<2||ml+4+hl>f.size)throw new Error('hdr');
+    return f.slice(ml+4,ml+4+hl).arrayBuffer().then(function(hb){
+      var h=JSON.parse(new TextDecoder().decode(hb));
+      if(!h||h.app!=='rassam-sabbura'||h.v!==1||!h.ls||typeof h.ls!=='object'||!Array.isArray(h.idb))throw new Error('fmt');
+      return {h:h,base:ml+4+hl};
+    });
+  }).then(function(o){
+    var h=o.h,pos=o.base,reads=[];
+    h.idb.forEach(function(en){
+      if(en.t==='b'){reads.push(f.slice(pos,pos+en.n).arrayBuffer().then(function(ab){return [en.k,ab];}));pos+=en.n;}
+      else if(en.t==='B'){reads.push(Promise.resolve([en.k,f.slice(pos,pos+en.n,en.m||'')]));pos+=en.n;}
+      else reads.push(Promise.resolve([en.k,en.v]));
+    });
+    if(pos>f.size)throw new Error('trunc');
+    var when=h.ts?new Date(h.ts).toLocaleString('ar-EG'):'';
+    if(!confirm('سيتم استبدال كل المشاريع والصوتيات الحالية بمحتوى النسخة'+(when?' ('+when+')':'')+'. هل تريد المتابعة؟')){bkMsg('أُلغي الاسترجاع.');return;}
+    bkMsg('جارٍ الاسترجاع...');
+    return Promise.all(reads).then(function(ents){
+      return idb().then(function(db){return new Promise(function(res,rej){
+        var tx=db.transaction('a','readwrite'),st=tx.objectStore('a');
+        st.clear();ents.forEach(function(e){st.put(e[1],e[0]);});
+        tx.oncomplete=res;tx.onerror=tx.onabort=function(){rej(tx.error);};
+      });});
+    }).then(function(){
+      var keep=h.ls,fut=Date.now()+60000,rm=[],i,k;
+      for(i=0;i<localStorage.length;i++){k=localStorage.key(i);if(!Object.prototype.hasOwnProperty.call(keep,k))rm.push(k);}
+      Object.keys(keep).forEach(function(k2){
+        var v=keep[k2];
+        if(typeof v==='string'&&/^\{"ts":\d+,"scenes"/.test(v))v=v.replace(/^\{"ts":\d+,/,'{"ts":'+fut+',');
+        localStorage.setItem(k2,v);
+      });
+      rm.forEach(function(k3){localStorage.removeItem(k3);});
+      /* منع الحفظ التلقائي عند الإغلاق من الكتابة فوق ما استُرجع */
+      try{asLive=false;}catch(e){}
+      Storage.prototype.setItem=function(){};
+      bkMsg('تم الاسترجاع. جارٍ إعادة تشغيل التطبيق...');
+      setTimeout(function(){location.reload();},400);
+    });
+  }).catch(function(e){
+    var m=e&&e.message;
+    bkMsg(m==='magic'||m==='hdr'||m==='fmt'?'هذا الملف ليس نسخة احتياطية صالحة من رسّام السبورة.':m==='trunc'?'الملف ناقص أو تالف.':'تعذّر الاسترجاع. لم يتغيّر شيء في بياناتك الحالية.');
+  });
+});
 /* حفظ المشاريع */
 function pjMsg(m){$('#pjMsg').textContent=m;}
 function pjBuild(){
@@ -9557,7 +9656,7 @@ $('#svgLibGrid').addEventListener('click',function(e){
   addSvgFromText(svgLibText(i),svgLibName(i));
   $('#svgLibMsg').textContent='أُضيفت «'+svgLibName(i)+'». يلوّنها القلم بألوانها الأصلية، ويمكنك جعلها بلون واحد من تبويب الخصائص.';
 });
-renderSvgLib();
+__idle(renderSvgLib);
 
 /* الرسومات التعليمية: 35 رسمة بأسماء عربية */
 var EDULIB_G=["مدرسة وتعليم", "علوم وطبيعة", "رياضيات", "أفكار وتحفيز", "تنظيم ومتابعة", "فن وتقنية"];
@@ -9595,7 +9694,7 @@ $('#eduGrid').addEventListener('click',function(e){
   addSvgFromText(eduText(i),EDULIB[i][1],EDULIB[i][6]);
   $('#eduMsg').textContent='أُضيفت «'+EDULIB[i][1]+'». يلوّنها القلم بألوانها الأصلية، ويمكنك جعلها بلون واحد من تبويب الخصائص.';
 });
-renderEdu();
+__idle(renderEdu);
 
 /* رسومات عامة: 11 قالباً فريداً بأسماء تصف ما تظهره */
 var HIST=[["بيت بسقف مدبب","<g><path d=\"M48 210 H208\" stroke=\"#263238\" stroke-width=\"6\" fill=\"none\"/><path d=\"M66 210 V130 L128 68 L190 130 V210Z\" fill=\"#E98B45\"/><path d=\"M104 210 V159 Q128 133 152 159 V210Z\" fill=\"#5C9DA0\"/><path d=\"M57 132 L128 55 L199 132\" fill=\"none\" stroke=\"#263238\" stroke-width=\"7\"/></g><g><rect x=\"82\" y=\"145\" width=\"18\" height=\"20\" fill=\"#C85D55\"/><rect x=\"156\" y=\"145\" width=\"18\" height=\"20\" fill=\"#C85D55\"/><path d=\"M128 74 V125\" stroke=\"#FFFFFF\" stroke-width=\"4\"/></g>"],["إناء مزخرف","<g><path d=\"M72 78 Q128 42 184 78 L174 185 Q128 218 82 185Z\" fill=\"#314A78\"/><path d=\"M91 91 Q128 111 165 91 M91 121 Q128 141 165 121 M91 151 Q128 171 165 151\" fill=\"none\" stroke=\"#E98B45\" stroke-width=\"7\"/><path d=\"M73 79 Q128 100 183 79\" fill=\"none\" stroke=\"#263238\" stroke-width=\"5\"/></g><g><ellipse cx=\"128\" cy=\"202\" rx=\"67\" ry=\"10\" fill=\"#D9C39A\"/></g>"],["مبنى بأعمدة وسقف مثلث","<g><path d=\"M58 206 V95 H198 V206Z\" fill=\"#7E9BCB\"/><path d=\"M45 95 L128 48 L211 95Z\" fill=\"#648B67\"/><g fill=\"#E8EFF8\" stroke=\"#263238\" stroke-width=\"4\"><path d=\"M75 206 V117 Q88 101 101 117 V206Z\"/><path d=\"M116 206 V117 Q129 101 142 117 V206Z\"/><path d=\"M157 206 V117 Q170 101 183 117 V206Z\"/></g><path d=\"M43 209 H213\" stroke=\"#263238\" stroke-width=\"7\"/></g>"],["شخص (نصف جسم)","<g><path d=\"M98 72 Q128 45 158 72 L153 110 Q128 130 103 110Z\" fill=\"#D9C39A\"/><path d=\"M88 122 Q128 104 168 122 L178 183 H78Z\" fill=\"#E98B45\"/><path d=\"M92 183 H164 L176 207 H80Z\" fill=\"#D9C39A\"/><path d=\"M111 78 H120 M136 78 H145 M113 98 Q128 107 143 98\" stroke=\"#263238\" stroke-width=\"4\" fill=\"none\"/></g>"],["بوابة مقوسة","<g><path d=\"M76 208 V104 Q76 61 128 48 Q180 61 180 104 V208Z\" fill=\"#D9A441\"/><path d=\"M101 208 V112 Q101 86 128 77 Q155 86 155 112 V208Z\" fill=\"#E8EFF8\"/><path d=\"M63 208 H193 M66 100 H190\" stroke=\"#263238\" stroke-width=\"7\"/><circle cx=\"128\" cy=\"55\" r=\"8\" fill=\"#393B43\"/></g>"],["هرم","<g><path d=\"M37 211 L128 47 L219 211Z\" fill=\"#E8EFF8\" stroke=\"#263238\" stroke-width=\"5\"/><path d=\"M128 47 L151 211 H219Z\" fill=\"#D9C39A\"/><path d=\"M75 143 H175 M58 178 H197\" stroke=\"#D9C39A\" stroke-width=\"5\"/><path d=\"M37 211 H219\" stroke=\"#263238\" stroke-width=\"7\"/></g>"],["قرص دائري مزخرف","<g><circle cx=\"128\" cy=\"126\" r=\"73\" fill=\"#C85D55\" stroke=\"#263238\" stroke-width=\"5\"/><path d=\"M128 64 V175 M93 93 Q128 122 163 93 M92 151 Q128 178 164 151\" fill=\"none\" stroke=\"#D9A441\" stroke-width=\"9\" stroke-linecap=\"round\"/><circle cx=\"128\" cy=\"126\" r=\"15\" fill=\"#5C9DA0\"/></g>"],["بناء مدرّج بسهم","<g><path d=\"M44 205 L62 154 L88 138 L108 102 L148 102 L171 137 L195 155 L212 205Z\" fill=\"#D9A441\" stroke=\"#263238\" stroke-width=\"5\"/><path d=\"M92 205 V165 H164 V205 M78 154 H181 M101 132 H158\" stroke=\"#E98B45\" stroke-width=\"7\" fill=\"none\"/><path d=\"M128 102 V72 M117 84 L128 72 L139 84\" stroke=\"#D9A441\" stroke-width=\"5\" fill=\"none\"/></g>"],["خريطة مطوية بمسار","<g><path d=\"M42 66 L96 48 L151 68 L210 48 V190 L151 210 L96 190 L42 210Z\" fill=\"#E8EFF8\" stroke=\"#263238\" stroke-width=\"5\"/><path d=\"M96 48 V190 M151 68 V210\" stroke=\"#D9C39A\" stroke-width=\"4\"/><path d=\"M57 160 Q82 120 111 138 T172 112 T197 85\" fill=\"none\" stroke=\"#648B67\" stroke-width=\"8\" stroke-linecap=\"round\"/><path d=\"M184 82 L198 84 L196 99\" fill=\"none\" stroke=\"#648B67\" stroke-width=\"7\"/><circle cx=\"111\" cy=\"138\" r=\"9\" fill=\"#C85D55\"/></g>"],["وعاء مخروطي","<g><path d=\"M76 81 H180 L167 192 Q128 218 89 192Z\" fill=\"#5C9DA0\" stroke=\"#263238\" stroke-width=\"5\"/><path d=\"M76 81 Q128 105 180 81 L174 64 Q128 86 82 64Z\" fill=\"#7E9BCB\" stroke=\"#263238\" stroke-width=\"4\"/><path d=\"M99 125 Q128 144 157 125\" fill=\"none\" stroke=\"#D9A441\" stroke-width=\"7\"/><path d=\"M98 170 H158\" stroke=\"#E8EFF8\" stroke-width=\"5\"/></g>"],["وثيقة بختم","<g><path d=\"M66 43 H158 L192 77 V212 H66Z\" fill=\"#E8EFF8\" stroke=\"#263238\" stroke-width=\"5\"/><path d=\"M158 43 V78 H192\" fill=\"none\" stroke=\"#263238\" stroke-width=\"5\"/><g stroke=\"#E8EFF8\" stroke-width=\"6\" stroke-linecap=\"round\"><path d=\"M87 103 H169\"/><path d=\"M87 128 H169\"/><path d=\"M87 153 H150\"/><path d=\"M87 178 H160\"/></g><circle cx=\"153\" cy=\"184\" r=\"17\" fill=\"#D9C39A\" stroke=\"#263238\" stroke-width=\"4\"/></g>"]];
@@ -12474,11 +12573,16 @@ function boot(info){
   t=cs()._s+cs()._il;
   renderAdd();renderList();renderScenes();renderTimeline();renderProps();renderScenePane();setBtn();render();
   histInit();
-  initAudio();
-  initImages();
-  initSvgs();
-  initAI();
-  asStart(info);
+  /* تأجيل التهيئة غير الحرجة إلى ما بعد أول عرض للشاشة لتسريع الفتح */
+  var __later=false;
+  function __runLater(){
+    if(__later)return;__later=true;
+    [initAudio,initImages,initSvgs,initAI,function(){asStart(info);}].forEach(function(f){
+      try{f();}catch(e){console.warn('deferred init failed',e);}
+    });
+  }
+  requestAnimationFrame(function(){setTimeout(__runLater,0);});
+  setTimeout(__runLater,500);
 }
 recoverPick().then(boot,function(){boot(null);});
 (function(){try{

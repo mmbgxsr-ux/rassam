@@ -3,16 +3,26 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "sync": "cap sync android",
-    "open": "cap open android"
+    "build": "node scripts/build.js",
+    "sync": "npm run build && cap sync android",
+    "open": "cap open android",
+    "assets": "capacitor-assets generate --android"
   },
   "dependencies": {
+    "@capacitor-community/media": "^8.0.0",
     "@capacitor/android": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
     "@capacitor/cli": "^7.0.0",
     "@capacitor/core": "^7.0.0",
     "@capacitor/filesystem": "^7.0.0",
     "@capacitor/share": "^7.0.0",
-    "@capacitor-community/media": "^8.0.0",
-    "@capacitor/app": "^7.0.0"
+    "@fontsource/aref-ruqaa": "^5.0.0",
+    "@fontsource/cairo": "^5.0.0",
+    "@fontsource/caveat": "^5.0.0",
+    "@fontsource/ibm-plex-sans-arabic": "^5.0.0",
+    "@fontsource/lemonada": "^5.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
   }
 }
