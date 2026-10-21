@@ -6,6 +6,11 @@ on:
         description: "اكمل البناء حتى لو ظهر SKIP/WARN مهم (1 = نعم)"
         required: false
         default: "0"
+concurrency:
+  group: build-apk
+  cancel-in-progress: true
+permissions:
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,14 +32,15 @@ jobs:
             ~/.npm
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: rassam-${{ runner.os }}-${{ hashFiles('package.json', 'build.sh') }}
+          key: rassam-${{ runner.os }}-${{ hashFiles('package.json') }}
           restore-keys: |
             rassam-${{ runner.os }}-
       - run: bash build.sh
       - uses: actions/upload-artifact@v4
         with:
           name: rassam-build
+          retention-days: 30
+          if-no-files-found: error
           path: |
             out/rassam.apk
-            out/rassam.aab
             build.log
