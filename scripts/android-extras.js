@@ -316,6 +316,7 @@
     return '';
   }
   function handle(f) {
+    if (f && f.error === 'big') { toast('الملف أكبر من 80 ميجا ولا يمكن استقباله: ' + (f.name || '')); return Promise.resolve(); }
     var k = kind(f);
     if (!k) { toast('نوع الملف غير مدعوم: ' + (f.name || '')); return Promise.resolve(); }
     var url = C.convertFileSrc ? C.convertFileSrc('file://' + encodeURI(f.path)) : '';
@@ -338,7 +339,7 @@
     if (!list.length) return;
     busy = true;
     (function next(i) {
-      if (i >= list.length) { busy = false; return; }
+      if (i >= list.length) { busy = false; setTimeout(pull, 300); return; } // ملفات وصلت أثناء المعالجة
       handle(list[i]).then(function () { setTimeout(function () { next(i + 1); }, 500); });
     })(0);
   }
