@@ -231,3 +231,113 @@
   if (document.readyState === 'complete') ready(); else window.addEventListener('load', ready);
   setTimeout(hide, 2500); // احتياطي
 })();
+
+
+/* ---------- 4) ملء الشاشة أثناء العرض + فتح ملفات من تطبيقات تانية ---------- */
+(function () {
+  var C = window.Capacitor;
+  if (!C || !C.isNativePlatform || !C.isNativePlatform()) return;
+
+  function toast(t) {
+    var e = document.getElementById('rsShareToast');
+    if (!e) {
+      e = document.createElement('div'); e.id = 'rsShareToast';
+      e.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));' +
+        'z-index:99999;background:rgba(20,24,31,.92);color:#fff;padding:9px 16px;border-radius:99px;font:600 13px system-ui,sans-serif;' +
+        'pointer-events:none;transition:opacity .2s;max-width:90%;text-align:center';
+      document.body.appendChild(e);
+    }
+    e.textContent = t; e.style.opacity = '1';
+    clearTimeout(e._t); e._t = setTimeout(function () { e.style.opacity = '0'; }, 2400);
+  }
+
+  /* ----- (أ) ملء الشاشة: يخفي شريط الحالة وأزرار النظام في «التركيز» و«العرض المباشر» ----- */
+  var lastImm = null, q = 0;
+  function wantImm() {
+    return document.body.classList.contains('focus') || !!document.querySelector('.board.pz');
+  }
+  function syncImm(force) {
+    var w = wantImm();
+    if (!force && w === lastImm) return;
+    lastImm = w;
+    try { if (window.RassamNative && window.RassamNative.immersive) window.RassamNative.immersive(w); } catch (e) {}
+  }
+  function schedImm() { if (q) return; q = requestAnimationFrame(function () { q = 0; syncImm(false); }); }
+  try {
+    new MutationObserver(schedImm).observe(document.documentElement, { attributes: true, subtree: true, attributeFilter: ['class'] });
+  } catch (e) {}
+  // بعد الرجوع للتطبيق النظام بيرجّع الأشرطة، فنعيد الحالة
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) { lastImm = null; syncImm(true); } });
+
+  /* ----- (ب) الملفات اللي بتتبعت للتطبيق من «مشاركة» أو «فتح بواسطة» ----- */
+  var busy = false;
+  function feed(id, file) {
+    var inp = document.getElementById(id);
+    if (!inp) return false;
+    try {
+      var dt = new DataTransfer(); dt.items.add(file);
+      inp.files = dt.files;
+      inp.dispatchEvent(new Event('change', { bubbles: true }));
+      return true;
+    } catch (e) { return false; }
+  }
+  function ask(name) {
+    return new Promise(function (res) {
+      var ov = document.createElement('div');
+      ov.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px';
+      var bx = document.createElement('div');
+      bx.setAttribute('dir', 'rtl');
+      bx.style.cssText = 'background:#fff;color:#14181f;border-radius:14px;padding:16px;max-width:340px;width:100%;font:600 15px system-ui,sans-serif;display:flex;flex-direction:column;gap:10px';
+      var t = document.createElement('div'); t.textContent = 'ملف صوتي: ' + name; t.style.cssText = 'word-break:break-all';
+      bx.appendChild(t);
+      [['voice', '🎙 تعليق صوتي'], ['music', '🎵 موسيقى خلفية'], ['', 'إلغاء']].forEach(function (o) {
+        var b = document.createElement('button'); b.type = 'button'; b.textContent = o[1];
+        b.style.cssText = 'padding:11px;border-radius:10px;border:1px solid #d0d5dd;background:' + (o[0] ? '#4f46e5' : '#fff') + ';color:' + (o[0] ? '#fff' : '#14181f') + ';font:inherit';
+        b.onclick = function () { ov.remove(); res(o[0]); };
+        bx.appendChild(b);
+      });
+      ov.appendChild(bx); document.body.appendChild(ov);
+    });
+  }
+  function kind(f) {
+    var m = (f.mime || '').toLowerCase(), n = (f.name || '').toLowerCase();
+    if (m === 'image/svg+xml' || /\.svg$/.test(n)) return 'svg';
+    if (/^image\//.test(m) || /\.(png|jpe?g|webp|gif|bmp)$/.test(n)) return 'image';
+    if (/^video\//.test(m) || /\.(mp4|webm|mov|m4v)$/.test(n)) return 'video';
+    if (m === 'application/pdf' || /\.pdf$/.test(n)) return 'pdf';
+    if (/^audio\//.test(m) || /\.(mp3|m4a|wav|ogg|aac|opus|flac)$/.test(n)) return 'audio';
+    return '';
+  }
+  function handle(f) {
+    var k = kind(f);
+    if (!k) { toast('نوع الملف غير مدعوم: ' + (f.name || '')); return Promise.resolve(); }
+    var url = C.convertFileSrc ? C.convertFileSrc('file://' + encodeURI(f.path)) : '';
+    return fetch(url).then(function (r) { if (!r.ok) throw new Error('http'); return r.blob(); }).then(function (b) {
+      var file = new File([b], f.name || 'file', { type: f.mime || b.type || '' });
+      if (k === 'audio') {
+        return ask(f.name || '').then(function (w) { if (w) { if (feed(w === 'music' ? 'fileMusic' : 'fileVoice', file)) toast('جارٍ إضافة الصوت...'); } });
+      }
+      var id = k === 'svg' ? 'fileSvg' : k === 'image' ? 'fileImg' : k === 'video' ? 'fileVid' : 'pdFile';
+      if (feed(id, file)) toast('تمت إضافة الملف: ' + (f.name || ''));
+      else toast('تعذّر فتح الملف');
+    }).catch(function () { toast('تعذّر فتح الملف'); });
+  }
+  function pull() {
+    if (busy) return;
+    var N = window.RassamNative;
+    if (!N || !N.takeShared) return;
+    var list = [];
+    try { list = JSON.parse(N.takeShared() || '[]'); } catch (e) { return; }
+    if (!list.length) return;
+    busy = true;
+    (function next(i) {
+      if (i >= list.length) { busy = false; return; }
+      handle(list[i]).then(function () { setTimeout(function () { next(i + 1); }, 500); });
+    })(0);
+  }
+  window.__rsPullShared = pull;
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) setTimeout(pull, 400); });
+  window.addEventListener('focus', function () { setTimeout(pull, 400); });
+  function first() { setTimeout(pull, 2500); }
+  if (document.readyState === 'complete') first(); else window.addEventListener('load', first);
+})();
