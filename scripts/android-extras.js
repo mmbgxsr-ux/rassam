@@ -155,3 +155,79 @@
     toast('اضغط رجوع مرة أخرى للخروج');
   });
 })();
+
+/* ---------- 3) شاشة البداية + قياس الأداء على الجهاز ---------- */
+(function () {
+  var P = { fcp: 0, longtasks: [], events: [], loaf: [], splashAt: 0 };
+  function pushTop(arr, item, max) {
+    arr.push(item); arr.sort(function (a, b) { return b[0] - a[0]; });
+    if (arr.length > max) arr.length = max;
+  }
+  function obs(type, opts, cb) {
+    try {
+      var o = new PerformanceObserver(function (l) { l.getEntries().forEach(cb); });
+      var init = { type: type, buffered: true };
+      for (var k in opts) init[k] = opts[k];
+      o.observe(init);
+    } catch (e) {}
+  }
+  obs('paint', {}, function (e) { if (e.name === 'first-contentful-paint') P.fcp = Math.round(e.startTime); });
+  obs('longtask', {}, function (e) { pushTop(P.longtasks, [Math.round(e.duration), Math.round(e.startTime)], 8); });
+  obs('event', { durationThreshold: 100 }, function (e) {
+    var t = e.target; var n = t ? ((t.id ? '#' + t.id : '') || t.tagName || '?') : '?';
+    pushTop(P.events, [Math.round(e.duration), e.name + ' ' + n], 8);
+  });
+  obs('long-animation-frame', {}, function (e) {
+    var sc = (e.scripts && e.scripts[0]) || {};
+    pushTop(P.loaf, [Math.round(e.duration), Math.round(e.blockingDuration || 0),
+      (sc.invoker || sc.sourceFunctionName || '?') + '@' + (sc.sourceCharPosition == null ? '' : sc.sourceCharPosition)], 8);
+  });
+
+  function perfText() {
+    var L = [], nav = {};
+    try { nav = performance.getEntriesByType('navigation')[0] || {}; } catch (e) {}
+    L.push('perf: fcp ' + P.fcp + ' ms | domReady ' + Math.round(nav.domContentLoadedEventEnd || 0) +
+      ' ms | load ' + Math.round(nav.loadEventEnd || 0) + ' ms | splashHidden ' + P.splashAt + ' ms');
+    var lp = document.getElementById('lowPow');
+    L.push('perf: lowPowerMode ' + (lp ? lp.checked : '?') + ' | cores ' + (navigator.hardwareConcurrency || '?') +
+      ' | ram ' + (navigator.deviceMemory || '?') + 'GB');
+    try { var m = performance.memory; if (m) L.push('perf: jsHeap ' + Math.round(m.usedJSHeapSize / 1048576) + ' MB'); } catch (e) {}
+    L.push('perf: longTasks (ms@start) ' + (P.longtasks.map(function (x) { return x[0] + '@' + x[1]; }).join(', ') || 'none'));
+    L.push('perf: slowEvents (ms) ' + (P.events.map(function (x) { return x[0] + ' ' + x[1]; }).join(' | ') || 'none'));
+    L.push('perf: slowFrames (ms,blocking,script) ' + (P.loaf.map(function (x) { return x[0] + ',' + x[1] + ',' + x[2]; }).join(' | ') || 'none'));
+    return L.join('\n');
+  }
+  window.__rsPerfText = perfText;
+
+  // نلحق بيانات الأداء بتقرير «نسخ تقرير المشاكل» الموجود أصلاً في التطبيق
+  var rb = document.getElementById('repBtn');
+  if (rb) rb.addEventListener('click', function () {
+    var n = 0, iv = setInterval(function () {
+      var ta = document.getElementById('repTxt');
+      if (ta && ta.value && ta.value.indexOf('errors (') > -1 && ta.value.indexOf('perf: fcp') < 0) {
+        clearInterval(iv);
+        ta.value += '\n' + perfText();
+        try { navigator.clipboard.writeText(ta.value); } catch (e) {}
+        setTimeout(function () {
+          var rm = document.getElementById('repMsg');
+          if (rm) rm.textContent = 'نُسخ التقرير مع بيانات الأداء. الصقه في المحادثة.';
+        }, 800);
+      } else if (++n > 40) clearInterval(iv);
+    }, 250);
+  });
+
+  // شاشة البداية: تفضل ظاهرة لحد ما التطبيق يرسم أول شاشة ثم تختفي
+  var C = window.Capacitor;
+  if (!C || !C.isNativePlatform || !C.isNativePlatform()) return;
+  var SS = C.Plugins && C.Plugins.SplashScreen;
+  if (!SS || !SS.hide) return;
+  var done = false;
+  function hide() {
+    if (done) return; done = true;
+    P.splashAt = Math.round(performance.now());
+    try { SS.hide({ fadeOutDuration: 200 }); } catch (e) {}
+  }
+  function ready() { requestAnimationFrame(function () { requestAnimationFrame(hide); }); }
+  if (document.readyState === 'complete') ready(); else window.addEventListener('load', ready);
+  setTimeout(hide, 2500); // احتياطي
+})();
