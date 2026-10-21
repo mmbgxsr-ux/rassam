@@ -215,24 +215,13 @@ grep -nE "versionCode|versionName" "$GR" || true
 cd android
 chmod +x gradlew
 if [ -n "$KS_B64" ] && [ -n "$KS_PASS" ]; then
-  ./gradlew assembleRelease bundleRelease
+  ./gradlew assembleRelease
   BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
   APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
   echo "$KS_B64" | base64 -d > ../release.p12
   "$BT/zipalign" -p 4 "$APK" ../aligned.apk
   "$BT/apksigner" sign --ks ../release.p12 --ks-pass env:KS_PASS --key-pass env:KS_PASS --out ../out/rassam.apk ../aligned.apk
   echo "SIGNED with stable key"
-
-  # ملف AAB لـ Google Play (موقّع بنفس المفتاح)
-  AAB=$(ls app/build/outputs/bundle/release/*.aab 2>/dev/null | head -1 || true)
-  ALIAS=$(keytool -list -keystore ../release.p12 -storetype PKCS12 -storepass "$KS_PASS" 2>/dev/null | grep -m1 -i "PrivateKeyEntry" | cut -d, -f1 || true)
-  if [ -n "$AAB" ] && [ -n "$ALIAS" ]; then
-    cp "$AAB" ../out/rassam.aab
-    jarsigner -keystore ../release.p12 -storetype PKCS12 -storepass:env KS_PASS ../out/rassam.aab "$ALIAS"
-    echo "AAB signed"
-  else
-    echo "WARNING: AAB step skipped"
-  fi
 else
   ./gradlew assembleDebug
   cp app/build/outputs/apk/debug/app-debug.apk ../out/rassam.apk
