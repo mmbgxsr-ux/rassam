@@ -41,7 +41,7 @@ let html = fs.readFileSync('index.html', 'utf8');
 html = html
   .replace(/<noscript>\s*<link[^>]*fonts\.googleapis\.com[^>]*>\s*<\/noscript>/g, '')
   .replace(/<link[^>]*fonts\.(?:googleapis|gstatic)\.com[^>]*>/g, '');
-html = html.replace('</head>', '<style id="local-fonts">\n' + css + '</style>\n</head>');
+html = html.replace('</head>', () => '<style id="local-fonts">\n' + css + '</style>\n</head>');
 
 /* ---------- 2) المكتبات (بدل CDN) ---------- */
 // [النص الأصلي في index.html، النص البديل، [[مصدر، وجهة], ...]]
@@ -68,7 +68,7 @@ for (const [name, from, to, files] of LIBS) {
   if (missing.length) { console.warn('SKIP (يبقى على الإنترنت):', name, '- ناقص:', missing.map(m => m[0]).join(', ')); continue; }
   if (!html.includes(from)) { console.warn('SKIP: لم أجد الرابط في index.html:', name); continue; }
   for (const [src, dst] of files) fs.copyFileSync(src, path.join(OUT, 'vendor', dst));
-  html = html.replace(from, to);
+  html = html.replace(from, () => to);
   console.log('OK:', name);
 }
 
