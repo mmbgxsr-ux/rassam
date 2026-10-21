@@ -241,6 +241,33 @@ if (blobs.length && html.includes(B_OLD) && !/getElementById\('rsblob_/.test(htm
   console.log('OK: library images moved to www/blobs (' + blobs.length + ' files)');
 } else console.warn('WARN: لم أنقل صور المكتبة (الشكل مختلف عن المتوقع) — تبقى داخل الصفحة');
 
+// (1هـ) مكتبة الشخصيات: كانت بتقرأ 62 صورة (XHR متزامن) وتفكّ base64 لكل واحدة (atob + حلقة بايتات) وقت الفتح، وتبني شبكتين من الأزرار فوراً.
+//      الجديد: (أ) خاصية s تُقرأ عند أول استخدام فقط (getter)، (ب) صور الشبكتين تتحمّل لما تظهر على الشاشة فعلاً (IntersectionObserver).
+//      شاشة الهيرو (rs-hero) تبقى كما هي لأنها تحتاج صوراً قليلة فور الفتح.
+const EGY_EAGER = /"s": __B\((\d+)\)/g;
+const GRID_IMG = "var im=document.createElement('img');im.src=__U(e.s);im.alt='';";
+const GRID_IMG_NEW = "var im=document.createElement('img');im.alt='';im.decoding='async';window.__rsLazyImg(im,e);";
+// المطابقة الأولى والثانية فقط (الشبكتان)؛ الثالثة هي الهيرو ونتركها
+const gridCount = html.split(GRID_IMG).length - 1;
+const eagerCount = (html.match(EGY_EAGER) || []).length;
+if (gridCount === 3 && eagerCount > 0) {
+  html = html.replace(EGY_EAGER, (m, n) => 'get "s"(){return __B(' + n + ')}');
+  let k = 0;
+  html = html.split(GRID_IMG).reduce((acc, part, i) => i === 0 ? part : acc + (i <= 2 ? GRID_IMG_NEW : GRID_IMG) + part, '');
+  const LAZY_JS = `<script id="rs-lazyimg">
+(function(){var io=null;
+window.__rsLazyImg=function(im,e){
+  var go=function(){try{im.src=__U(e.s);}catch(x){}};
+  if(!window.IntersectionObserver){go();return;}
+  if(!io)io=new IntersectionObserver(function(es){es.forEach(function(x){if(!x.isIntersecting)return;var t=x.target;io.unobserve(t);if(t._rsGo){var f=t._rsGo;t._rsGo=null;f();}});},{rootMargin:'300px'});
+  im._rsGo=go;io.observe(im);
+};})();
+</script>`;
+  // لازم يتعرّف قبل أي سكربت يستخدمه
+  html = html.replace('</head>', () => LAZY_JS + '\n</head>');
+  console.log('OK: lazy library images (' + eagerCount + ' blobs now read on demand)');
+} else console.warn('WARN: لم أفعّل تأجيل صور المكتبة (الشكل مختلف: شبكات=' + gridCount + '، blobs=' + eagerCount + ') — تبقى تتحمّل عند الفتح');
+
 // (2) تمويه الخلفية (backdrop-filter) تقيل على الـ WebView وبيبطّئ الرسم فوق السبورة: نلغيه ونعوّضه بخلفية أغمق شوية.
 // (3) لمس أسرع وأنعم: بدون وميض الضغط، وبدون سحب-للتحديث أو ارتداد الصفحة.
 const PERF_CSS = `<style id="rs-perf">
