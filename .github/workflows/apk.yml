@@ -22,19 +22,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20 }
+        with: { node-version: 22 }
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 21 }
-      - name: Cache npm and Gradle
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+      - name: Cache npm
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.npm
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: rassam-${{ runner.os }}-${{ hashFiles('package.json') }}
+          path: ~/.npm
+          key: rassam-npm-${{ runner.os }}-${{ hashFiles('package.json', 'package-lock.json') }}
           restore-keys: |
-            rassam-${{ runner.os }}-
+            rassam-npm-${{ runner.os }}-
       - run: bash build.sh
       - name: Summary (success)
         if: success()
@@ -44,6 +44,7 @@ jobs:
             echo '```'
             ls -lh out/rassam.apk
             grep -E "versionCode|versionName" android/app/build.gradle || true
+            grep -A5 "OFFLINE-CHECK" build.log || true
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Summary (failure)
