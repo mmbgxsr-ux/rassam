@@ -3,6 +3,7 @@ on: [workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     env:
       KS_B64: ${{ secrets.KS_B64 }}
       KS_PASS: ${{ secrets.KS_PASS }}
@@ -12,6 +13,16 @@ jobs:
         with: { node-version: 20 }
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 21 }
+      - name: Cache npm and Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: rassam-${{ runner.os }}-${{ hashFiles('package.json', 'build.sh') }}
+          restore-keys: |
+            rassam-${{ runner.os }}-
       - run: bash build.sh
       - uses: actions/upload-artifact@v4
         with:
