@@ -2431,15 +2431,49 @@ function build(it,sc){
   }
   setTf(it);
 }
+/*PERF-PATCH*/
+var _incRec=[],_sk=null,_skR=0,_thTok=0;
+function scSig(sc){
+  var s=JSON.stringify(sc,function(k,v){return k.charAt(0)==='_'?undefined:v;}),x='',i,it;
+  for(i=0;i<sc.items.length;i++){it=sc.items[i];x+=(it._src?it._src.length+it._src.slice(-12):0)+','+(it._svg?it._svg.length:0)+';';}
+  return W+'x'+H+'|'+x+'|'+s;
+}
+function incBuildScene(sc,sig,anchor){
+  var d0=defs.childNodes.length;
+  var sg=mk('g',{}),bg=mk('rect',{width:W,height:H,fill:sc.bg}),cam=mk('g',{});
+  sg.appendChild(bg);sg.appendChild(cam);
+  itemsG.insertBefore(sg,anchor||null); /* لازم يكون داخل الصفحة قبل القياس (getBBox) */
+  sc._sg=sg;sc._cam=cam;sc._bg=bg;sg.id='sg-'+sc.id;cam.id='cm-'+sc.id;
+  sc.items.forEach(function(it){build(it,sc);});
+  var r={sc:sc,sg:sg,dn:[].slice.call(defs.childNodes,d0),sig:sig||scSig(sc)};
+  sc._rec=r;return r;
+}
 function buildAll(){
   while(itemsG.firstChild)itemsG.removeChild(itemsG.firstChild);
   while(defs.firstChild)defs.removeChild(defs.firstChild);
+  _incRec=[];
+  scenes.forEach(function(sc){_incRec.push(incBuildScene(sc,null,null));});
+}
+function buildAllInc(){
+  var ok=_incRec.length>0,i;
+  for(i=0;ok&&i<_incRec.length;i++)if(_incRec[i].sg.parentNode!==itemsG)ok=false;
+  if(!ok){buildAll();return;}
+  var next=[];
   scenes.forEach(function(sc){
-    var sg=mk('g',{}),bg=mk('rect',{width:W,height:H,fill:sc.bg}),cam=mk('g',{});
-    sg.appendChild(bg);sg.appendChild(cam);itemsG.appendChild(sg);
-    sc._sg=sg;sc._cam=cam;sc._bg=bg;sg.id='sg-'+sc.id;cam.id='cm-'+sc.id;
-    sc.items.forEach(function(it){build(it,sc);});
+    var r=sc._rec,sig=scSig(sc);
+    if(r&&r.sc===sc&&r.sig===sig&&_incRec.indexOf(r)>=0){next.push(r);return;}
+    var anchor=(r&&r.sg.parentNode===itemsG)?r.sg:null;
+    var nr=incBuildScene(sc,sig,anchor);
+    if(r){if(r.sg.parentNode)r.sg.parentNode.removeChild(r.sg);r.dn.forEach(function(n){if(n.parentNode)n.parentNode.removeChild(n);});}
+    next.push(nr);
   });
+  _incRec.forEach(function(r){
+    if(next.indexOf(r)>=0)return;
+    if(r.sg.parentNode)r.sg.parentNode.removeChild(r.sg);
+    r.dn.forEach(function(n){if(n.parentNode)n.parentNode.removeChild(n);});
+  });
+  for(i=0;i<next.length;i++){var c0=itemsG.children[i];if(c0!==next[i].sg)itemsG.insertBefore(next[i].sg,c0||null);}
+  _incRec=next;
 }
 /* images: تُكشف بمسار تظليل متعرج تتبعه اليد */
 function scribbleOf(w,h){
@@ -2705,8 +2739,8 @@ function showScene(sc,on){
   if(sg.getAttribute('visibility')!==vv)sg.setAttribute('visibility',vv);
   if(sg.hasAttribute('transform'))sg.removeAttribute('transform');
   if(sg.hasAttribute('clip-path'))sg.removeAttribute('clip-path');
-  sc._sg.setAttribute('opacity',1);
-  sc._cam.removeAttribute('transform');
+  if(sg.getAttribute('opacity')!=='1')sg.setAttribute('opacity',1);
+  if(sc._cam.hasAttribute('transform'))sc._cam.removeAttribute('transform');
 }
 function render(){
   if(!scenes.length)return;
@@ -2846,7 +2880,7 @@ function enterEdit(k){
 function edited(){
   pause();handOn=false;stopAt=null;mode='edit';
   cur=clamp(cur,0,scenes.length-1);
-  timeline();buildAll();
+  timeline();buildAllInc();
   t=cs()._s+cs()._il;
   render();renderList();renderScenes();renderTimeline();drawSel();save();histCommit();
 }
@@ -3062,13 +3096,13 @@ tl.addEventListener('pointerdown',function(e){
   }
   if(scb){var k=scIndex(scb.dataset.scb);if(k>=0){enterEdit(k);setTab('scene');}return;}
   if(e.target.closest('.trb'))return;
-  tlAct={type:'seek'};
+  tlAct={type:'seek'};_sk=null;
   try{tl.setPointerCapture(e.pointerId);}catch(err){}
   seekTo(e);
 });
 tl.addEventListener('pointermove',function(e){
   if(!tlAct)return;
-  if(tlAct.type==='seek'){seekTo(e);return;}
+  if(tlAct.type==='seek'){_sk=e;if(!_skR)_skR=requestAnimationFrame(function(){_skR=0;if(_sk&&tlAct&&tlAct.type==='seek')seekTo(_sk);});return;}
   if(tlAct.type==='cm'){
     var cm=clipById(tlAct.id);if(!cm)return;
     cm.start=Math.max(0,Math.round((tlAct.s0+(e.clientX-tlAct.x0)/PX)*10)/10);
@@ -3085,7 +3119,7 @@ tl.addEventListener('pointermove',function(e){
     var msc=scenes[sceneOf(mv.id)];
     if(!msc){tlAct=null;return;}
     setItemStart(msc,msc.items.indexOf(mv),Math.round((tlAct.st0+dx/PX)*10)/10);
-    timeline();renderTimeline();
+    timeline();tlGeom();
     return;
   }
   var it=get(tlAct.id);if(!it)return;
@@ -3098,7 +3132,7 @@ function tlEnd(){
   if(a.type==='cm'){audioChanged();}
   else if(a.type==='rs'){edited();renderProps();}
   else if(a.type==='mv'){if(a.moved){edited();renderProps();}}
-  else{handOn=false;render();}
+  else{if(a.type==='seek'&&_sk){var e2=_sk;_sk=null;seekTo(e2);}handOn=false;render();}
 }
 tl.addEventListener('pointerup',tlEnd);
 tl.addEventListener('pointercancel',tlEnd);
@@ -3119,16 +3153,47 @@ function drawPenSw(){
 function itemName(it){return it.kind==='text'?(it.text||'نص فارغ'):it.kind==='image'?(it.name||'صورة'):it.kind==='chart'?CHART_TYPES[it.type].name:it.kind==='svg'?(it.name||'رسمة SVG'):SHAPES[it.shape].name;}
 var _thT=0;
 function drawScThumbs(){
+  var q=[],tok=++_thTok;
   Array.prototype.forEach.call(document.querySelectorAll('#scenesBar canvas.scth'),function(cv){
     var sc=scenes[+cv.dataset.k];if(!sc)return;
-    var g=cv.getContext('2d');if(!g)return;
-    g.save();
-    try{g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.clearRect(0,0,W,H);cvScene(g,sc,0,camAt(sc,sc._len),'full');}catch(e){}
-    g.restore();
+    var sig=scSig(sc);
+    if(cv._sig!==sig)q.push([cv,sc,sig,+cv.dataset.k===cur?0:1]);
   });
+  q.sort(function(a,b){return a[3]-b[3];});
+  (function step(){
+    if(tok!==_thTok||playing)return;
+    var t0=performance.now();
+    while(q.length&&performance.now()-t0<10){
+      var j=q.shift(),cv=j[0],sc=j[1],g=cv.getContext('2d');
+      if(!g)continue;
+      g.save();
+      try{g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.clearRect(0,0,W,H);cvScene(g,sc,0,camAt(sc,sc._len),'full');}catch(e){}
+      g.restore();
+      cv._sig=j[2];
+    }
+    if(q.length)setTimeout(step,16);
+  })();
 }
 function schedThumbs(){clearTimeout(_thT);_thT=setTimeout(function(){if(!playing)drawScThumbs();},350);}
 function renderScenes(){
+  var bar0=$('#scenesBar'),add0=bar0.querySelector('.chip.add');
+  if(add0){
+    var cs0=[].slice.call(bar0.querySelectorAll('.chip[data-scene]'));
+    while(cs0.length>scenes.length)bar0.removeChild(cs0.pop());
+    while(cs0.length<scenes.length){
+      var nb=document.createElement('button');nb.className='chip';
+      nb.innerHTML='<canvas class="scth" width="128" height="72" aria-hidden="true"></canvas><span></span>';
+      bar0.insertBefore(nb,add0);cs0.push(nb);
+    }
+    cs0.forEach(function(b,k){
+      var sc=scenes[k],pr=String(k===cur),cv=b.firstChild,sp=b.lastChild,nm=snm(sc,k);
+      if(b.getAttribute('data-scene')!==String(k))b.setAttribute('data-scene',k);
+      if(b.getAttribute('aria-pressed')!==pr)b.setAttribute('aria-pressed',pr);
+      if(cv&&cv.dataset.k!==String(k))cv.dataset.k=k;
+      if(sp&&sp.textContent!==nm)sp.textContent=nm;
+    });
+    schedThumbs();return;
+  }
   $('#scenesBar').innerHTML=scenes.map(function(sc,k){
     return '<button class="chip" data-scene="'+k+'" aria-pressed="'+(k===cur)+'"><canvas class="scth" width="128" height="72" data-k="'+k+'" aria-hidden="true"></canvas><span>'+esc(snm(sc,k))+'</span></button>';
   }).join('')+'<button class="chip add" data-addscene="1">+ مشهد</button>';
