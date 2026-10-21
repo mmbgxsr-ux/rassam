@@ -96,6 +96,21 @@ if (fs.existsSync(MF)) {
   }
   if (add) { fs.writeFileSync(MF, x.replace('</manifest>', () => add + '</manifest>')); }
   console.log('OK: microphone permissions in AndroidManifest.xml');
+  // استقبال الملفات: زر «مشاركة» (صور/صوت/فيديو/PDF) و«فتح بواسطة» للصوت وPDF
+  let m2 = fs.readFileSync(MF, 'utf8');
+  if (!m2.includes('RASSAM_SHARE')) {
+    const F = '\n        <!-- RASSAM_SHARE -->\n' +
+      '        <intent-filter>\n            <action android:name="android.intent.action.SEND" />\n            <category android:name="android.intent.category.DEFAULT" />\n' +
+      '            <data android:mimeType="image/*" />\n            <data android:mimeType="audio/*" />\n            <data android:mimeType="video/*" />\n            <data android:mimeType="application/pdf" />\n        </intent-filter>\n' +
+      '        <intent-filter>\n            <action android:name="android.intent.action.SEND_MULTIPLE" />\n            <category android:name="android.intent.category.DEFAULT" />\n' +
+      '            <data android:mimeType="image/*" />\n            <data android:mimeType="audio/*" />\n        </intent-filter>\n' +
+      '        <intent-filter>\n            <action android:name="android.intent.action.VIEW" />\n            <category android:name="android.intent.category.DEFAULT" />\n            <category android:name="android.intent.category.BROWSABLE" />\n' +
+      '            <data android:mimeType="audio/*" />\n            <data android:mimeType="application/pdf" />\n        </intent-filter>\n    ';
+    if (m2.includes('</activity>')) {
+      fs.writeFileSync(MF, m2.replace('</activity>', () => F + '</activity>'));
+      console.log('OK: share/open-with intent filters in AndroidManifest.xml');
+    } else console.warn('WARN: لم أجد </activity> في AndroidManifest.xml، لن يظهر التطبيق في قائمة المشاركة');
+  }
 } else {
   console.warn('WARN: AndroidManifest.xml غير موجود وقت البناء. تسجيل الصوت لن يعمل إلا بعد إضافة إذن RECORD_AUDIO يدوياً.');
 }
@@ -174,15 +189,57 @@ const RP_NEW = "if(sn&&typeof sn.json==='string'&&(!lok||sn.ts>(+lo.ts||0)+1500)
 if (html.includes(RP_OLD)) { html = html.replace(RP_OLD, () => RP_NEW); console.log('OK: faster startup restore'); }
 else console.warn('WARN: لم أجد سطر استرجاع الحفظ عند الفتح (التسريع غير مفعّل)');
 
-// (1ج) الصوت عند الفتح: كان بيفك ترميز كل المقاطع فوراً (توقف ~0.4 ثانية لكل مقطع + ذاكرة كبيرة على جهاز 2 جيجا) (تشغيل المحرك بس لو فيه مقاطع اتعمل في خطوة 4 فوق).
-//      الجديد: نبدأ التحميل بعد ما الشاشة تظهر بـ1.8 ثانية، وبين كل مقطع والتاني استراحة 120 ملّي ثانية.
-const AU_RE = /var list=clips\.slice\(\),n=list\.length,k=0;\s*setAudioMsg\('جارٍ تحميل الصوت 0\/'\+n\+'\.\.\.'\);\s*\(function next\(\)\{/;
-const AU_END_RE = /setTimeout\(next,0\);\s*\}\);\s*\}\)\(\);/;
-if (AU_RE.test(html) && AU_END_RE.test(html)) {
-  html = html.replace(AU_RE, () => "var list=clips.slice(),n=list.length,k=0;setAudioMsg('جارٍ تحميل الصوت 0/'+n+'...');setTimeout(function next(){");
-  html = html.replace(AU_END_RE, () => "setTimeout(next,120);});},1800);");
-  console.log('OK: deferred audio loading');
-} else console.warn('WARN: لم أجد دالة تحميل الصوت عند الفتح (التأجيل غير مفعّل)');
+// (1ج) الصوت: تحميل المقاطع المحفوظة (قراءة من IndexedDB + فك ترميز) كان بيحصل فوراً عند الفتح (توقف ~0.5 ثانية + ذاكرة كبيرة على جهاز 2 جيجا).
+//      الجديد: يتأجّل لحد أول استخدام فعلي (تشغيل / تصدير / فتح تبويب الصوت)، وفيه احتياطي بعد 20 ثانية لو ما استُخدم.
+//      لو ضغطت تشغيل قبل ما الصوت يجهز، التشغيل بيستنى التحميل ثم يبدأ تلقائياً.
+const AU_RE = /var list=clips\.slice\(\),n=list\.length,k=0;\s*setAudioMsg\('جارٍ تحميل الصوت 0\/'\+n\+'\.\.\.'\);\s*\(function next\(\)\{\s*var c=list\[k\];\s*if\(!c\)\{setAudioMsg\(''\);timeline\(\);renderTimeline\(\);renderClipList\(\);return;\}\s*idbGet\(c\.id\)\.then\(function\(buf\)\{\s*if\(!buf\)return;\s*return a\.decodeAudioData\(buf\)\.then\(function\(b\)\{bufs\[c\.id\]=b;c\.dur=b\.duration;\}\);\s*\}\)\.catch\(function\(\)\{\}\)\.then\(function\(\)\{\s*k\+\+;setAudioMsg\(k<n\?'جارٍ تحميل الصوت '\+k\+'\/'\+n\+'\.\.\.':''\);\s*setTimeout\(next,0\);\s*\}\);\s*\}\)\(\);/;
+const AU_NEW = `var list=clips.slice(),n=list.length,k=0,cbs=[],started=false;
+  window.__rsAuPend=true;window.__rsAuQ=0;renderClipList();
+  window.__rsAuThen=function(f,A){if(window.__rsAuQ)return;window.__rsAuQ=1;window.__rsAuLoad(function(){window.__rsAuQ=0;f.apply(null,A);});};
+  var my=window.__rsAuLoad=function(cb){
+    if(cb)cbs.push(cb);
+    if(started)return;started=true;
+    setAudioMsg('جارٍ تحميل الصوت 0/'+n+'...');
+    (function next(){
+      if(window.__rsAuLoad!==my)return;
+      var c=list[k];
+      if(!c){window.__rsAuPend=false;setAudioMsg('');timeline();renderTimeline();renderClipList();renderClipProps();var q=cbs.splice(0);q.forEach(function(f){try{f();}catch(e){}});return;}
+      idbGet(c.id).then(function(buf){
+        if(!buf)return;
+        return a.decodeAudioData(buf).then(function(b){bufs[c.id]=b;c.dur=b.duration;});
+      }).catch(function(){}).then(function(){
+        k++;setAudioMsg(k<n?'جارٍ تحميل الصوت '+k+'/'+n+'...':'');
+        setTimeout(next,60);
+      });
+    })();
+  };
+  setTimeout(function(){if(window.__rsAuLoad===my&&window.__rsAuPend)my();},20000);`;
+const AU_HOOKS = [
+  ["function play(from,to){", "function play(from,to){if(window.__rsAuPend){window.__rsAuThen(play,arguments);return;}"],
+  ["function exportVideo(){", "function exportVideo(){if(window.__rsAuPend){window.__rsAuThen(exportVideo,arguments);return;}"],
+  ["async function exportFast(auto,maxSec){", "async function exportFast(auto,maxSec){if(window.__rsAuPend){window.__rsAuThen(exportFast,arguments);return;}"],
+  ["function setTab(n){", "function setTab(n){if(n==='audio'&&window.__rsAuPend&&window.__rsAuLoad)window.__rsAuLoad();"],
+  ["var miss=!bufs[c.id];", "var miss=!bufs[c.id]&&!window.__rsAuPend;"],
+  ["(bufs[c.id]?'':' (يحتاج إعادة رفع)')", "(bufs[c.id]||window.__rsAuPend?'':' (يحتاج إعادة رفع)')"],
+];
+const AU_OK = AU_RE.test(html) && AU_HOOKS.every(([o]) => html.split(o).length === 2);
+if (AU_OK) {
+  html = html.replace(AU_RE, () => AU_NEW);
+  for (const [o, nw] of AU_HOOKS) html = html.replace(o, () => nw);
+  console.log('OK: lazy audio loading (on first use)');
+} else console.warn('WARN: تعذّر تفعيل تأجيل الصوت (نصوص ناقصة/متكرّرة في index.html) — يبقى التحميل عند الفتح');
+
+// (1د) صور المكتبة المضمّنة (~1.2 ميجا base64 داخل الصفحة): نطلعها لملفات منفصلة في www/blobs وتتقرأ عند الحاجة، فالصفحة تخفّ ~45% وقت القراءة.
+const BLOB_RE = /<script type="text\/plain" id="rsblob_(\d+)">([\s\S]*?)<\/script>/g;
+const B_OLD = "function __B(i){var v=__BC[i];if(v===undefined){var e=document.getElementById('rsblob_'+i);v=__BC[i]=e?e.textContent:'';}return v;}";
+const B_NEW = "function __B(i){var v=__BC[i];if(v===undefined){try{var x=new XMLHttpRequest();x.open('GET','blobs/'+i+'.txt',false);x.send();v=(x.status===200||x.status===0)?x.responseText:'';}catch(e){v='';}if(v)__BC[i]=v;}return v;}";
+const blobs = [...html.matchAll(BLOB_RE)];
+if (blobs.length && html.includes(B_OLD) && !/getElementById\('rsblob_/.test(html.replace(B_OLD, ''))) {
+  fs.mkdirSync(path.join(OUT, 'blobs'), { recursive: true });
+  for (const m of blobs) fs.writeFileSync(path.join(OUT, 'blobs', m[1] + '.txt'), m[2]);
+  html = html.replace(BLOB_RE, '').replace(B_OLD, () => B_NEW);
+  console.log('OK: library images moved to www/blobs (' + blobs.length + ' files)');
+} else console.warn('WARN: لم أنقل صور المكتبة (الشكل مختلف عن المتوقع) — تبقى داخل الصفحة');
 
 // (2) تمويه الخلفية (backdrop-filter) تقيل على الـ WebView وبيبطّئ الرسم فوق السبورة: نلغيه ونعوّضه بخلفية أغمق شوية.
 // (3) لمس أسرع وأنعم: بدون وميض الضغط، وبدون سحب-للتحديث أو ارتداد الصفحة.
