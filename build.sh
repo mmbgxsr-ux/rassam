@@ -60,6 +60,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.MotionEvent;
 import android.provider.OpenableColumns;
 import android.view.View;
 import android.view.WindowManager;
@@ -75,13 +78,46 @@ import org.json.JSONObject;
 
 public class MainActivity extends BridgeActivity {
   private final ArrayList<JSONObject> shared = new ArrayList<JSONObject>();
+  private static final long MAX_SHARED = 80L * 1024L * 1024L;
+  private static final long IDLE_MS = 15L * 60L * 1000L; // الشاشة تنطفئ طبيعياً بعد 15 دقيقة بدون لمس
+  private final Handler idle = new Handler(Looper.getMainLooper());
+  private final Runnable clearKeep = new Runnable() {
+    public void run() { getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); }
+  };
+  private long lastKeep = 0;
+
+  private void keepAwake() {
+    long now = System.currentTimeMillis();
+    if (now - lastKeep < 5000L) return;
+    lastKeep = now;
+    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    idle.removeCallbacks(clearKeep);
+    idle.postDelayed(clearKeep, IDLE_MS);
+  }
+
+  @Override
+  public boolean dispatchTouchEvent(MotionEvent ev) {
+    keepAwake();
+    return super.dispatchTouchEvent(ev);
+  }
+
+  // بعد ما ينتهي نسخ الملف نخبر الصفحة فوراً (بدل ما تعتمد على مؤقت قد يسبق انتهاء النسخ)
+  private void notifyJs() {
+    runOnUiThread(new Runnable() {
+      public void run() {
+        try {
+          getBridge().getWebView().evaluateJavascript("window.__rsPullShared&&window.__rsPullShared()", null);
+        } catch (Exception e) { }
+      }
+    });
+  }
 
   // جسر بسيط بين الصفحة والنظام: ملء الشاشة + الملفات المستقبَلة من تطبيقات تانية
   public class Native {
     @JavascriptInterface
     public void immersive(final boolean on) {
       runOnUiThread(new Runnable() {
-        public void run() { applyImmersive(on); }
+        public void run() { if (on) { lastKeep = 0; keepAwake(); } applyImmersive(on); }
       });
     }
 
@@ -114,7 +150,7 @@ public class MainActivity extends BridgeActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    keepAwake();
     try {
       getBridge().getWebView().addJavascriptInterface(new Native(), "RassamNative");
     } catch (Exception e) { }
@@ -194,12 +230,17 @@ public class MainActivity extends BridgeActivity {
       while ((n = is.read(buf)) > 0) {
         os.write(buf, 0, n);
         total += n;
-        if (total > 80L * 1024L * 1024L) break;
+        if (total > MAX_SHARED) break;
       }
       os.close();
       is.close();
-      if (total > 80L * 1024L * 1024L) {
+      if (total > MAX_SHARED) {
         out.delete();
+        JSONObject big = new JSONObject();
+        big.put("error", "big");
+        big.put("name", name);
+        synchronized (shared) { shared.add(big); }
+        notifyJs();
         return;
       }
       JSONObject o = new JSONObject();
@@ -209,6 +250,7 @@ public class MainActivity extends BridgeActivity {
       synchronized (shared) {
         shared.add(o);
       }
+      notifyJs();
     } catch (Exception e) { }
   }
 }
