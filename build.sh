@@ -10,7 +10,7 @@ node scripts/build.js 2>&1 | tee build.log
 
 # فشل البناء لو أي استبدال مهم في index.html ما اتنفّذش (بدل ما تطلع نسخة ناقصة بدون ما تحس)
 # للتخطي مؤقتاً: شغّل الـ workflow مع ALLOW_WARN=1
-if grep -E "SKIP \(|SKIP: لم أجد|WARN: لم أجد مستمع زر الرجوع|WARN: تعذّر تفعيل|WARN: لم أنقل" build.log; then
+if grep -E "SKIP \(|SKIP: لم أجد|WARN: لم أجد مستمع زر الرجوع|WARN: تعذّر تفعيل|WARN: لم أنقل|التسريع غير مفعّل|WARN: AndroidManifest|WARN: لم أجد </activity>" build.log; then
   if [ "$ALLOW_WARN" != "1" ]; then
     echo "BUILD STOPPED: النصوص اللي فوق اتغيّرت في index.html. راجع build.js أو رجّع النص الأصلي."
     exit 1
@@ -32,7 +32,7 @@ JS
 
 # أيقونة التطبيق (لا توقف البناء إن فشلت)
 cp -f icon-only.png icon-foreground.png icon-background.png assets/ 2>/dev/null || true
-npx --yes @capacitor/assets generate --android || echo "icon step skipped"
+npx capacitor-assets generate --android || echo "icon step skipped"
 
 # إبقاء الشاشة مضاءة أثناء استخدام التطبيق
 D=android/app/src/main/java/com/rassam/sabbura
@@ -212,6 +212,8 @@ VC=${GITHUB_RUN_NUMBER:-1}
 sed -i -E "s/versionCode [0-9]+/versionCode $VC/; s/versionName \"[^\"]*\"/versionName \"1.$VC\"/" "$GR"
 grep -nE "versionCode|versionName" "$GR" || true
 
+ROOT=$(pwd)
+trap 'rm -f "$ROOT/release.p12" "$ROOT/aligned.apk"' EXIT
 cd android
 chmod +x gradlew
 if [ -n "$KS_B64" ] && [ -n "$KS_PASS" ]; then
