@@ -168,6 +168,22 @@ const AS_NEW = "var __rsFv=-1,__rsN=0;setInterval(function(){if(rec)return;if(!a
 if (html.includes(AS_OLD)) { html = html.replace(AS_OLD, () => AS_NEW); console.log('OK: smart autosave'); }
 else console.warn('WARN: لم أجد سطر الحفظ التلقائي (التسريع غير مفعّل)');
 
+// (1ب) الفتح: كان بيفكّ نسخة الحفظ من IndexedDB (JSON ضخم) حتى لو أقدم من نسخة localStorage ومش هتُستخدم. نفكّها بس لو ممكن تُستخدم.
+const RP_OLD = "if(sn&&typeof sn.json==='string'){try{o=JSON.parse(sn.json);}catch(e){o=null;}}";
+const RP_NEW = "if(sn&&typeof sn.json==='string'&&(!lok||sn.ts>(+lo.ts||0)+1500)){try{o=JSON.parse(sn.json);}catch(e){o=null;}}";
+if (html.includes(RP_OLD)) { html = html.replace(RP_OLD, () => RP_NEW); console.log('OK: faster startup restore'); }
+else console.warn('WARN: لم أجد سطر استرجاع الحفظ عند الفتح (التسريع غير مفعّل)');
+
+// (1ج) الصوت عند الفتح: كان بيفك ترميز كل المقاطع فوراً (توقف ~0.4 ثانية لكل مقطع + ذاكرة كبيرة على جهاز 2 جيجا) (تشغيل المحرك بس لو فيه مقاطع اتعمل في خطوة 4 فوق).
+//      الجديد: نبدأ التحميل بعد ما الشاشة تظهر بـ1.8 ثانية، وبين كل مقطع والتاني استراحة 120 ملّي ثانية.
+const AU_RE = /var list=clips\.slice\(\),n=list\.length,k=0;\s*setAudioMsg\('جارٍ تحميل الصوت 0\/'\+n\+'\.\.\.'\);\s*\(function next\(\)\{/;
+const AU_END_RE = /setTimeout\(next,0\);\s*\}\);\s*\}\)\(\);/;
+if (AU_RE.test(html) && AU_END_RE.test(html)) {
+  html = html.replace(AU_RE, () => "var list=clips.slice(),n=list.length,k=0;setAudioMsg('جارٍ تحميل الصوت 0/'+n+'...');setTimeout(function next(){");
+  html = html.replace(AU_END_RE, () => "setTimeout(next,120);});},1800);");
+  console.log('OK: deferred audio loading');
+} else console.warn('WARN: لم أجد دالة تحميل الصوت عند الفتح (التأجيل غير مفعّل)');
+
 // (2) تمويه الخلفية (backdrop-filter) تقيل على الـ WebView وبيبطّئ الرسم فوق السبورة: نلغيه ونعوّضه بخلفية أغمق شوية.
 // (3) لمس أسرع وأنعم: بدون وميض الضغط، وبدون سحب-للتحديث أو ارتداد الصفحة.
 const PERF_CSS = `<style id="rs-perf">
@@ -177,6 +193,8 @@ const PERF_CSS = `<style id="rs-perf">
 .rs358p{background:var(--bg,#fff)!important}
 html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
 button,label,summary,[role=button]{touch-action:manipulation}
+/* قائمة «العرض» كانت بتخرج برّه الشاشة على التابلت (عرض 641-1100 بكسل) فتوسّع الصفحة: نعرضها كورقة سفلية زي الموبايل */
+@media (min-width:641px) and (max-width:1100px){.rs-view .rs-pop-body{position:fixed;inset-inline:12px;margin-inline:auto;max-width:420px;bottom:12px;top:auto;width:auto;max-height:70vh;overflow:auto}}
 </style>
 `;
 html = html.replace('</head>', () => PERF_CSS + '</head>');
