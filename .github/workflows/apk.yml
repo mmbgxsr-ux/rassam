@@ -36,11 +36,31 @@ jobs:
           restore-keys: |
             rassam-${{ runner.os }}-
       - run: bash build.sh
+      - name: Summary (success)
+        if: success()
+        run: |
+          {
+            echo "### Rassam APK"
+            echo '```'
+            ls -lh out/rassam.apk
+            grep -E "versionCode|versionName" android/app/build.gradle || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Summary (failure)
+        if: failure()
+        run: |
+          {
+            echo "### Build failed"
+            echo '```'
+            grep -E "SKIP|WARN|BUILD STOPPED" build.log 2>/dev/null | head -30 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: rassam-build
           retention-days: 30
-          if-no-files-found: error
+          if-no-files-found: warn
           path: |
             out/rassam.apk
             build.log
