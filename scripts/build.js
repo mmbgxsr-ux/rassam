@@ -120,11 +120,17 @@ function thReady(sc){
 }
 function thSig(sc){return JSON.stringify(sc,function(k,v){return k.charAt(0)==='_'?undefined:v;})+'|'+W+'x'+H+'|'+thReady(sc);}
 if(document.fonts&&document.fonts.addEventListener){document.fonts.addEventListener('loadingdone',function(){_thC={};});}
+(function(){var sb=document.getElementById('scenesBar');if(sb&&!sb._rsTh){sb._rsTh=1;sb.addEventListener('scroll',function(){if(typeof schedThumbs==='function')schedThumbs();},{passive:true});}})();
 function drawScThumbs(){
   var run=++_thRun,live={},id;
   scenes.forEach(function(sc){live[sc.id]=1;});
   for(id in _thC){if(!live[id])delete _thC[id];}
   var cvs=Array.prototype.slice.call(document.querySelectorAll('#scenesBar canvas.scth'));
+  // نرسم المصغّرات الظاهرة على الشاشة فقط (الباقي يتأجّل لحد ما يظهر بالتمرير) — كل مصغّرة بتاخد ~0.4 ثانية على التابلت الضعيف
+  var sbx=document.getElementById('scenesBar'),sr=sbx?sbx.getBoundingClientRect():null;
+  if(sr&&sr.width>0&&sr.height>0){
+    cvs=cvs.filter(function(cv){var r=cv.getBoundingClientRect();return r.right>sr.left-60&&r.left<sr.right+60&&r.bottom>sr.top-60&&r.top<sr.bottom+60;});
+  }
   cvs.sort(function(a,b){return (+(+b.dataset.k===cur))-(+(+a.dataset.k===cur));});
   var i=0;
   (function step(){
@@ -145,7 +151,7 @@ function drawScThumbs(){
       }
       if(performance.now()-t0>10)break;
     }
-    if(i<cvs.length)setTimeout(step,0);
+    if(i<cvs.length)setTimeout(step,60);
   })();
 }
 `;
@@ -153,6 +159,28 @@ const THUMB_RE = /function drawScThumbs\(\)\{\s*Array\.prototype\.forEach\.call\
 const tm = html.match(THUMB_RE);
 if (tm && tm[0].length < 800) { html = html.replace(THUMB_RE, () => THUMB_NEW); console.log('OK: fast scene thumbnails'); }
 else console.warn('WARN: لم أجد دالة مصغّرات المشاهد (التسريع غير مفعّل)');
+
+/* ---------- 4ج) تحسينات الأداء (v2) ---------- */
+// (1) الحفظ التلقائي: كان بيحوّل المشروع كله لنص JSON كل 3 ثواني حتى لو ما اتغيّرش حاجة (تقطيع واضح في المشاريع الكبيرة).
+//     الجديد: يتخطّى الحفظ لو مفيش تعديل، مع حفظ كامل احتياطي كل 30 ثانية. (الحفظ عند الخروج من التطبيق لسه شغّال زي ما هو)
+const AS_OLD = "setInterval(function(){if(!rec)asFlush();},AUTO_MS);";
+const AS_NEW = "var __rsFv=-1,__rsN=0;setInterval(function(){if(rec)return;if(!asDirty&&__rsFv===asVer&&(++__rsN%10)){beat();return;}__rsFv=asVer;asFlush();},AUTO_MS);";
+if (html.includes(AS_OLD)) { html = html.replace(AS_OLD, () => AS_NEW); console.log('OK: smart autosave'); }
+else console.warn('WARN: لم أجد سطر الحفظ التلقائي (التسريع غير مفعّل)');
+
+// (2) تمويه الخلفية (backdrop-filter) تقيل على الـ WebView وبيبطّئ الرسم فوق السبورة: نلغيه ونعوّضه بخلفية أغمق شوية.
+// (3) لمس أسرع وأنعم: بدون وميض الضغط، وبدون سحب-للتحديث أو ارتداد الصفحة.
+const PERF_CSS = `<style id="rs-perf">
+*{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+#rsCmd{background:rgba(0,0,0,.6)}
+#rsStudio .sg{background:var(--surface)!important}
+.rs358p{background:var(--bg,#fff)!important}
+html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+button,label,summary,[role=button]{touch-action:manipulation}
+</style>
+`;
+html = html.replace('</head>', () => PERF_CSS + '</head>');
+console.log('OK: perf css');
 
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
 console.log('www ready, font faces:', (css.match(/@font-face/g) || []).length);
