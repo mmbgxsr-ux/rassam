@@ -111,6 +111,15 @@ if (fs.existsSync(MF)) {
       console.log('OK: share/open-with intent filters in AndroidManifest.xml');
     } else console.warn('WARN: لم أجد </activity> في AndroidManifest.xml، لن يظهر التطبيق في قائمة المشاركة');
   }
+
+  // ذاكرة أكبر للتطبيق (جهاز 2 جيجا + مشاريع كبيرة + تصدير فيديو)
+  let m3 = fs.readFileSync(MF, 'utf8');
+  if (!m3.includes('android:largeHeap')) {
+    if (/<application\b/.test(m3)) {
+      fs.writeFileSync(MF, m3.replace(/<application\b/, () => '<application android:largeHeap="true"'));
+      console.log('OK: largeHeap in AndroidManifest.xml');
+    } else console.warn('WARN: largeHeap: لم أجد <application في AndroidManifest.xml (غير مؤثر)');
+  }
 } else {
   console.warn('WARN: AndroidManifest.xml غير موجود وقت البناء. تسجيل الصوت لن يعمل إلا بعد إضافة إذن RECORD_AUDIO يدوياً.');
 }
@@ -120,10 +129,24 @@ const AC_RE = /var a=ensureAC\(\);\s*if\(!a\|\|!clips\.length\)return;/;
 if (AC_RE.test(html)) { html = html.replace(AC_RE, 'if(!clips.length)return;var a=ensureAC();if(!a)return;'); console.log('OK: lazy audio engine'); }
 else console.warn('WARN: لم أجد سطر تشغيل الصوت عند الفتح (غير مؤثر)');
 
+/* ---------- 4د) تحسينات إضافية (v3) ---------- */
+// (أ) __U: كانت تفك base64 ببايت-بايت لكل صورة. للصور الصغيرة (< ~120KB) نرجّع الـ data URI مباشرة والمتصفح يفكها أسرع.
+const U_OLD = "function __U(d){try{var c=__UC[d];if(c)return c;";
+const U_NEW = "function __U(d){try{var c=__UC[d];if(c)return c;if(d.length<160000)return d;";
+if (html.split(U_OLD).length === 2) { html = html.replace(U_OLD, () => U_NEW); console.log('OK: fast __U for small images'); }
+else console.warn('WARN: تعذّر تفعيل تسريع __U (النص تغيّر في index.html)');
+
+// (ب) شاشة البداية: نخفيها لحظة __rsReveal (جاهزية الواجهة) بدل مؤقت ثابت
+// ملاحظة: setTimeout(window.__rsReveal,6000) يلتقط الدالة الأصلية وقت التنفيذ، فلازم نعدّل تعريفها نفسه (التغليف من برّه ما يكفي).
+const RV_OLD = 'window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot")};';
+const RV_NEW = 'window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot");try{if(window.__rsSplashHide)window.__rsSplashHide()}catch(e){}};';
+if (html.split(RV_OLD).length === 2) { html = html.replace(RV_OLD, () => RV_NEW); console.log('OK: splash hides on __rsReveal'); }
+else console.warn('WARN: تعذّر تفعيل إخفاء الشاشة من __rsReveal (النص تغيّر في index.html)');
+
 /* ---------- 4ب) تسريع التعديل: مصغّرات المشاهد ---------- */
 // الأصل: بعد كل تعديل بيعيد رسم مصغّرات كل المشاهد مرة واحدة (بطيء على المشاريع الكبيرة).
 // الجديد: يرسم المتغيّر فقط (باقي المصغّرات من ذاكرة مؤقتة) وعلى دفعات صغيرة حتى ما يهنّجش الشاشة.
-const THUMB_NEW = `var _thC={},_thRun=0;
+const THUMB_NEW = `var _thC={},_thRun=0,_thT=0;
 function thReady(sc){
   var r='',i,it,v;
   for(i=0;i<sc.items.length;i++){
@@ -134,7 +157,7 @@ function thReady(sc){
   return r;
 }
 function thSig(sc){return JSON.stringify(sc,function(k,v){return k.charAt(0)==='_'?undefined:v;})+'|'+W+'x'+H+'|'+thReady(sc);}
-if(document.fonts&&document.fonts.addEventListener){document.fonts.addEventListener('loadingdone',function(){_thC={};});}
+if(document.fonts&&document.fonts.addEventListener){document.fonts.addEventListener('loadingdone',function(){clearTimeout(_thT);_thT=setTimeout(function(){_thC={};},1000);});}
 (function(){var sb=document.getElementById('scenesBar');if(sb&&!sb._rsTh){sb._rsTh=1;sb.addEventListener('scroll',function(){if(typeof schedThumbs==='function')schedThumbs();},{passive:true});}})();
 function drawScThumbs(){
   var run=++_thRun,live={},id;
@@ -241,33 +264,6 @@ if (blobs.length && html.includes(B_OLD) && !/getElementById\('rsblob_/.test(htm
   console.log('OK: library images moved to www/blobs (' + blobs.length + ' files)');
 } else console.warn('WARN: لم أنقل صور المكتبة (الشكل مختلف عن المتوقع) — تبقى داخل الصفحة');
 
-// (1هـ) مكتبة الشخصيات: كانت بتقرأ 62 صورة (XHR متزامن) وتفكّ base64 لكل واحدة (atob + حلقة بايتات) وقت الفتح، وتبني شبكتين من الأزرار فوراً.
-//      الجديد: (أ) خاصية s تُقرأ عند أول استخدام فقط (getter)، (ب) صور الشبكتين تتحمّل لما تظهر على الشاشة فعلاً (IntersectionObserver).
-//      شاشة الهيرو (rs-hero) تبقى كما هي لأنها تحتاج صوراً قليلة فور الفتح.
-const EGY_EAGER = /"s": __B\((\d+)\)/g;
-const GRID_IMG = "var im=document.createElement('img');im.src=__U(e.s);im.alt='';";
-const GRID_IMG_NEW = "var im=document.createElement('img');im.alt='';im.decoding='async';window.__rsLazyImg(im,e);";
-// المطابقة الأولى والثانية فقط (الشبكتان)؛ الثالثة هي الهيرو ونتركها
-const gridCount = html.split(GRID_IMG).length - 1;
-const eagerCount = (html.match(EGY_EAGER) || []).length;
-if (gridCount === 3 && eagerCount > 0) {
-  html = html.replace(EGY_EAGER, (m, n) => 'get "s"(){return __B(' + n + ')}');
-  let k = 0;
-  html = html.split(GRID_IMG).reduce((acc, part, i) => i === 0 ? part : acc + (i <= 2 ? GRID_IMG_NEW : GRID_IMG) + part, '');
-  const LAZY_JS = `<script id="rs-lazyimg">
-(function(){var io=null;
-window.__rsLazyImg=function(im,e){
-  var go=function(){try{im.src=__U(e.s);}catch(x){}};
-  if(!window.IntersectionObserver){go();return;}
-  if(!io)io=new IntersectionObserver(function(es){es.forEach(function(x){if(!x.isIntersecting)return;var t=x.target;io.unobserve(t);if(t._rsGo){var f=t._rsGo;t._rsGo=null;f();}});},{rootMargin:'300px'});
-  im._rsGo=go;io.observe(im);
-};})();
-</script>`;
-  // لازم يتعرّف قبل أي سكربت يستخدمه
-  html = html.replace('</head>', () => LAZY_JS + '\n</head>');
-  console.log('OK: lazy library images (' + eagerCount + ' blobs now read on demand)');
-} else console.warn('WARN: لم أفعّل تأجيل صور المكتبة (الشكل مختلف: شبكات=' + gridCount + '، blobs=' + eagerCount + ') — تبقى تتحمّل عند الفتح');
-
 // (2) تمويه الخلفية (backdrop-filter) تقيل على الـ WebView وبيبطّئ الرسم فوق السبورة: نلغيه ونعوّضه بخلفية أغمق شوية.
 // (3) لمس أسرع وأنعم: بدون وميض الضغط، وبدون سحب-للتحديث أو ارتداد الصفحة.
 const PERF_CSS = `<style id="rs-perf">
@@ -288,14 +284,14 @@ fs.writeFileSync(path.join(OUT, 'index.html'), html);
 console.log('www ready, font faces:', (css.match(/@font-face/g) || []).length);
 
 /* ---------- 5) شاشة البداية ---------- */
-// (أ) إعداد إضافة SplashScreen في capacitor.config.json (يختفي تلقائياً بحد أقصى 3 ثواني، وأسرع لو التطبيق جاهز)
+// (أ) إعداد إضافة SplashScreen في capacitor.config.json (حد أقصى 8 ثواني احتياطياً؛ الإخفاء الفعلي من __rsReveal عبر android-extras)
 try {
   const CF = 'capacitor.config.json';
   if (fs.existsSync(CF)) {
     const cfg = JSON.parse(fs.readFileSync(CF, 'utf8'));
     cfg.plugins = cfg.plugins || {};
     cfg.plugins.SplashScreen = Object.assign(
-      { launchShowDuration: 3000, launchAutoHide: true, backgroundColor: '#ffffff', showSpinner: false },
+      { launchShowDuration: 8000, launchAutoHide: true, backgroundColor: '#ffffff', showSpinner: false },
       cfg.plugins.SplashScreen || {});
     fs.writeFileSync(CF, JSON.stringify(cfg, null, 2));
     console.log('OK: splash screen config');
