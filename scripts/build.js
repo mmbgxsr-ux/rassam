@@ -139,7 +139,7 @@ else console.warn('WARN: تعذّر تفعيل تسريع __U (النص تغيّ
 // (ب) شاشة البداية: نخفيها لحظة __rsReveal (جاهزية الواجهة) بدل مؤقت ثابت
 // ملاحظة: setTimeout(window.__rsReveal,6000) يلتقط الدالة الأصلية وقت التنفيذ، فلازم نعدّل تعريفها نفسه (التغليف من برّه ما يكفي).
 const RV_OLD = 'window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot")};';
-const RV_NEW = 'window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot");try{if(window.__rsSplashHide)window.__rsSplashHide()}catch(e){}};';
+const RV_NEW = 'window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot");try{performance.mark(\'rs-reveal\')}catch(e){}try{if(window.__rsSplashHide)window.__rsSplashHide()}catch(e){}};';
 if (html.split(RV_OLD).length === 2) { html = html.replace(RV_OLD, () => RV_NEW); console.log('OK: splash hides on __rsReveal'); }
 else console.warn('WARN: تعذّر تفعيل إخفاء الشاشة من __rsReveal (النص تغيّر في index.html)');
 
@@ -279,6 +279,25 @@ button,label,summary,[role=button]{touch-action:manipulation}
 `;
 html = html.replace('</head>', () => PERF_CSS + '</head>');
 console.log('OK: perf css');
+
+/* ---------- 4هـ) علامات قياس الفتح (performance.mark): تظهر في «نسخ تقرير المشاكل» عشان نعرف أين يروح وقت الفتح ---------- */
+/*MARKS-BEGIN*/
+const MARKS = [
+  ["var NS='http://www.w3.org/2000/svg', W=1280, H=720, GAP=0.35", "var __pm=function(n){try{performance.mark(n)}catch(e){}};__pm('rs-main-start');var NS='http://www.w3.org/2000/svg', W=1280, H=720, GAP=0.35"],
+  ["navigator.serviceWorker.register('sw.js').catch(function(){});\n  }catch(e){}\n})();\n\n})();", "navigator.serviceWorker.register('sw.js').catch(function(){});\n  }catch(e){}\n})();\n\n__pm('rs-main-end');\n})();"],
+  ["function recoverPick(){\n", "function recoverPick(){__pm('rs-restore-start');\n"],
+  ["return Promise.race([rd,tmo]).then(function(sn){\n", "return Promise.race([rd,tmo]).then(function(sn){__pm('rs-idb-read');\n"],
+  ["    return info;\n  });\n}\nfunction asFlush(){", "    __pm('rs-parse-done');return info;\n  });\n}\nfunction asFlush(){"],
+  ["function boot(info){\n  scenes=load(info&&info.raw);\n", "function boot(info){__pm('rs-boot-start');\n  scenes=load(info&&info.raw);__pm('rs-load-done');\n"],
+  ["  buildAll();\n  t=cs()._s+cs()._il;", "  buildAll();__pm('rs-build-done');\n  t=cs()._s+cs()._il;"],
+  ["setBtn();render();\n  histInit();", "setBtn();render();__pm('rs-render-done');\n  histInit();"],
+  ["if(__later)return;__later=true;\n", "if(__later)return;__later=true;__pm('rs-later-start');\n"],
+  ["    });\n  }\n  requestAnimationFrame(function(){setTimeout(__runLater,0);});", "    });__pm('rs-later-done');\n  }\n  requestAnimationFrame(function(){setTimeout(__runLater,0);});"],
+];
+const badMarks = MARKS.filter(([o]) => html.split(o).length !== 2);
+if (badMarks.length) console.warn('WARN: علامات القياس: تخطّيتها كلها (غير مؤثر). نص غير مطابق في index.html:', badMarks.map(b => b[0].slice(0, 30).replace(/\n/g, ' ')).join(' | '));
+else { for (const [o, n] of MARKS) html = html.replace(o, () => n); console.log('OK: boot perf marks'); }
+/*MARKS-END*/
 
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
 console.log('www ready, font faces:', (css.match(/@font-face/g) || []).length);

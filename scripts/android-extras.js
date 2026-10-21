@@ -192,6 +192,11 @@
     L.push('perf: lowPowerMode ' + (lp ? lp.checked : '?') + ' | cores ' + (navigator.hardwareConcurrency || '?') +
       ' | ram ' + (navigator.deviceMemory || '?') + 'GB');
     try { var m = performance.memory; if (m) L.push('perf: jsHeap ' + Math.round(m.usedJSHeapSize / 1048576) + ' MB'); } catch (e) {}
+    try {
+      var mk = performance.getEntriesByType('mark').filter(function (m) { return m.name.indexOf('rs-') === 0; })
+        .map(function (m) { return m.name.slice(3) + ' ' + Math.round(m.startTime); });
+      L.push('perf: marks (ms) ' + (mk.join(' | ') || 'none'));
+    } catch (e) {}
     L.push('perf: longTasks (ms@start) ' + (P.longtasks.map(function (x) { return x[0] + '@' + x[1]; }).join(', ') || 'none'));
     L.push('perf: slowEvents (ms) ' + (P.events.map(function (x) { return x[0] + ' ' + x[1]; }).join(' | ') || 'none'));
     L.push('perf: slowFrames (ms,blocking,script) ' + (P.loaf.map(function (x) { return x[0] + ',' + x[1] + ',' + x[2]; }).join(' | ') || 'none'));
