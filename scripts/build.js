@@ -100,5 +100,90 @@ if (fs.existsSync(MF)) {
   console.warn('WARN: AndroidManifest.xml غير موجود وقت البناء. تسجيل الصوت لن يعمل إلا بعد إضافة إذن RECORD_AUDIO يدوياً.');
 }
 
+/* ---------- 4) تسريع الفتح: ما نشغّل محرك الصوت إلا لو فيه مقاطع محفوظة ---------- */
+const AC_RE = /var a=ensureAC\(\);\s*if\(!a\|\|!clips\.length\)return;/;
+if (AC_RE.test(html)) { html = html.replace(AC_RE, 'if(!clips.length)return;var a=ensureAC();if(!a)return;'); console.log('OK: lazy audio engine'); }
+else console.warn('WARN: لم أجد سطر تشغيل الصوت عند الفتح (غير مؤثر)');
+
+/* ---------- 4ب) تسريع التعديل: مصغّرات المشاهد ---------- */
+// الأصل: بعد كل تعديل بيعيد رسم مصغّرات كل المشاهد مرة واحدة (بطيء على المشاريع الكبيرة).
+// الجديد: يرسم المتغيّر فقط (باقي المصغّرات من ذاكرة مؤقتة) وعلى دفعات صغيرة حتى ما يهنّجش الشاشة.
+const THUMB_NEW = `var _thC={},_thRun=0;
+function thReady(sc){
+  var r='',i,it,v;
+  for(i=0;i<sc.items.length;i++){
+    it=sc.items[i];
+    if(it.kind==='image'){v=VID[it.id];r+=((it._src&&it._hlen&&it._sd)?1:0)+((it._cci&&it._cci.complete&&it._cci.naturalWidth)?1:0)+((it._cli&&it._cli.complete&&it._cli.naturalWidth)?1:0)+((v&&v.v&&v.v.readyState>=2)?1:0);}
+    else if(it.kind==='chart'||it.kind==='svg'){r+=it._parts?1:0;}
+  }
+  return r;
+}
+function thSig(sc){return JSON.stringify(sc,function(k,v){return k.charAt(0)==='_'?undefined:v;})+'|'+W+'x'+H+'|'+thReady(sc);}
+if(document.fonts&&document.fonts.addEventListener){document.fonts.addEventListener('loadingdone',function(){_thC={};});}
+function drawScThumbs(){
+  var run=++_thRun,live={},id;
+  scenes.forEach(function(sc){live[sc.id]=1;});
+  for(id in _thC){if(!live[id])delete _thC[id];}
+  var cvs=Array.prototype.slice.call(document.querySelectorAll('#scenesBar canvas.scth'));
+  cvs.sort(function(a,b){return (+(+b.dataset.k===cur))-(+(+a.dataset.k===cur));});
+  var i=0;
+  (function step(){
+    if(run!==_thRun||playing)return;
+    var t0=performance.now();
+    while(i<cvs.length){
+      var cv=cvs[i++],sc=scenes[+cv.dataset.k];
+      if(!sc||!cv.isConnected)continue;
+      var g=cv.getContext('2d');if(!g)continue;
+      var sig=thSig(sc),c=_thC[sc.id];
+      if(c&&c.sig===sig){g.clearRect(0,0,cv.width,cv.height);g.drawImage(c.cv,0,0);}
+      else{
+        g.save();
+        try{g.setTransform(cv.width/W,0,0,cv.height/H,0,0);g.clearRect(0,0,W,H);cvScene(g,sc,0,camAt(sc,sc._len),'full');}catch(e){}
+        g.restore();
+        var cc=document.createElement('canvas');cc.width=cv.width;cc.height=cv.height;cc.getContext('2d').drawImage(cv,0,0);
+        _thC[sc.id]={sig:sig,cv:cc};
+      }
+      if(performance.now()-t0>10)break;
+    }
+    if(i<cvs.length)setTimeout(step,0);
+  })();
+}
+`;
+const THUMB_RE = /function drawScThumbs\(\)\{\s*Array\.prototype\.forEach\.call\(document\.querySelectorAll\('#scenesBar canvas\.scth'\),function\(cv\)\{[\s\S]*?\n\}\n/;
+const tm = html.match(THUMB_RE);
+if (tm && tm[0].length < 800) { html = html.replace(THUMB_RE, () => THUMB_NEW); console.log('OK: fast scene thumbnails'); }
+else console.warn('WARN: لم أجد دالة مصغّرات المشاهد (التسريع غير مفعّل)');
+
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
 console.log('www ready, font faces:', (css.match(/@font-face/g) || []).length);
+
+/* ---------- 5) شاشة البداية ---------- */
+// (أ) إعداد إضافة SplashScreen في capacitor.config.json (يختفي تلقائياً بحد أقصى 3 ثواني، وأسرع لو التطبيق جاهز)
+try {
+  const CF = 'capacitor.config.json';
+  if (fs.existsSync(CF)) {
+    const cfg = JSON.parse(fs.readFileSync(CF, 'utf8'));
+    cfg.plugins = cfg.plugins || {};
+    cfg.plugins.SplashScreen = Object.assign(
+      { launchShowDuration: 3000, launchAutoHide: true, backgroundColor: '#ffffff', showSpinner: false },
+      cfg.plugins.SplashScreen || {});
+    fs.writeFileSync(CF, JSON.stringify(cfg, null, 2));
+    console.log('OK: splash screen config');
+  } else console.warn('WARN: capacitor.config.json غير موجود، تخطّيت إعداد شاشة البداية');
+} catch (e) { console.warn('WARN: splash config:', e.message); }
+
+// (ب) صورة شاشة البداية من icon-only.png (لا توقف البناء لو فشلت)
+(async () => {
+  try {
+    if (!fs.existsSync('icon-only.png')) { console.warn('SKIP: icon-only.png غير موجود، لم أولّد صورة شاشة البداية'); return; }
+    const sharp = require('sharp');
+    fs.mkdirSync('assets', { recursive: true });
+    const S = 2732;
+    const logo = await sharp('icon-only.png').resize(900, 900, { fit: 'inside' }).png().toBuffer();
+    for (const [bg, out] of [['#ffffff', 'splash.png'], ['#14181f', 'splash-dark.png']]) {
+      await sharp({ create: { width: S, height: S, channels: 4, background: bg } })
+        .composite([{ input: logo, gravity: 'center' }]).png().toFile(path.join('assets', out));
+    }
+    console.log('OK: splash images');
+  } catch (e) { console.warn('SKIP: صورة شاشة البداية:', e.message); }
+})();
