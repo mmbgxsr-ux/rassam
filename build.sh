@@ -1,4 +1,4 @@
-set -e
+set -eo pipefail
 mkdir -p www out assets
 cp -f index.html www/index.html
 npm install --no-audit --no-fund --prefer-offline
@@ -6,7 +6,29 @@ npm install --no-audit --no-fund --prefer-offline
 
 # تجهيز www: الخطوط والمكتبات + زر الرجوع + تسجيل الصوت + إذن الميكروفون
 # (لازم بعد cap add عشان AndroidManifest.xml يكون موجود، وقبل cap sync)
-node scripts/build.js
+node scripts/build.js 2>&1 | tee build.log
+
+# فشل البناء لو أي استبدال مهم في index.html ما اتنفّذش (بدل ما تطلع نسخة ناقصة بدون ما تحس)
+# للتخطي مؤقتاً: شغّل الـ workflow مع ALLOW_WARN=1
+if grep -E "SKIP \(|SKIP: لم أجد|WARN: لم أجد مستمع زر الرجوع|WARN: تعذّر تفعيل|WARN: لم أنقل" build.log; then
+  if [ "$ALLOW_WARN" != "1" ]; then
+    echo "BUILD STOPPED: النصوص اللي فوق اتغيّرت في index.html. راجع build.js أو رجّع النص الأصلي."
+    exit 1
+  fi
+fi
+
+# تعطيل فحص التحديثات داخل التطبيق (كان بيقرأ index.html كله بعد 4 ثواني من الفتح وكل ساعة، ومالوش لازمة في الـ APK)
+node - <<'JS'
+const fs = require('fs');
+let h = fs.readFileSync('www/index.html', 'utf8');
+const a = 'function auto(){if(cfg.on&&';
+const b = 'setTimeout(function(){if(cfg.on)check(false);},4000);';
+if (h.includes(a) && h.includes(b)) {
+  h = h.replace(a, () => 'function auto(){if(false&&cfg.on&&').replace(b, () => '');
+  fs.writeFileSync('www/index.html', h);
+  console.log('OK: update check disabled');
+} else console.log('WARN: لم أجد كود فحص التحديثات (غير مؤثر)');
+JS
 
 # أيقونة التطبيق (لا توقف البناء إن فشلت)
 cp -f icon-only.png icon-foreground.png icon-background.png assets/ 2>/dev/null || true
@@ -184,16 +206,33 @@ touch "$GP"
 sed -i '/^org.gradle.jvmargs/d;/^org.gradle.parallel/d;/^org.gradle.caching/d;/^org.gradle.daemon/d' "$GP"
 printf '\norg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8\norg.gradle.parallel=true\norg.gradle.caching=true\norg.gradle.daemon=false\n' >> "$GP"
 
+# رقم إصدار تلقائي: كل تشغيل للـ workflow ياخد رقم أكبر من اللي قبله
+GR=android/app/build.gradle
+VC=${GITHUB_RUN_NUMBER:-1}
+sed -i -E "s/versionCode [0-9]+/versionCode $VC/; s/versionName \"[^\"]*\"/versionName \"1.$VC\"/" "$GR"
+grep -nE "versionCode|versionName" "$GR" || true
+
 cd android
 chmod +x gradlew
 if [ -n "$KS_B64" ] && [ -n "$KS_PASS" ]; then
-  ./gradlew assembleRelease
+  ./gradlew assembleRelease bundleRelease
   BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
   APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
   echo "$KS_B64" | base64 -d > ../release.p12
   "$BT/zipalign" -p 4 "$APK" ../aligned.apk
   "$BT/apksigner" sign --ks ../release.p12 --ks-pass env:KS_PASS --key-pass env:KS_PASS --out ../out/rassam.apk ../aligned.apk
   echo "SIGNED with stable key"
+
+  # ملف AAB لـ Google Play (موقّع بنفس المفتاح)
+  AAB=$(ls app/build/outputs/bundle/release/*.aab 2>/dev/null | head -1 || true)
+  ALIAS=$(keytool -list -keystore ../release.p12 -storetype PKCS12 -storepass "$KS_PASS" 2>/dev/null | grep -m1 -i "PrivateKeyEntry" | cut -d, -f1 || true)
+  if [ -n "$AAB" ] && [ -n "$ALIAS" ]; then
+    cp "$AAB" ../out/rassam.aab
+    jarsigner -keystore ../release.p12 -storetype PKCS12 -storepass:env KS_PASS ../out/rassam.aab "$ALIAS"
+    echo "AAB signed"
+  else
+    echo "WARNING: AAB step skipped"
+  fi
 else
   ./gradlew assembleDebug
   cp app/build/outputs/apk/debug/app-debug.apk ../out/rassam.apk
