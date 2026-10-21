@@ -216,7 +216,7 @@
     }, 250);
   });
 
-  // شاشة البداية: تفضل ظاهرة لحد ما التطبيق يرسم أول شاشة ثم تختفي
+  // شاشة البداية: تفضل ظاهرة لحد ما __rsReveal يكشف الواجهة ثم تختفي
   var C = window.Capacitor;
   if (!C || !C.isNativePlatform || !C.isNativePlatform()) return;
   var SS = C.Plugins && C.Plugins.SplashScreen;
@@ -227,9 +227,11 @@
     P.splashAt = Math.round(performance.now());
     try { SS.hide({ fadeOutDuration: 200 }); } catch (e) {}
   }
-  function ready() { requestAnimationFrame(function () { requestAnimationFrame(hide); }); }
-  if (document.readyState === 'complete') ready(); else window.addEventListener('load', ready);
-  setTimeout(hide, 2500); // احتياطي
+  // build.js يعدّل __rsReveal ليستدعي هذه الدالة لحظة جاهزية الواجهة
+  window.__rsSplashHide = function () { requestAnimationFrame(function () { requestAnimationFrame(hide); }); };
+  // لو الواجهة ظهرت أصلاً قبل تحميل هذه الإضافة
+  if (!document.documentElement.classList.contains('rs-boot')) window.__rsSplashHide();
+  setTimeout(hide, 7000); // احتياطي (بعد مؤقت __rsReveal عند 6 ثواني وقبل حد الإضافة 8 ثواني)
 })();
 
 
