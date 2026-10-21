@@ -4487,7 +4487,7 @@ function myRender(){
   myLib.forEach(function(e){
     var w=document.createElement('div');w.className='myit';
     var b=document.createElement('button');b.type='button';b.title=e.n;b.style.width='100%';
-    var im=document.createElement('img');im.alt='';im.src=e.t==='svg'?mySvgUrl(e.d):e.d;
+    var im=document.createElement('img');im.alt='';im.loading='lazy';im.decoding='async';im.src=e.t==='svg'?mySvgUrl(e.d):(e.th||e.d);
     var sp=document.createElement('span');sp.textContent=e.n;
     b.appendChild(im);b.appendChild(sp);
     b.addEventListener('click',function(){myUse(e);});
@@ -4511,24 +4511,53 @@ function myUse(e){
   im.onerror=function(){myMsg('تعذّر فتح هذه الصورة.');};
   im.src=e.d;
 }
+/* نوع الملف: بعض مدراء الملفات على أندرويد يرجّعون type فاضي، فنستنتجه من الامتداد */
+function myMime(f){
+  var t=(f.type||'').toLowerCase();
+  if(/^image\//.test(t))return t;
+  var m=(f.name||'').toLowerCase().match(/\.([a-z0-9]+)$/);
+  var map={png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',jpe:'image/jpeg',webp:'image/webp',gif:'image/gif',bmp:'image/bmp',avif:'image/avif',heic:'image/heic',heif:'image/heif',svg:'image/svg+xml'};
+  return (m&&map[m[1]])||t;
+}
 function myReadImage(f){
   return new Promise(function(res,rej){
-    var fr=new FileReader();
-    fr.onerror=function(){rej('read');};
-    fr.onload=function(){
-      var im=new Image();
-      im.onerror=function(){rej('img');};
-      im.onload=function(){
-        var m=Math.max(im.naturalWidth,im.naturalHeight),sc=Math.min(1,1600/m);
-        if(sc===1&&f.size<600*1024){res(fr.result);return;}
-        var c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*sc));c.height=Math.max(1,Math.round(im.naturalHeight*sc));
+    var url=URL.createObjectURL(f),im=new Image();
+    function done(){try{URL.revokeObjectURL(url);}catch(e){}}
+    im.onerror=function(){done();rej('img');};
+    im.onload=function(){
+      try{
+        var w0=im.naturalWidth,h0=im.naturalHeight;
+        if(!w0||!h0){done();rej('img');return;}
+        var m=Math.max(w0,h0),sc=Math.min(1,1600/m);
+        var mime=myMime(f),png=/png|gif|webp/.test(mime);
+        if(sc===1&&f.size<600*1024&&/^image\/(png|jpeg|webp|gif)$/.test(mime)){
+          var fr=new FileReader();
+          fr.onerror=function(){done();rej('read');};
+          fr.onload=function(){done();res(fr.result);};
+          fr.readAsDataURL(f);return;
+        }
+        var c=document.createElement('canvas');c.width=Math.max(1,Math.round(w0*sc));c.height=Math.max(1,Math.round(h0*sc));
         c.getContext('2d').drawImage(im,0,0,c.width,c.height);
-        var png=/png|gif|webp/.test(f.type);
+        done();
         res(png?c.toDataURL('image/png'):c.toDataURL('image/jpeg',0.88));
-      };
-      im.src=fr.result;
+      }catch(e){done();rej('img');}
     };
-    fr.readAsDataURL(f);
+    im.src=url;
+  });
+}
+/* مصغّرة صغيرة (160px) لكل صورة في مكتبتي: الشبكة تعرضها بدل الصورة الكاملة فتخفّ الذاكرة والفتح */
+function myThumb(d){
+  return new Promise(function(res){
+    var im=new Image();
+    im.onerror=function(){res(null);};
+    im.onload=function(){try{
+      var m=Math.max(im.naturalWidth,im.naturalHeight);if(!m){res(null);return;}
+      var sc=Math.min(1,160/m),c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(im.naturalWidth*sc));c.height=Math.max(1,Math.round(im.naturalHeight*sc));
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      res(/^data:image\/(png|gif|webp)/.test(d)?c.toDataURL('image/png'):c.toDataURL('image/jpeg',0.75));
+    }catch(e){res(null);}};
+    im.src=d;
   });
 }
 function myReadSvg(f){
@@ -4547,26 +4576,58 @@ $('#myFiles').addEventListener('change',function(ev){
   var files=Array.prototype.slice.call(ev.target.files||[]);ev.target.value='';
   if(!files.length)return;
   myMsg('جارٍ الحفظ...');
-  var ok=0,bad=0,chain=Promise.resolve();
+  var ok=0,bad=0,why=[],chain=Promise.resolve();
+  function fail(f,r){bad++;if(why.length<3)why.push('«'+String(f.name||'ملف').slice(0,22)+'»: '+r);}
+  var cnt=0,tot=files.length;
   files.forEach(function(f){
     chain=chain.then(function(){
-      var isSvg=/svg/i.test(f.type)||/\.svg$/i.test(f.name);
-      if(f.size>(isSvg?2:10)*1024*1024){bad++;return;}
-      if(!isSvg&&!/^image\//.test(f.type)){bad++;return;}
+      myMsg('جارٍ الحفظ '+(++cnt)+'/'+tot+'...');
+      return new Promise(function(r){setTimeout(r,30);}); /* نسيب الشاشة ترسم رسالة التقدّم */
+    }).then(function(){
+      var mt=myMime(f),isSvg=/svg/i.test(mt)||/\.svg$/i.test(f.name||'');
+      if(f.size>(isSvg?2:30)*1024*1024){fail(f,'حجمه كبير (الحد '+(isSvg?'2':'30')+' ميجا)');return;}
+      if(!f.size){fail(f,'الملف فارغ');return;}
+      if(!isSvg&&mt&&!/^image\//.test(mt)){fail(f,'ليس صورة ('+mt+')');return;}
       return (isSvg?myReadSvg(f):myReadImage(f)).then(function(d){
-        myLib.unshift({id:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:isSvg?'svg':'img',n:f.name.replace(/\.[^.]+$/,'').slice(0,30)||'بدون اسم',d:d});
-        ok++;
-      },function(){bad++;});
+        return (isSvg?Promise.resolve(null):myThumb(d)).then(function(th){
+          var ent={id:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:isSvg?'svg':'img',n:(f.name||'').replace(/\.[^.]+$/,'').slice(0,30)||'بدون اسم',d:d};
+          if(th)ent.th=th;
+          myLib.unshift(ent);
+          ok++;
+        });
+      },function(e){
+        fail(f,e==='svg'?'ملف SVG غير صالح':e==='read'?'تعذّرت قراءته من الجهاز':/heic|heif|avif/.test(mt)?'صيغة '+mt.replace('image/','')+' غير مدعومة هنا، حوّلها إلى JPG أو PNG':'تعذّر فتح الصورة (تالفة أو صيغة غير مدعومة)');
+      });
     });
   });
   chain.then(function(){
-    return mySave();
-  }).then(function(){
+    if(!ok)return false;
+    return mySave().then(function(){return idbGet(MYKEY);}).then(function(v){return Array.isArray(v)&&v.length>=myLib.length;});
+  }).then(function(saved){
     myRender();
-    myMsg('تم حفظ '+ok+' في مكتبتي'+(bad?' وتعذّر '+bad+' (ملف غير صالح أو كبير).':'.')+' اضغط أي عنصر لإضافته للمشهد.');
+    var m='';
+    if(ok&&saved===false)m='⚠ ظهرت الصور لكنها لم تُحفظ على الجهاز (المساحة ممتلئة؟) وستختفي عند الإغلاق. ';
+    else m='تم حفظ '+ok+' في مكتبتي'+(bad?' وتعذّر '+bad+'.':'.')+' ';
+    if(!ok&&bad)m='تعذّر حفظ '+bad+'. ';
+    if(why.length)m+=why.join(' | ')+' ';
+    if(ok)m+='اضغط أي عنصر لإضافته للمشهد.';
+    myMsg(m.trim());
   });
 });
-idbGet(MYKEY).then(function(v){if(Array.isArray(v)){myLib=v;myRender();}});
+idbGet(MYKEY).then(function(v){if(Array.isArray(v)){myLib=v;myRender();myThumbFill();}});
+/* الصور القديمة في مكتبتي بلا مصغّرة: نولّدها في الخلفية واحدة واحدة بعد ما التطبيق يهدأ، ونحفظ مرة واحدة في الآخر */
+function myThumbFill(){
+  setTimeout(function(){
+    var todo=myLib.filter(function(e){return e.t==='img'&&!e.th&&e.d;}),n=0;
+    if(!todo.length)return;
+    (function next(){
+      var e=todo.shift();
+      if(!e){if(n){mySave();myRender();}return;}
+      if(playing||rec){setTimeout(function(){todo.unshift(e);next();},3000);return;}
+      myThumb(e.d).then(function(th){if(th){e.th=th;n++;}setTimeout(next,250);});
+    })();
+  },10000);
+}
 function initImages(){
   var jobs=[];
   scenes.forEach(function(sc){
