@@ -4,6 +4,10 @@ cp -f index.html www/index.html
 npm install
 [ -d android ] || npx cap add android
 
+# تجهيز www: الخطوط والمكتبات + زر الرجوع + تسجيل الصوت + إذن الميكروفون
+# (لازم بعد cap add عشان AndroidManifest.xml يكون موجود، وقبل cap sync)
+node scripts/build.js
+
 # أيقونة التطبيق (لا توقف البناء إن فشلت)
 cp -f icon-only.png icon-foreground.png icon-background.png assets/ 2>/dev/null || true
 npx --yes @capacitor/assets generate --android || echo "icon step skipped"
