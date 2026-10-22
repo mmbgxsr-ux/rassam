@@ -144,6 +144,11 @@
       try { document.exitFullscreen(); } catch (e) {}
       return true;
     }
+    var P = window.__rsProj;
+    if (P) {
+      if (P.back()) return true; // من شاشة المشاريع إلى المحرر
+      if (P.booted() && !P.visible()) { P.show(); return true; } // من المحرر إلى شاشة المشاريع
+    }
     return false;
   }
 
@@ -235,7 +240,7 @@
   // build.js يعدّل __rsReveal ليستدعي هذه الدالة لحظة جاهزية الواجهة
   window.__rsSplashHide = function () { requestAnimationFrame(function () { requestAnimationFrame(hide); }); };
   // لو الواجهة ظهرت أصلاً قبل تحميل هذه الإضافة
-  if (!document.documentElement.classList.contains('rs-boot')) window.__rsSplashHide();
+  if (!document.documentElement.classList.contains('rs-boot') || window.__rsHomeShown) window.__rsSplashHide();
   setTimeout(hide, 7000); // احتياطي (بعد مؤقت __rsReveal عند 6 ثواني وقبل حد الإضافة 8 ثواني)
 })();
 
