@@ -139,7 +139,7 @@ else console.warn('WARN: تعذّر تفعيل تسريع __U (النص تغيّ
 // (ب) شاشة البداية: نخفيها لحظة __rsReveal (جاهزية الواجهة) بدل مؤقت ثابت
 // ملاحظة: setTimeout(window.__rsReveal,6000) يلتقط الدالة الأصلية وقت التنفيذ، فلازم نعدّل تعريفها نفسه (التغليف من برّه ما يكفي).
 const RV_OLD = 'window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot")};';
-const RV_NEW = 'window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot");try{performance.mark(\'rs-reveal\')}catch(e){}try{if(window.__rsSplashHide)window.__rsSplashHide()}catch(e){}};';
+const RV_NEW = 'window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot");try{performance.mark(\'rs-reveal\')}catch(e){}try{if(window.__rsSplashHide)window.__rsSplashHide()}catch(e){}try{if(window.__rsOnReveal)window.__rsOnReveal()}catch(e){}};';
 if (html.split(RV_OLD).length === 2) { html = html.replace(RV_OLD, () => RV_NEW); console.log('OK: splash hides on __rsReveal'); }
 else console.warn('WARN: تعذّر تفعيل إخفاء الشاشة من __rsReveal (النص تغيّر في index.html)');
 
@@ -292,12 +292,41 @@ const MARKS = [
   ["  buildAll();\n  t=cs()._s+cs()._il;", "  buildAll();__pm('rs-build-done');\n  t=cs()._s+cs()._il;"],
   ["setBtn();render();\n  histInit();", "setBtn();render();__pm('rs-render-done');\n  histInit();"],
   ["if(__later)return;__later=true;\n", "if(__later)return;__later=true;__pm('rs-later-start');\n"],
-  ["    });\n  }\n  requestAnimationFrame(function(){setTimeout(__runLater,0);});", "    });__pm('rs-later-done');\n  }\n  requestAnimationFrame(function(){setTimeout(__runLater,0);});"],
+  ["    });\n  }\n  requestAnimationFrame(function(){setTimeout(__runLater,0);});", "    });__pm('rs-later-done');try{if(window.__rsReveal)window.__rsReveal()}catch(e){}\n  }\n  requestAnimationFrame(function(){setTimeout(__runLater,0);});"],
 ];
 const badMarks = MARKS.filter(([o]) => html.split(o).length !== 2);
 if (badMarks.length) console.warn('WARN: علامات القياس: تخطّيتها كلها (غير مؤثر). نص غير مطابق في index.html:', badMarks.map(b => b[0].slice(0, 30).replace(/\n/g, ' ')).join(' | '));
 else { for (const [o, n] of MARKS) html = html.replace(o, () => n); console.log('OK: boot perf marks'); }
 /*MARKS-END*/
+
+/* ---------- 4و) شاشة المشاريع: كل مشروع بمفتاح حفظ وقاعدة بيانات مستقلة ---------- */
+// الكود الرئيسي يقرأ window.__rsKey / window.__rsDb (يضبطهما projects.js)، والمشروع القديم يبقى بأسمائه الأصلية.
+const PJ = [
+  ["KEY='rassam-sabbura-v2', OLD='rassam-sabbura-v1';", "KEY=(window.__rsKey||'rassam-sabbura-v2'), OLD='rassam-sabbura-v1';"],
+  ["function idb(){\n  return new Promise(function(res,rej){\n    try{\n      var r=indexedDB.open('rassam-audio',1);",
+   "function idb(g){\n  return new Promise(function(res,rej){\n    try{\n      var r=indexedDB.open(g?'rassam-audio':(window.__rsDb||'rassam-audio'),1);"],
+  ["function idbPut(k,v){\n  return idb().then(", "function idbPut(k,v){\n  return idb(k===MYKEY||k===SLIB_KEY).then("],
+  ["function idbGet(k){\n  return idb().then(", "function idbGet(k){\n  return idb(k===MYKEY||k===SLIB_KEY).then("],
+  ["function asFlush(){if(!asLive)return;var s=stateSig();saveLS(s);saveDB(s);beat();}",
+   "function asFlush(){if(!asLive)return;var s=stateSig();saveLS(s);saveDB(s);beat();}\nwindow.__rsFlush=function(){try{asFlush();}catch(e){}};"],
+  ["recoverPick().then(boot,function(){boot(null);});",
+   "(window.__rsGate?window.__rsGate():Promise.resolve()).then(function(){if(window.__rsKey)KEY=window.__rsKey;return recoverPick();}).then(boot,function(){boot(null);});"],
+];
+// idbDel: يتبع نفس قاعدة المكتبات المشتركة (نبحث عن رأس الدالة بدل نص ثابت لأن جسمها أطول)
+const DEL_RE = /function idbDel\(k\)\{\s*return idb\(\)\.then\(/;
+const pjBad = PJ.filter(([o]) => html.split(o).length !== 2).map(p => p[0].slice(0, 40).replace(/\n/g, ' '));
+if (!DEL_RE.test(html)) pjBad.push('idbDel');
+const pjMatch = /<\/head>\s*<body[^>]*>/.exec(html);
+if (!pjMatch) pjBad.push('<body>');
+if (pjBad.length) console.warn('WARN: تعذّر تفعيل شاشة المشاريع (نص غير مطابق في index.html):', pjBad.join(' | '));
+else {
+  for (const [o, n] of PJ) html = html.replace(o, () => n);
+  html = html.replace(DEL_RE, () => 'function idbDel(k){\n  return idb(k===MYKEY||k===SLIB_KEY).then(');
+  const pjCode = fs.readFileSync(path.join(__dirname, 'projects.js'), 'utf8');
+  const bi2 = html.indexOf(pjMatch[0]) + pjMatch[0].length;
+  html = html.slice(0, bi2) + '<script id="rs-projects">\n' + pjCode + '\n</script>' + html.slice(bi2);
+  console.log('OK: projects screen');
+}
 
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
 console.log('www ready, font faces:', (css.match(/@font-face/g) || []).length);
