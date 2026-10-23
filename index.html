@@ -20,7 +20,8 @@ document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&
 var h=a.getAttribute('href')||'';if(!/^(blob|data):/.test(h))return;e.preventDefault();e.stopPropagation();
 var n=(a.getAttribute('download')||'file').replace(/[\\\/:*?"<>|]+/g,'_');
 save(h,n).catch(function(x){if(x&&/cancel/i.test(String(x.message||x)))return;alert('تعذّر حفظ الملف: '+(x&&x.message||x))})},true)})();
-</script><style id="rs-perf-contain">.tl-in,.tb,.scb,.trb,.ab{contain:layout style}</style></head><body>
+</script><style id="rs-perf-contain">.tl-in,.tb,.scb,.trb,.ab{contain:layout style}</style><style id="rs-hide-plan">/* إخفاء خطة التطوير مع إبقاء صندوق التحديث التلقائي */#plan>:not(#updBox){display:none!important}#plan{margin-top:0}</style>
+</head><body>
 <svg id="rs-icons" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-add" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol><symbol id="i-props" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol><symbol id="i-scene" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M16 4v16M3 9h5M3 15h5M16 9h5M16 15h5"/></symbol><symbol id="i-audio" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></symbol><symbol id="i-tpl" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></symbol><symbol id="i-ws" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol><symbol id="i-qz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/></symbol><symbol id="i-ta" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></symbol><symbol id="i-tg" viewBox="0 0 24 24"><path d="M3 12V4h8l9 9-8 8z"/><path d="M7.5 8h.01"/></symbol><symbol id="i-ai" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></symbol><symbol id="i-brand" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></symbol><symbol id="i-assets" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol><symbol id="i-present" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M10.5 8l4 2-4 2z"/></symbol><symbol id="i-focus" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol><symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l12 8-12 8z" fill="currentColor"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-undo" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 1 2.5 5.8M4 5v7h7"/></symbol></svg>
 
 <title>رسّام السبورة</title>
@@ -1058,68 +1059,7 @@ input[type=color]{width:100%;height:40px;padding:2px;border:1px solid var(--line
   <b id="tourT"></b><p id="tourP"></p>
   <div class="actions"><button class="btn" id="tourPrev" type="button">السابق</button><span class="note" id="tourN" style="margin:0"></span><button class="btn primary" id="tourNext" type="button">التالي</button><button class="btn" id="tourEnd" type="button">إنهاء</button></div>
 </div>
-<section class="roadmap" id="roadmap" aria-label="خريطة المراحل">
-    <h2>خريطة المراحل</h2>
-    <p style="margin:-4px 0 10px;color:var(--muted);font-size:13px">اضغط على أي مرحلة لتظهر أداتها.</p>
-    <ol class="road">
-      <li class="done" data-stages="1,28"><span class="no">1</span><b>الرسم باليد والحر</b><em class="st">مكتملة</em><p>سبورة ونصوص ورسومات وترتيب وتشغيل، مع رسم حر بالإصبع أو الماوس يعيد القلم رسمه بنفس الترتيب والحركة.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="1" title="اعرض أداة المرحلة 1">1</span><span class="stg" role="button" tabindex="0" data-s="28" title="اعرض أداة المرحلة 28">28</span></p></li>
-      <li class="done" data-stages="2,41,52"><span class="no">2</span><b>المشاهد والتايم لاين والكاميرا</b><em class="st">مكتملة</em><p>عدة مشاهد بكاميرا تتبع العناصر وانتقالات، ومحرر مرئي لضبط لحظة بدء كل عنصر بالسحب، وكاميرا ثلاثية الأبعاد خفيفة بعمق لكل عنصر.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="2" title="اعرض أداة المرحلة 2">2</span><span class="stg" role="button" tabindex="0" data-s="41" title="اعرض أداة المرحلة 41">41</span><span class="stg" role="button" tabindex="0" data-s="52" title="اعرض أداة المرحلة 52">52</span></p></li>
-      <li class="done" data-stages="3,27,30,48"><span class="no">3</span><b>الصوت</b><em class="st">مكتملة</em><p>تعليق صوتي وموسيقى وصوت القلم، وتحضير صوت آلي عبر KikiVoice، ومزامنة مدة المشاهد مع التعليق، وسبعة مؤثرات مولّدة داخل المتصفح.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="3" title="اعرض أداة المرحلة 3">3</span><span class="stg" role="button" tabindex="0" data-s="27" title="اعرض أداة المرحلة 27">27</span><span class="stg" role="button" tabindex="0" data-s="30" title="اعرض أداة المرحلة 30">30</span><span class="stg" role="button" tabindex="0" data-s="48" title="اعرض أداة المرحلة 48">48</span></p></li>
-      <li class="done" data-stages="4,12,18,47"><span class="no">4</span><b>التصدير</b><em class="st">مكتملة</em><p>تسجيل فيديو بالصوت بمقاسات 16:9 و9:16 و1:1 و4:5 وبجودتين، مع ملء الإطار العمودي بالمحتوى وتحويل WebM إلى MP4 داخل المتصفح.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="4" title="اعرض أداة المرحلة 4">4</span><span class="stg" role="button" tabindex="0" data-s="12" title="اعرض أداة المرحلة 12">12</span><span class="stg" role="button" tabindex="0" data-s="18" title="اعرض أداة المرحلة 18">18</span><span class="stg" role="button" tabindex="0" data-s="47" title="اعرض أداة المرحلة 47">47</span></p></li>
-      <li class="done" data-stages="5,9"><span class="no">5</span><b>الصور وملفات SVG</b><em class="st">مكتملة</em><p>ارفع صورة أو ملف SVG (أو الصق كوده) فيرسمه القلم خطاً بخط ثم يلوّنه.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="5" title="اعرض أداة المرحلة 5">5</span><span class="stg" role="button" tabindex="0" data-s="9" title="اعرض أداة المرحلة 9">9</span></p></li>
-      <li class="done" data-stages="6,25,31,32,33,34,35,67"><span class="no">6</span><b>مكتبات الرسومات والشخصيات</b><em class="st">مكتملة</em><p>مئات الرسومات الجاهزة (خطية وملوّنة وتعليمية وعامة) مع بحث وقائمة بآخر المستخدم، وشخصيات خطية، و38 شخصية تاريخية، و32 شخصاً معاصراً بخلفية شفافة.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="6" title="اعرض أداة المرحلة 6">6</span><span class="stg" role="button" tabindex="0" data-s="25" title="اعرض أداة المرحلة 25">25</span><span class="stg" role="button" tabindex="0" data-s="31" title="اعرض أداة المرحلة 31">31</span><span class="stg" role="button" tabindex="0" data-s="32" title="اعرض أداة المرحلة 32">32</span><span class="stg" role="button" tabindex="0" data-s="33" title="اعرض أداة المرحلة 33">33</span><span class="stg" role="button" tabindex="0" data-s="34" title="اعرض أداة المرحلة 34">34</span><span class="stg" role="button" tabindex="0" data-s="35" title="اعرض أداة المرحلة 35">35</span><span class="stg" role="button" tabindex="0" data-s="67" title="اعرض أداة المرحلة 67">67</span></p></li>
-      <li class="done" data-stages="7,36,37,38,53,63,64"><span class="no">7</span><b>المساعد الذكي وتحويل الفكرة إلى فيديو</b><em class="st">مكتملة</em><p>اكتب فكرة أو سكريبت فيبني المساعد المشاهد والرسومات والتعليق والمؤثرات بتخطيطات متنوعة، ويخرج الفيديو كاملاً. يعمل بـ Claude أو بخدمة مجانية أو نموذج محلي، ويختار الرسمة بالمعنى دون إنترنت.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="7" title="اعرض أداة المرحلة 7">7</span><span class="stg" role="button" tabindex="0" data-s="36" title="اعرض أداة المرحلة 36">36</span><span class="stg" role="button" tabindex="0" data-s="37" title="اعرض أداة المرحلة 37">37</span><span class="stg" role="button" tabindex="0" data-s="38" title="اعرض أداة المرحلة 38">38</span><span class="stg" role="button" tabindex="0" data-s="53" title="اعرض أداة المرحلة 53">53</span><span class="stg" role="button" tabindex="0" data-s="63" title="اعرض أداة المرحلة 63">63</span><span class="stg" role="button" tabindex="0" data-s="64" title="اعرض أداة المرحلة 64">64</span></p></li>
-      <li class="done" data-stages="8,23,45"><span class="no">8</span><b>الرسوم البيانية والعدّادات والجداول</b><em class="st">مكتملة</em><p>أعمدة ودائري وخطي بأرقامك، وعدّادات تصاعدية أو تنازلية ببادئة ولاحقة، وجداول ومقارنات بخلاياها وعلامات صح وخطأ، يرسمها القلم عنصراً بعد عنصر.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="8" title="اعرض أداة المرحلة 8">8</span><span class="stg" role="button" tabindex="0" data-s="23" title="اعرض أداة المرحلة 23">23</span><span class="stg" role="button" tabindex="0" data-s="45" title="اعرض أداة المرحلة 45">45</span></p></li>
-      <li class="done" data-stages="10,42"><span class="no">10</span><b>التراجع والحفظ التلقائي</b><em class="st">مكتملة</em><p>تراجع وإعادة لكل التعديلات، وحفظ تلقائي كل 3 ثوانٍ مع استرجاع بعد الإغلاق المفاجئ، ويستمر التحرير دون إنترنت.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="10" title="اعرض أداة المرحلة 10">10</span><span class="stg" role="button" tabindex="0" data-s="42" title="اعرض أداة المرحلة 42">42</span></p></li>
-      <li class="done" data-stages="11,44,54"><span class="no">11</span><b>القوالب</b><em class="st">مكتملة</em><p>قوالب جاهزة ومكتبة من 20 قالباً في خمسة تصنيفات تُدرج بنقرة، وقوالب ذكية تبني رسماً بيانياً متحركاً لكل عمود رقمي من ملف CSV.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="11" title="اعرض أداة المرحلة 11">11</span><span class="stg" role="button" tabindex="0" data-s="44" title="اعرض أداة المرحلة 44">44</span><span class="stg" role="button" tabindex="0" data-s="54" title="اعرض أداة المرحلة 54">54</span></p></li>
-      <li class="done" data-stages="13,14,61"><span class="no">13</span><b>الخرائط الذهنية والمخططات</b><em class="st">مكتملة</em><p>اكتب فكرتك وفروعها (وفروع فرعية) أو خطواتك فيرسمها القلم كخريطة ذهنية أو مخطط انسيابي، أو يبني Claude خريطة شجرية من الدرس تلقائياً.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="13" title="اعرض أداة المرحلة 13">13</span><span class="stg" role="button" tabindex="0" data-s="14" title="اعرض أداة المرحلة 14">14</span><span class="stg" role="button" tabindex="0" data-s="61" title="اعرض أداة المرحلة 61">61</span></p></li>
-      <li class="done" data-stages="15,16,51"><span class="no">15</span><b>التمييز والتحريك</b><em class="st">مكتملة</em><p>دائرة أو خط أو إطار أو سهم بالأحمر بعد العنصر، وظهور بتكبير أو تلاشٍ أو انزلاق، وحركة بعد الظهور ومسارات تحرك مستقيمة أو منحنية.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="15" title="اعرض أداة المرحلة 15">15</span><span class="stg" role="button" tabindex="0" data-s="16" title="اعرض أداة المرحلة 16">16</span><span class="stg" role="button" tabindex="0" data-s="51" title="اعرض أداة المرحلة 51">51</span></p></li>
-      <li class="done" data-stages="17,21,26,68"><span class="no">17</span><b>التجميع والتنسيق والفحص والإصلاح</b><em class="st">مكتملة</em><p>تجميع العناصر لتتحرك معاً، وترتيب تلقائي في صف أو عمود أو شبكة، وفحص قبل التصدير، وإصلاح التداخل بنقرة أو تلقائياً قبل التصدير.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="17" title="اعرض أداة المرحلة 17">17</span><span class="stg" role="button" tabindex="0" data-s="21" title="اعرض أداة المرحلة 21">21</span><span class="stg" role="button" tabindex="0" data-s="26" title="اعرض أداة المرحلة 26">26</span><span class="stg" role="button" tabindex="0" data-s="68" title="اعرض أداة المرحلة 68">68</span></p></li>
-      <li class="done" data-stages="19,56"><span class="no">19</span><b>التعليق والترجمة والإملاء</b><em class="st">مكتملة</em><p>نص تعليق لكل مشهد يظهر ترجمة على الفيديو ويُقرأ أثناء التشغيل، ومدقق إملائي عربي يعمل دون إنترنت.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="19" title="اعرض أداة المرحلة 19">19</span><span class="stg" role="button" tabindex="0" data-s="56" title="اعرض أداة المرحلة 56">56</span></p></li>
-      <li class="done" data-stages="20,43,46"><span class="no">20</span><b>المشاريع والمقدمة والخاتمة</b><em class="st">مكتملة</em><p>احفظ المشروع كملف وافتح أي مشروع محفوظ، وابدأ مشروعاً جديداً بنقرتين، وأضف مقدمة وخاتمة ثابتتين لقناتك تلقائياً.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="20" title="اعرض أداة المرحلة 20">20</span><span class="stg" role="button" tabindex="0" data-s="43" title="اعرض أداة المرحلة 43">43</span><span class="stg" role="button" tabindex="0" data-s="46" title="اعرض أداة المرحلة 46">46</span></p></li>
-      <li class="done" data-stages="22,60"><span class="no">22</span><b>الأسئلة والاختبارات</b><em class="st">مكتملة</em><p>اكتب سؤالاً وخياراته، أو يولّد Claude من 5 إلى 10 أسئلة من نص الدرس، فيُبنى مشهد السؤال ومشهد الإجابة بتفسير قصير.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="22" title="اعرض أداة المرحلة 22">22</span><span class="stg" role="button" tabindex="0" data-s="60" title="اعرض أداة المرحلة 60">60</span></p></li>
-      <li class="done" data-stages="24,50"><span class="no">24</span><b>النص المتعدد الأسطر والكتابة الحيّة</b><em class="st">مكتملة</em><p>قوائم بنقاط أو أرقام تُرسم سطراً بسطر، وكتابة حرفاً حرفاً أو كلمة كلمة، وتظليل وخط تحت وظل وحدّ وإطار للنص.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="24" title="اعرض أداة المرحلة 24">24</span><span class="stg" role="button" tabindex="0" data-s="50" title="اعرض أداة المرحلة 50">50</span></p></li>
-      <li class="done" data-stages="29,58"><span class="no">29</span><b>الهوية البصرية وشارة المنهج</b><em class="st">مكتملة</em><p>اسم وشعار وألوان وخط لعلامتك على كل مشهد، وبطاقة صغيرة بالصف والوحدة والدرس والجزء.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="29" title="اعرض أداة المرحلة 29">29</span><span class="stg" role="button" tabindex="0" data-s="58" title="اعرض أداة المرحلة 58">58</span></p></li>
-      <li class="done" data-stages="39"><span class="no">39</span><b>تحسين الأداء والاختبارات</b><em class="st">مكتملة</em><p>إعادة بناء المشاهد أسرع بنحو 10 مرات في المشاريع الكبيرة، وإصلاح خطأ إضافة النص، واختبارات تشغيل آلية.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="39" title="اعرض أداة المرحلة 39">39</span></p></li>
-      <li class="done" data-stages="40,59,62"><span class="no">40</span><b>القلم واليد والشخصية المتحدثة</b><em class="st">مكتملة</em><p>اختيار القلم والحبر وشكل اليد (مرسومة أو حقيقية بقلم رصاص) مع ضبط دقيق لرأس القلم، وشخصية في زاوية السبورة يتحرك فمها مع التعليق.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="40" title="اعرض أداة المرحلة 40">40</span><span class="stg" role="button" tabindex="0" data-s="59" title="اعرض أداة المرحلة 59">59</span><span class="stg" role="button" tabindex="0" data-s="62" title="اعرض أداة المرحلة 62">62</span></p></li>
-      <li class="done" data-stages="49,57"><span class="no">49</span><b>التحرير بالأوامر ومراجعة المخرج</b><em class="st">مكتملة</em><p>عدّل المشروع بجملة عادية أو بأوامر سريعة، واطلب من «المخرج الذكي» ملاحظات على التسلسل والإيقاع مع زر «طبّق» يمكن التراجع عنه.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="49" title="اعرض أداة المرحلة 49">49</span><span class="stg" role="button" tabindex="0" data-s="57" title="اعرض أداة المرحلة 57">57</span></p></li>
-      <li class="done" data-stages="55,65,66"><span class="no">55</span><b>الألوان السينمائية والهولوجرام</b><em class="st">مكتملة</em><p>سبعة أنماط لونية بقوة قابلة للضبط، وتأثير هولوجرام وتصدير هرم الهولوجرام، وهولوجرام ذهبي فوق صورة خلفية.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="55" title="اعرض أداة المرحلة 55">55</span><span class="stg" role="button" tabindex="0" data-s="65" title="اعرض أداة المرحلة 65">65</span><span class="stg" role="button" tabindex="0" data-s="66" title="اعرض أداة المرحلة 66">66</span></p></li>
-      <li class="done" data-stages="69,70"><span class="no">69</span><b>العروض التعليمية وقراءة PDF</b><em class="st">مكتملة</em><p>الصق الدرس أو اقرأ ملف PDF فيتحول إلى عرض بشرائح ورسمات وملاحظات شرح، أو إلى مشاهد بسكريبت.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="69" title="اعرض أداة المرحلة 69">69</span><span class="stg" role="button" tabindex="0" data-s="70" title="اعرض أداة المرحلة 70">70</span></p></li>
-      <li class="done" data-stages="71,72,73"><span class="no">71</span><b>مجموعات الصور والمشاهد الذكية ومكتبتها</b><em class="st">مكتملة</em><p>عدة صور في مشهد واحد، وتقسيم الدرس إلى مشاهد بكاميرا وانتقالات مناسبة بثلاثة أنماط، ومكتبة مشاهد تُحفظ وتُصدَّر وتُستورد كملف وتُبحث بالاسم. وكلها مجموعة في أداة واحدة مطوية أعلى تبويب «إضافة» («ابنِ الفيديو من الدرس»): الصق الدرس واختر صوراً اختيارية واضغط زراً واحداً، وتبقى الأدوات الأصلية في «خيارات متقدمة».</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="71" title="اعرض أداة المرحلة 71">71</span><span class="stg" role="button" tabindex="0" data-s="72" title="اعرض أداة المرحلة 72">72</span><span class="stg" role="button" tabindex="0" data-s="73" title="اعرض أداة المرحلة 73">73</span></p></li>
-    <li class="done" data-stages="74"><span class="no">74</span><b>المساعدة والاختصارات والجولة</b><em class="st">مكتملة</em><p>زر «مساعدة ؟» (أو مفتاح ؟ / F1) يفتح نافذة فيها كل الاختصارات وشرح كل تبويب مع زر «افتح»، وبحث، وجولة قصيرة من سبع خطوات تنتقل بين التبويبات. تتحول الشارة إلى لون مميز حتى تفتحها أول مرة.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="74" title="اعرض أداة المرحلة 74">74</span></p></li>
-    <li class="done" data-stages="75"><span class="no">75</span><b>صورة مصغّرة لليوتيوب</b><em class="st">مكتملة</em><p>من قسم التصدير: اختر أي مشهد وعنواناً (يُملأ من المشهد) ومكانه وشكله، فتُبنى صورة 1280×720 بألوانك السينمائية وشعارك واسمك، وتُحفظ PNG.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="75" title="اعرض أداة المرحلة 75">75</span></p></li>
-    <li class="done" data-stages="76,77"><span class="no">76</span><b>العرض المباشر ومؤشر الليزر والقلم</b><em class="st">مكتملة</em><p>زر «عرض مباشر» يعرض مشروعك بملء الشاشة مشهداً بعد مشهد بالأسهم أو النقر، لتشرح به أمام طلاب أو في اجتماع دون تصدير فيديو. وفي العرض مؤشر ليزر أحمر يتبع الماوس أو الإصبع، وقلم مؤقت يرسم خطوطاً حمراء تختفي بعد ثوانٍ، مع شريط تحكم يختفي تلقائياً.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="76" title="اعرض أداة المرحلة 76">76</span><span class="stg" role="button" tabindex="0" data-s="77" title="اعرض أداة المرحلة 77">77</span></p></li>
-    <li class="done" data-stages="78"><span class="no">78</span><b>مشاركة العرض كملف واحد</b><em class="st">مكتملة</em><p>من قسم التصدير: ابنِ صفحة HTML واحدة تعرض مشاهدك عنصراً بعد عنصر (أو مشهداً كاملاً) مع نص التعليق، ويتنقل بها من تشاركه بالأسهم أو النقر أو السحب وبملء الشاشة، في أي متصفح بلا تطبيق ولا إنترنت.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="78" title="اعرض أداة المرحلة 78">78</span></p></li>
-    <li class="done" data-stages="79"><span class="no">79</span><b>ترجمة SRT وصور المشاهد</b><em class="st">مكتملة</em><p>من قسم التصدير: ملف ترجمة SRT يُبنى من نص التعليق بتوقيت كل مشهد، وصورة PNG لأي مشهد أو ملف ZIP بصورة لكل مشهد بدقة 720 أو 1080 وبألوانك السينمائية.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="79" title="اعرض أداة المرحلة 79">79</span></p></li>
-    <li class="done" data-stages="84"><span class="no">84</span><b>ممحاة وسبورة طباشيرية وفقاعات وموصّلات</b><em class="st">مكتملة</em><p>انتقال «ممحاة» تمسح فيه ممحاة سبورة المشهد لتكشف التالي، وستايل السبورة الخضراء بألوان الطباشير بنقرة، وفقاعة كلام بنص مجمّع، وموصّل مستقيم أو منحنٍ أو بزاوية قائمة بين عنصرين.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="84" title="اعرض أداة المرحلة 84">84</span></p></li>
-    <li class="done" data-stages="85"><span class="no">85</span><b>شخصيات بأوضاع متعددة</b><em class="st">مكتملة</em><p>ارفع ورقة أوضاع (صورة فيها عدة أوضاع لنفس الشخص) فيقصّها التطبيق تلقائياً ويزيل خلفيتها، ثم اختر الأوضاع بالترتيب وحدّد مدة كل وضع فتتبدّل أثناء الفيديو بانتقال ناعم. وخاصية «اختفاء العنصر بعد ثوانٍ» لأي عنصر. وفيها شخصية جاهزة للتجربة.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="85" title="اعرض أداة المرحلة 85">85</span></p></li>
-    <li class="done" data-stages="86"><span class="no">86</span><b>شخصيات مرسومة بأوضاع متبدّلة وقالب القتال</b><em class="st">مكتملة</em><p>شخصيتان مرسومتان (عملاق ومقاتلة) بأوضاع متعددة: واقف، رفع المطرقة، ضربة، ترنّح، ركوع، اندفاع، انحناء، قفزة، رمي. تختار الأوضاع بالترتيب ومدة كل وضع من لوحة «شخصيات مرسومة بأوضاع متعددة» فتتبدّل أثناء الفيديو. وقالب «مشهد قتال مرسوم» من سبع لقطات يستخدمها مع التأثيرات والحوار والحركة.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="86" title="اعرض أداة المرحلة 86">86</span></p></li>
-    <li class="done" data-stages="87"><span class="no">87</span><b>مكتبة حركات قتالية جاهزة</b><em class="st">مكتملة</em><p>عشر حركات بنقرة واحدة: للعملاق ضربة المطرقة الثقيلة ودوسة تهزّ الأرض واندفاع وتلقّي ضربة، وللمقاتلة قفزة للخلف واندفاع وطعنة وقفزة دورانية ورمي السلسلة ومراوغة وتلقّي ضربة. كل حركة تجمع الأوضاع والمسار والغبار والومضات والنص والمؤثر الصوتي، وتُضاف للمشهد الحالي من لوحة «حركات قتالية جاهزة» مع اختيار المكان واتجاه الوجه.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="87" title="اعرض أداة المرحلة 87">87</span></p></li>
-    <li class="done" data-stages="88,89"><span class="no">89</span><b>العالم الكبير ولقطات الكاميرا</b><em class="st">مكتملة</em><p>لوحة أوسع من الشاشة (من 2× إلى 4×) تحرّك فيها الكاميرا بالسحب والعجلة، وقائمة لقطات مرقّمة بصور مصغّرة ومدة لكل لقطة. تنتقل الكاميرا بين اللقطات أثناء التشغيل والتصدير، وتظهر إطاراتها على العالم أثناء التحرير. المشاريع القديمة تبقى بحجم الشاشة 1×.</p></li>
-    <li class="done" data-stages="92"><span class="no">92</span><b>الكاميرا الذكية بالأوامر العربية</b><em class="st">مكتملة</em><p>اكتب «ابدأ بعرض العالم كاملاً ثم اقترب من النيل لمدة 4 ثوان» فتتحول الجمل إلى لقطات: اقترب من / ركّز على / ابتعد / اذهب إلى اسم نص أو صورة، العالم كاملاً، الشاشة الثالثة، أعلى اليمين، وارجع إلى اللقطة 2. تعمل دون إنترنت ودون مفاتيح، ومعها أوامر مقترحة تُضاف بنقرة.</p></li>
-    <li class="done" data-stages="94"><span class="no">94</span><b>الورقة كاملة صورة واحدة</b><em class="st">مكتملة</em><p>من قسم التصدير → صور المشاهد: اختر «الورقة كاملة» فتُرتَّب كل المشاهد على لوحة واحدة بنفس ترتيب وضع الورقة الواحدة، وتُحفظ صورة PNG واحدة.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="94" title="اعرض أداة المرحلة 94">94</span></p></li>
-    <li class="done" data-stages="95"><span class="no">95</span><b>خطوط ربط بين مناطق الورقة</b><em class="st">مكتملة</em><p>في وضع الورقة الواحدة اربط عنصراً في مشهد بعنصر في مشهد آخر بسهم يتبعهما عند تحريكهما، ويظهر في الصورة الكاملة وفي التشغيل.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="95" title="اعرض أداة المرحلة 95">95</span></p></li>
-    <li class="done" data-stages="96"><span class="no">96</span><b>الشاب المتحدث في مكتبة الأوضاع</b><em class="st">مكتملة</em><p>شخصية جاهزة بوضع «يتحدث ويشير بيديه» في أداة «شخصية بأوضاع متعددة»، وتُضاف إليها أوضاع أخرى برفع ورقة أوضاع لنفس الشخص.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="96" title="اعرض أداة المرحلة 96">96</span></p></li>
-    <li class="done" data-stages="97"><span class="no">97</span><b>هولوجرام ذهبي سينمائي</b><em class="st">مكتملة</em><p>في نمط «هولوجرام ذهبي فوق صورة»: ميداليات دائرية مضيئة حول الرسمات، وخطوط ربط ناعمة ينساب فيها الضوء، وغبار ذهبي متصاعد، وتظليل سينمائي للحواف. يُتحكم بها من شريط الهولوجرام.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="97" title="اعرض أداة المرحلة 97">97</span></p></li>
-    <li class="done" data-stages="98"><span class="no">98</span><b>شخصيات ويد طبيعية فوق الهولوجرام</b><em class="st">مكتملة</em><p>مع الهولوجرام الذهبي تبقى الشخصيات وكل الصور (من المكتبات أو المرفوعة) واليد التي ترسم بألوانها الطبيعية، ويتحول باقي المشهد إلى توهّج ذهبي. مربع «الشخصيات والصور واليد بألوانها الطبيعية» في شريط الهولوجرام.</p><p class="stgs" style="font-size:12px"><span class="stl">المراحل:</span> <span class="stg" role="button" tabindex="0" data-s="98" title="اعرض أداة المرحلة 98">98</span></p></li>
-    <li class="done" data-stages="99"><span class="no">99</span><b>قوالب أوراق العمل وسمات الألوان</b><em class="st">مكتملة</em><p>من تبويب «أوراق عمل»: ورقة دورة الماء، ورقة فارغة، خطوات متسلسلة، ومقارنة. اختر السمة من القسم نفسه قبل الضغط على القالب.</p></li>
-    <li class="done" data-stages="100"><span class="no">100</span><b>الترويسات والبطاقات الجاهزة</b><em class="st">مكتملة</em><p>تسع قطع جاهزة في تبويب «أوراق عمل» (عنوان سحابة، شارة المادة، ورقة اكتشف، تذكّر، قائمة مرقّمة، أكمل العبارة، شريط نشاط، شارة سفلية، هل تعلم) تُضاف كمجموعة واحدة للمشهد الحالي بسمة الألوان المختارة.</p></li>
-    <li class="done" data-stages="101"><span class="no">101</span><b>وسوم تتبع الرسم</b><em class="st">مكتملة</em><p>حدّد عنصراً ثم افتح تبويب «وسوم»: اكتب اسم الوسم ويُضاف بجانب العنصر مع سهم اختياري. يلتحق الوسم بالعنصر عند تحريكه وتركه، ويمكن سحبه وحده أو فصله.</p></li>
-    <li class="done" data-stages="102"><span class="no">102</span><b>بنك أسئلة التقييم</b><em class="st">مكتملة</em><p>من تبويب «أسئلة»: اكتب الأسئلة سطرًا لكل سؤال بأربعة أنواع (أكمل العبارة، صح وخطأ، اختيار من متعدد، مطابقة) فتُبنى مشاهد جاهزة بسمة الألوان، مع خيار إضافة الإجابات لنسخة المعلم.</p></li>
-    <li class="done" data-stages="103"><span class="no">103</span><b>نسخة الطالب ونسخة المعلم</b><em class="st">مكتملة</em><p>أوراق بنك الأسئلة تحفظ إجاباتها دائمًا. من تبويب «أسئلة» → «نسخة الطالب / المعلم» تُخفى الإجابات أو تُظهر في كل الأوراق بنقرة، ثم يُصدَّر المشروع بالنسخة المطلوبة.</p></li>
-    <li class="done" data-stages="104"><span class="no">104</span><b>محلل النص الدلالي</b><em class="st">مكتملة</em><p>تبويب «محلل»: الصق نصًا تعليميًا فيُقسَّم إلى مقاطع ويُحدَّد نوع كل مقطع (تعريف، خطوات، مقارنة، تاريخ، جغرافيا، علوم، رياضيات، لغة عربية، قصة، تجربة) وتُستخرج التواريخ والأرقام والأسماء والأماكن والعلاقات السببية كما وردت. راجع الخطة وعدّل الأنواع ثم ابنِ المشاهد.</p></li>
-    <li class="done" data-stages="105"><span class="no">105</span><b>الاختيار البصري التلقائي</b><em class="st">مكتملة</em><p>في تبويب «محلل»: يختار المحلل لكل مقطع أسلوبًا بصريًا مناسبًا مع سبب الاختيار: سبورة للتعريفات، خطوات مرقّمة، خط زمني للأحداث ذات التواريخ، مقارنة بين طرفين، سلسلة للأسباب والنتائج والأحداث المتتابعة، وإطار خريطة بدبابيس للأماكن. يمكن تغيير الأسلوب يدويًا قبل البناء.</p></li>
-    <li class="done" data-stages="106"><span class="no">106</span><b>اللوحة المتصلة</b><em class="st">مكتملة</em><p>عند بناء المشاهد من «محلل» مع تفعيل «لوحة واحدة متصلة»: تُرتَّب المشاهد على ورقة واحدة بترتيب متعرج يبدأ من اليمين فتتجاور المشاهد المتتابعة، وتُرسم خطوط ربط بينها: بين الشريحة المشتركة (تاريخ أو اسم أو مكان ورد في المشهدين)، وإلا بين نقطتي ربط على حافتي المشهدين. الترتيب متاح أيضًا من تبويب «المشهد».</p></li>
-    <li class="done" data-stages="107"><span class="no">107</span><b>المخرج السينمائي</b><em class="st">مكتملة</em><p>في تبويب «محلل»: تُبنى كاميرا كل مشهد تلقائيًا كمسار نقاط رئيسية بحسب أسلوبه (عقدة بعد عقدة في الخط الزمني، عمود بعد عمود في المقارنة، صندوق بعد صندوق في السلسلة، أجزاء النص الطويل بالتتابع) بتقريب هادئ لا يتجاوز 1.7×. تُضبط مدة كتابة النص ومدة بقاء المشهد حسب طول النص وسرعة العرض (بطيئة/عادية/سريعة)، ويمكن تغيير السرعة لاحقًا بزر واحد. النقاط تظهر وتُعدَّل من تبويب «المشهد».</p></li>
-    <li class="done" data-stages="108"><span class="no">108</span><b>الانتقالات الدلالية</b><em class="st">مكتملة</em><p>في تبويب «محلل»: الانتقال بين مشهدين يُبنى من معنى النص. إذا ورد عنصر مشترك (اسم أو رقم) في مشهدين متجاورين تُرسم حلقة عدسة حوله في المشهد الأول وتنتهي الكاميرا بالتقريب عليه، ثم تبدأ كاميرا المشهد الثاني من العنصر نفسه. وبين مشهدي خريطة متتاليين يُرسم طريق سميك بين المكانين. وما عدا ذلك يبقى خط الربط العادي.</p></li>
-    <li class="done" data-stages="109"><span class="no">109</span><b>مزامنة التعليق الصوتي</b><em class="st">مكتملة</em><p>في تبويب «محلل»: يصير نص المقطع نص التعليق، ويظهر كل سطر وكل شريحة (تاريخ، اسم، مكان) عند ذكره في النص بحسب موضعه ومدة الكلام بالسرعة المختارة، فإن تقدّمت النتيجة على السبب في الجملة ظهر الذي يُذكر أولاً. يُعاد الحساب تلقائيًا عند تعديل النص أو نص التعليق، أو يدويًا بزر واحد. وزر «طابق الصوت المرفوع» يضبط المدد على مدة تعليق صوتي حقيقي رفعته من تبويب «الصوت».</p></li>
-    <li class="done" data-stages="350"><span class="no">350</span><b>إعدادات تصدير محفوظة</b><em class="st">مكتملة</em><p>من قسم التصدير: احفظ المقاس والجودة وملء الإطار ووضع الأجهزة الضعيفة بإسم مثل «يوتيوب عالي الجودة» وطبّقها بنقرة، ومعها إعدادان جاهزان لليوتيوب وللشورتس.</p></li>
-    <li class="done" data-stages="351"><span class="no">351</span><b>الجوال أولاً (١١٣ في خطتك)</b><em class="st">مكتملة</em><p>على الشاشات الضيقة: أدوات السبورة في درج سفلي يُسحب لإغلاقه، وشريط عائم للتشغيل والتراجع وإضافة مشهد، وقرصة بإصبعين لتقريب المعاينة، وضغطة مطوّلة على شريحة المشهد ثم سحب لإعادة ترتيبه، وزر «تثبيت» كتطبيق.</p></li>
-    <li class="now" data-stages="352"><span class="no">352</span><b>تايم لاين احترافي: الموجة الصوتية (١١٤-أ)</b><em class="st">المرحلة الحالية</em><p>يرسم التايم لاين شكل الموجة داخل كل مقطع تعليق أو موسيقى، فترى مواضع الكلام والصمت والذروات وتضبط البداية بالسحب بدقة. المتبقي من ١١٤: المسارات المتعددة، اللقطات المفتاحية ومنحنيات التسارع، والمعاينة الفورية.</p></li>
-    </ol>
-  </section>
-
-  <section class="plan" id="plan" aria-label="خطة التطوير المستقبلية">
+<section class="plan" id="plan" aria-label="خطة التطوير المستقبلية">
     <h2>خطة التطوير المستقبلية</h2>
     <p class="sub">المراحل القادمة مرتبة مرحلة بعد مرحلة. غيّر حالة أي مرحلة، أو أضف فكرتك، وتُحفظ تعديلاتك على هذا الجهاز.</p>
     <div class="plan-bar">
@@ -16959,4 +16899,369 @@ var tries=0,iv=setInterval(function(){
   body.sheet-open aside.panel,body.mob.sheet-open aside.panel{max-height:min(45dvh,calc(100dvh - 190px))!important}
 }
 </style>
+<script id="rs-gemini">
+/* gemini-studio.js: تعليق صوتي مصري وتفريغ صوتي عبر Gemini (منقول من OmniBoard)
+   يُحقن بواسطة build.js قبل </body>. يعتمد على دوال الصفحة العامة: clips, bufs, scenes, cs, ensureAC, newId,
+   idbGet, idbPut, idbDel, audioChanged, timeline, edited, renderScenePane, setTab. */
+(function () {
+  if (window.__rsGem) return; window.__rsGem = 1;
+  var KK = 'rassam_gem_key_v1';
+  var BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
+  /* تُجرَّب بالترتيب؛ عدّلها هنا لو تغيّرت أسماء النماذج */
+  var TTS_MODELS = ['gemini-3.1-flash-tts-preview', 'gemini-2.5-flash-preview-tts'];
+  var TXT_MODELS = ['gemini-3.5-flash', 'gemini-2.5-flash'];
+  var VOICES = [['Kore', 'كوري (نسائي)'], ['Aoede', 'أويدي (نسائي)'], ['Zephyr', 'زيفير (نسائي)'],
+    ['Charon', 'شارون (رجالي)'], ['Fenrir', 'فنرير (رجالي)'], ['Puck', 'باك (رجالي)']];
+  var SPEEDS = [['0.8', 'بطيء'], ['1', 'عادي'], ['1.3', 'سريع']];
+  var busy = false;
+
+  function $g(id) { return document.getElementById(id); }
+  function key() { try { return localStorage.getItem(KK) || ''; } catch (e) { return ''; } }
+  function say(m) { var e = $g('gemMsg'); if (e) e.textContent = m || ''; }
+  function lock(on) {
+    busy = on;
+    ['gemOne', 'gemAll', 'gemStt', 'gemSet'].forEach(function (i) { var b = $g(i); if (b) b.disabled = on; });
+  }
+
+  /* استدعاء generateContent مع تجربة النماذج بالترتيب */
+  function gen(models, body) {
+    var k = key();
+    if (!k) return Promise.reject(new Error('أدخل مفتاح Gemini API أولاً.'));
+    var i = 0;
+    function go() {
+      return fetch(BASE + models[i] + ':generateContent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': k },
+        body: JSON.stringify(body)
+      }).then(function (r) {
+        if ((r.status === 404 || r.status === 400) && ++i < models.length) return go();
+        if (r.status === 429) throw new Error('تجاوزت حدّ الاستخدام، حاول بعد قليل.');
+        if (r.status === 401 || r.status === 403) throw new Error('المفتاح غير صالح أو غير مسموح به.');
+        if (!r.ok) throw new Error('خطأ من Gemini (' + r.status + ').');
+        if (i > 0) models.unshift(models.splice(i, 1)[0]);
+        return r.json();
+      }, function () { throw new Error('تعذّر الاتصال بالإنترنت.'); });
+    }
+    return go();
+  }
+
+  /* نص إلى كلام: يرجع PCM خام 16-bit mono (غالباً 24kHz) */
+  function tts(text, voice, speed) {
+    var pace = speed < 0.85 ? 'at a calm, slow, clear pace' : speed > 1.15 ? 'at an energetic, brisk pace' : 'at a natural conversational pace';
+    return gen(TTS_MODELS, {
+      contents: [{ parts: [{ text: 'Speak in natural Egyptian Arabic dialect ' + pace + ':\n' + text }] }],
+      generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } }
+    }).then(function (j) {
+      var ps = (((j.candidates || [])[0] || {}).content || {}).parts || [];
+      var p = ps.filter(function (x) { return x.inlineData; })[0];
+      if (!p) throw new Error('لم يصل صوت من Gemini.');
+      var m = /rate=(\d+)/.exec(p.inlineData.mimeType || '');
+      var bin = atob(p.inlineData.data), pcm = new Uint8Array(bin.length), i;
+      for (i = 0; i < bin.length; i++) pcm[i] = bin.charCodeAt(i);
+      var n = pcm.length >> 1, f = new Float32Array(n), dv = new DataView(pcm.buffer);
+      for (i = 0; i < n; i++) f[i] = dv.getInt16(i * 2, true) / 32768;
+      return { f: f, sr: m ? +m[1] : 24000, pcm: pcm };
+    });
+  }
+
+  function wav(pcm, sr) {
+    var h = new DataView(new ArrayBuffer(44));
+    function s(o, t) { for (var i = 0; i < 4; i++) h.setUint8(o + i, t.charCodeAt(i)); }
+    s(0, 'RIFF'); h.setUint32(4, 36 + pcm.length, true); s(8, 'WAVE'); s(12, 'fmt ');
+    h.setUint32(16, 16, true); h.setUint16(20, 1, true); h.setUint16(22, 1, true);
+    h.setUint32(24, sr, true); h.setUint32(28, sr * 2, true); h.setUint16(32, 2, true); h.setUint16(34, 16, true);
+    s(36, 'data'); h.setUint32(40, pcm.length, true);
+    var o = new Uint8Array(44 + pcm.length); o.set(new Uint8Array(h.buffer), 0); o.set(pcm, 44);
+    return o.buffer;
+  }
+
+  /* يضيف مقطع تعليق جاهزاً (بدون فك ترميز) ويحفظه في IndexedDB كملف WAV */
+  function addVoice(r, name, start) {
+    var a = ensureAC();
+    if (!a) throw new Error('تشغيل الصوت غير متاح في هذا المتصفح.');
+    var b = a.createBuffer(1, r.f.length, r.sr); b.copyToChannel(r.f, 0);
+    var c = { id: newId('a'), name: name.slice(0, 40), kind: 'voice', start: Math.round(start * 10) / 10, vol: 1, loop: false, dur: b.duration };
+    bufs[c.id] = b; clips.push(c); selClip = c.id;
+    var w = wav(r.pcm, r.sr);
+    setTimeout(function () { idbPut(c.id, w); }, 80);
+    return c;
+  }
+
+  function opts() {
+    return { voice: $g('gemVoice').value, speed: parseFloat($g('gemSpeed').value) || 1 };
+  }
+
+  function genOne() {
+    var tx = $g('gemText').value.trim();
+    if (!tx) { say('اكتب نص التعليق أولاً.'); return; }
+    var o = opts(); lock(true); say('جارٍ توليد الصوت...');
+    tts(tx, o.voice, o.speed).then(function (r) {
+      timeline(); addVoice(r, 'تعليق Gemini', cs()._s);
+      audioChanged(); setTab('audio'); say('تمت إضافة التعليق عند بداية المشهد الحالي.');
+    }).catch(function (e) { say(e.message || 'فشل التوليد.'); }).then(function () { lock(false); });
+  }
+
+  function genAll() {
+    var list = [];
+    scenes.forEach(function (s, i) { var t = String(s.narr || '').trim(); if (t) list.push([i, t]); });
+    if (!list.length) { say('لا توجد نصوص تعليق في المشاهد. اكتبها من تبويب «المشهد» أو ولّدها من تبويب الذكاء الاصطناعي.'); return; }
+    var o = opts(), k = 0; lock(true);
+    /* نحذف تعليقات Gemini السابقة حتى لا تتكرر عند إعادة التوليد */
+    clips.filter(function (c) { return /^تعليق مشهد \d+/.test(c.name || ''); }).forEach(function (c) {
+      delete bufs[c.id]; idbDel(c.id); clips.splice(clips.indexOf(c), 1);
+    });
+    timeline();
+    (function next() {
+      if (k >= list.length) {
+        audioChanged(); setTab('audio'); lock(false);
+        say('تم توليد ' + list.length + ' مقطع. اضغط «مطابقة مدة المشاهد للتعليق الصوتي» لضبط التوقيت.');
+        return;
+      }
+      var it = list[k]; say('جارٍ توليد التعليق ' + (k + 1) + '/' + list.length + '...');
+      tts(it[1], o.voice, o.speed).then(function (r) {
+        addVoice(r, 'تعليق مشهد ' + (it[0] + 1), scenes[it[0]]._s || 0); k++; next();
+      }).catch(function (e) {
+        if (k) audioChanged();
+        lock(false); say((e.message || 'فشل التوليد.') + (k ? ' (اكتمل ' + k + ' من ' + list.length + ')' : ''));
+      });
+    })();
+  }
+
+  /* كشف نوع الملف من أول بايتات (الملفات المرفوعة تُحفظ بدون نوعها) */
+  function mimeOf(b) {
+    var u = new Uint8Array(b, 0, 12), s = String.fromCharCode.apply(null, u);
+    if (s.slice(0, 4) === 'RIFF') return 'audio/wav';
+    if (s.slice(0, 3) === 'ID3' || (u[0] === 255 && (u[1] & 224) === 224)) return 'audio/mp3';
+    if (s.slice(4, 8) === 'ftyp') return 'audio/aac';
+    if (s.slice(0, 4) === 'OggS') return 'audio/ogg';
+    if (s.slice(0, 4) === 'fLaC') return 'audio/flac';
+    return 'audio/mp3';
+  }
+  function b64(buf) {
+    var u = new Uint8Array(buf), s = '';
+    for (var i = 0; i < u.length; i += 32768) s += String.fromCharCode.apply(null, u.subarray(i, i + 32768));
+    return btoa(s);
+  }
+
+  function stt() {
+    if (!selClip) { say('اختر مقطعاً صوتياً من قائمة المقاطع أولاً.'); return; }
+    var id = selClip, fusha = $g('gemFusha').checked; lock(true); say('جارٍ قراءة المقطع...');
+    idbGet(id).then(function (buf) {
+      if (!buf) throw new Error('بيانات هذا المقطع غير محفوظة. أعد رفعه أولاً.');
+      if (buf.byteLength > 14 * 1024 * 1024) throw new Error('المقطع كبير للتفريغ (الحد 14 ميغابايت).');
+      say('جارٍ التفريغ...');
+      var ins = fusha
+        ? 'استمع إلى هذا التسجيل (قد يكون بالعامية المصرية) وفرّغه إلى نص بالعربية الفصحى السليمة مع علامات الترقيم. أعد النص فقط دون أي شرح.'
+        : 'استمع إلى هذا التسجيل وفرّغه حرفياً كما قيل بلهجته المصرية مع علامات الترقيم. أعد النص فقط دون أي شرح.';
+      return gen(TXT_MODELS, {
+        contents: [{ parts: [{ text: ins }, { inlineData: { mimeType: mimeOf(buf), data: b64(buf) } }] }],
+        generationConfig: { temperature: 0.2 }
+      });
+    }).then(function (j) {
+      var ps = (((j.candidates || [])[0] || {}).content || {}).parts || [];
+      var t = ps.map(function (p) { return p.text || ''; }).join('').trim();
+      if (!t) throw new Error('تعذّر استخراج نص من المقطع.');
+      $g('gemText').value = t; say('تم التفريغ. يمكنك تعديل النص ثم جعله نص تعليق المشهد.');
+    }).catch(function (e) { say(e.message || 'فشل التفريغ.'); }).then(function () { lock(false); });
+  }
+
+  function setNarr() {
+    var t = $g('gemText').value.trim();
+    if (!t) { say('لا يوجد نص.'); return; }
+    cs().narr = t.slice(0, 300); edited(); try { renderScenePane(); } catch (e) {}
+    say('تم تعيين النص كتعليق للمشهد الحالي' + (t.length > 300 ? ' (قُصّ إلى 300 حرف).' : '.'));
+  }
+
+  function build() {
+    var pane = $g('pane-audio'); if (!pane || $g('gemBox')) return;
+    var d = document.createElement('div'); d.className = 'field'; d.id = 'gemBox';
+    d.innerHTML = '<span class="lbl">تعليق وتفريغ بالذكاء الاصطناعي (Gemini)</span>' +
+      '<input id="gemKey" type="password" autocomplete="off" placeholder="مفتاح Gemini API (يُحفظ على جهازك فقط)" aria-label="مفتاح Gemini">' +
+      '<div class="row"><select id="gemVoice" class="grow" aria-label="الصوت">' + VOICES.map(function (v) { return '<option value="' + v[0] + '">' + v[1] + '</option>'; }).join('') + '</select>' +
+      '<select id="gemSpeed" aria-label="السرعة">' + SPEEDS.map(function (v) { return '<option value="' + v[0] + '"' + (v[0] === '1' ? ' selected' : '') + '>' + v[1] + '</option>'; }).join('') + '</select></div>' +
+      '<textarea id="gemText" rows="3" maxlength="1500" placeholder="نص التعليق، أو نتيجة التفريغ تظهر هنا"></textarea>' +
+      '<div class="row"><button class="btn grow" id="gemOne" type="button">ولّد صوتاً لهذا النص</button>' +
+      '<button class="btn primary grow" id="gemAll" type="button">ولّد صوتاً لكل المشاهد</button></div>' +
+      '<div class="row"><button class="btn grow" id="gemStt" type="button">فرّغ المقطع المحدد</button>' +
+      '<button class="btn grow" id="gemSet" type="button">اجعله تعليق المشهد</button></div>' +
+      '<label class="chk2"><input type="checkbox" id="gemFusha"> حوّل التفريغ إلى فصحى</label>' +
+      '<p class="note" id="gemMsg" role="status"></p>';
+    var f = pane.querySelector('.field'); pane.insertBefore(d, f);
+    var ki = $g('gemKey'); ki.value = key();
+    ki.addEventListener('change', function () { try { localStorage.setItem(KK, ki.value.trim()); } catch (e) {} say(ki.value.trim() ? 'تم حفظ المفتاح.' : ''); });
+    $g('gemOne').addEventListener('click', function () { if (!busy) genOne(); });
+    $g('gemAll').addEventListener('click', function () { if (!busy) genAll(); });
+    $g('gemStt').addEventListener('click', function () { if (!busy) stt(); });
+    $g('gemSet').addEventListener('click', function () { if (!busy) setNarr(); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
+})();
+
+</script>
+<script id="rs-boardstyles">
+/* board-styles.js: بطاقة ملاحظة وعنوان متموّج (منقولان من whiteboard5)
+   يُحقن قبل </body>. يعتمد على دوال الأداة: dgPath, rrp, dgSvgItem, dgTxt, T, S, newId, cs, clamp,
+   hasAr, edited, renderProps, setTab, play. يضيف قسماً في تبويب «القوالب» ويُدرج العناصر في المشهد الحالي. */
+(function () {
+  if (window.__rsBS) return; window.__rsBS = 1;
+  var COLS = [['أزرق', '#1e6fe0'], ['أخضر', '#1f9d55'], ['برتقالي', '#f08a1c'], ['أحمر', '#e5383b'], ['بنفسجي', '#8e44ad'], ['فيروزي', '#0f9aa8']];
+  var BGS = { '#1e6fe0': '#e4efff', '#1f9d55': '#e6f6ec', '#f08a1c': '#fff1de', '#e5383b': '#fdecea', '#8e44ad': '#f3eafd', '#0f9aa8': '#e1f5f7' };
+  function $b(id) { return document.getElementById(id); }
+  function say(m) { var e = $b('bsMsg'); if (e) e.textContent = m || ''; }
+
+  /* بطاقة: إطار مستدير بخلفية فاتحة وحافة علوية سميكة بلون الموضوع، عنوان ملوّن، ونقاط */
+  function noteItems(head, lines, col) {
+    var n = lines.length, w = 780, h = 110 + n * 62, cx = 640, top = Math.round(360 - h / 2);
+    var parts = [
+      dgPath(rrp(cx, top + h / 2, w, h, 20), '#c9d2de', BGS[col] || '#fff6c8', 4),
+      dgPath('M' + (cx - w / 2 + 20) + ' ' + (top + 4) + 'H' + (cx + w / 2 - 20), col, null, 10)
+    ];
+    var its = [dgSvgItem(parts)];
+    its.push(dgTxt(head, cx, top + 52, clamp(Math.round(w * 1.4 / Math.max(head.length, 8)), 38, 54), col));
+    lines.forEach(function (l, i) {
+      var t = '• ' + l;
+      its.push(dgTxt(t, cx, top + 118 + i * 62, clamp(Math.round(w * 1.6 / Math.max(t.length, 10)), 26, 38), '#1d2b4f'));
+    });
+    return its;
+  }
+
+  /* عنوان: نص كبير بلون الموضوع وتحته خط متموّج أحمر */
+  function titleItems(txt, col) {
+    var size = txt.length > 22 ? 64 : txt.length > 12 ? 80 : 96;
+    var t = T(txt, 640, 150, size, hasAr(txt) ? 'aref' : 'cav', col, Math.round(clamp(txt.length * 0.12, 1.2, 3) * 10) / 10);
+    var w = clamp(Math.round(txt.length * size * 0.55), 260, 1000);
+    var u = S('squiggle', 640, 150 + Math.round(size * 0.62), w, '#e5383b', 0, 1.2);
+    return [t, u];
+  }
+
+  function put(its, okMsg) {
+    var g = newId('g'); its.forEach(function (i) { i.grp = g; });
+    its.forEach(function (i) { cs().items.push(i); });
+    sel = its[its.length - 1].id;
+    edited(); renderProps(); setTab('props');
+    var last = its[its.length - 1];
+    try { play(its[0]._gs, last._gs + last.dur + 0.5); } catch (e) {}
+    say(okMsg);
+  }
+
+  function addNote() {
+    var head = $b('bsNoteH').value.trim().slice(0, 30);
+    var lines = $b('bsNoteL').value.split('\n').map(function (x) { return x.trim().slice(0, 50); }).filter(Boolean).slice(0, 5);
+    if (!head) { $b('bsNoteH').focus(); say('اكتب عنوان البطاقة.'); return; }
+    if (!lines.length) { $b('bsNoteL').focus(); say('اكتب نقطة واحدة على الأقل، كل نقطة في سطر.'); return; }
+    put(noteItems(head, lines, $b('bsCol').value), 'أُضيفت البطاقة إلى المشهد الحالي. يمكنك تحريكها أو تعديل نصوصها، أو التراجع بـ Ctrl+Z.');
+  }
+  function addTitle() {
+    var t = $b('bsTitle').value.trim().slice(0, 40);
+    if (!t) { $b('bsTitle').focus(); say('اكتب نص العنوان.'); return; }
+    put(titleItems(t, $b('bsCol').value), 'أُضيف العنوان إلى المشهد الحالي.');
+  }
+
+  function build() {
+    var f = $b('fcSteps'), host = f && f.closest('.tpl-sec');
+    if (!host || $b('bsBox')) return;
+    var d = document.createElement('div'); d.className = 'tpl-sec'; d.id = 'bsBox';
+    d.innerHTML = '<div class="field"><label for="bsNoteH">بطاقة ملاحظة وعنوان متموّج</label>' +
+      '<select id="bsCol" aria-label="اللون" style="width:100%;margin-bottom:6px">' + COLS.map(function (c) { return '<option value="' + c[1] + '">' + c[0] + '</option>'; }).join('') + '</select>' +
+      '<input id="bsNoteH" maxlength="30" placeholder="عنوان البطاقة">' +
+      '<textarea id="bsNoteL" rows="3" placeholder="كل نقطة في سطر (حتى 5 نقاط)"></textarea>' +
+      '<button class="btn primary" id="bsNote" type="button" style="margin-top:6px">أضف البطاقة</button>' +
+      '<input id="bsTitle" maxlength="40" placeholder="نص العنوان" style="margin-top:10px">' +
+      '<button class="btn" id="bsTitleBtn" type="button" style="margin-top:6px">أضف عنواناً بخط متموّج</button>' +
+      '<p class="note" id="bsMsg" role="status"></p></div>';
+    host.parentNode.insertBefore(d, host);
+    $b('bsNote').addEventListener('click', addNote);
+    $b('bsTitleBtn').addEventListener('click', addTitle);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
+})();
+
+</script>
+<script id="rs-cropsheet">
+/* crop-sheet.js: قصّ رسومات من صورة كبيرة (منقول من فكرة SPR في whiteboard5)
+   ارفع صورة مرة واحدة، حدّد مستطيلاً بالسحب، واضغط «أضف المحدد» لتصير القطعة صورة عادية في المشهد.
+   يمرّ القصّ عبر addImage() الموجودة في الأداة، فتنطبق عليه إزالة الخلفية والتحويل لخطوط. */
+(function () {
+  if (window.__rsCrop) return;
+  var im = null, url = null, sc = 1, sel = null, a = null, cv, ctx, msgEl;
+  function $c(id) { return document.getElementById(id); }
+  function say(m) { if (msgEl) msgEl.textContent = m || ''; }
+
+  /* مستطيل بإحداثيات الشاشة من نقطتين، مقصوص على حدود الصورة */
+  function rectFrom(p, q, W, H) {
+    var x1 = Math.max(0, Math.min(p.x, q.x)), y1 = Math.max(0, Math.min(p.y, q.y));
+    var x2 = Math.min(W, Math.max(p.x, q.x)), y2 = Math.min(H, Math.max(p.y, q.y));
+    return { x: x1, y: y1, w: x2 - x1, h: y2 - y1 };
+  }
+  window.__rsCrop = { rectFrom: rectFrom };
+
+  function draw() {
+    if (!im || !ctx) return;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.drawImage(im, 0, 0, cv.width, cv.height);
+    if (sel && sel.w > 1 && sel.h > 1) {
+      ctx.fillStyle = 'rgba(0,0,0,.45)';
+      ctx.fillRect(0, 0, cv.width, sel.y);
+      ctx.fillRect(0, sel.y + sel.h, cv.width, cv.height - sel.y - sel.h);
+      ctx.fillRect(0, sel.y, sel.x, sel.h);
+      ctx.fillRect(sel.x + sel.w, sel.y, cv.width - sel.x - sel.w, sel.h);
+      ctx.strokeStyle = '#1e6fe0'; ctx.lineWidth = 2; ctx.strokeRect(sel.x, sel.y, sel.w, sel.h);
+    }
+  }
+  function pt(e) { var r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * cv.width / r.width, y: (e.clientY - r.top) * cv.height / r.height }; }
+
+  function load(file) {
+    if (!file) return;
+    if (url) { try { URL.revokeObjectURL(url); } catch (e) {} }
+    url = URL.createObjectURL(file);
+    var i = new Image();
+    i.onload = function () {
+      im = i; sel = null;
+      var w = Math.min($c('crBox').clientWidth || 320, 480), h = 360;
+      sc = Math.min(w / im.naturalWidth, h / im.naturalHeight);
+      cv.width = Math.max(1, Math.round(im.naturalWidth * sc)); cv.height = Math.max(1, Math.round(im.naturalHeight * sc));
+      cv.hidden = false; $c('crAdd').disabled = true; draw();
+      say('اسحب على الصورة لتحديد القطعة، ثم اضغط «أضف المحدد». يمكنك تكرار ذلك من نفس الصورة.');
+    };
+    i.onerror = function () { say('تعذّر فتح هذا الملف كصورة.'); };
+    i.src = url;
+  }
+
+  function add() {
+    if (!im || !sel || sel.w < 8 || sel.h < 8) { say('حدّد قطعة أكبر بالسحب أولاً.'); return; }
+    var sx = Math.round(sel.x / sc), sy = Math.round(sel.y / sc), sw = Math.round(sel.w / sc), sh = Math.round(sel.h / sc);
+    var c = document.createElement('canvas'); c.width = sw; c.height = sh;
+    c.getContext('2d').drawImage(im, sx, sy, sw, sh, 0, 0, sw, sh);
+    c.toBlob(function (b) {
+      if (!b) { say('تعذّر قصّ هذه القطعة.'); return; }
+      sel = null; $c('crAdd').disabled = true; draw();
+      say('جارٍ إضافة القطعة...');
+      addImage(new File([b], 'قطعة.png', { type: 'image/png' }));
+      setTimeout(function () { say('أُضيفت القطعة. حدّد قطعة أخرى لإضافتها.'); }, 400);
+    }, 'image/png');
+  }
+
+  function build() {
+    var f = $c('fileImg'), host = f && f.closest('.field');
+    if (!host || $c('crBox')) return;
+    var d = document.createElement('div'); d.className = 'field'; d.id = 'crBox';
+    d.innerHTML = '<span class="lbl">قصّ رسومات من صورة كبيرة</span>' +
+      '<label class="btn" for="crFile">+ رفع صورة للقصّ منها</label>' +
+      '<input class="verh" id="crFile" type="file" accept="image/*">' +
+      '<canvas id="crCv" hidden style="width:100%;max-width:100%;touch-action:none;border:1px solid var(--line);border-radius:8px;margin-top:8px;cursor:crosshair"></canvas>' +
+      '<button class="btn primary" id="crAdd" type="button" style="margin-top:6px" disabled>أضف المحدد</button>' +
+      '<p class="note" id="crMsg" role="status"></p>';
+    host.parentNode.insertBefore(d, host.nextSibling);
+    cv = $c('crCv'); ctx = cv.getContext('2d'); msgEl = $c('crMsg');
+    $c('crFile').addEventListener('change', function (e) { load(e.target.files[0]); e.target.value = ''; });
+    $c('crAdd').addEventListener('click', add);
+    cv.addEventListener('pointerdown', function (e) { if (!im) return; try { cv.setPointerCapture(e.pointerId); } catch (x) {} a = pt(e); sel = null; draw(); });
+    cv.addEventListener('pointermove', function (e) { if (!a) return; sel = rectFrom(a, pt(e), cv.width, cv.height); draw(); });
+    function up() { if (!a) return; a = null; $c('crAdd').disabled = !(sel && sel.w >= 8 && sel.h >= 8); }
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
+})();
+
+</script>
 </body></html>
