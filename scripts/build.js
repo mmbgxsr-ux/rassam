@@ -87,6 +87,16 @@ if (bi < 0) throw new Error('لم أجد </body> في index.html');
 html = html.slice(0, bi) + '<script id="rs-android-extras">\n' + extras + '\n</script>\n' + html.slice(bi);
 console.log('OK: android extras injected');
 
+// إضافات مستقلة تُحقن بعد android-extras: Gemini (تعليق/تفريغ) وأنماط السبورة (بطاقة وعنوان)
+for (const [fname, sid] of [['gemini-studio.js', 'rs-gemini'], ['board-styles.js', 'rs-boardstyles'], ['crop-sheet.js', 'rs-cropsheet']]) {
+  const addon = path.join(__dirname, fname);
+  if (!fs.existsSync(addon)) { console.warn('WARN: ' + fname + ' غير موجود (الميزة غير مفعّلة)'); continue; }
+  if (html.includes('id="' + sid + '"')) { console.log('OK: ' + fname + ' موجود أصلاً في index.html'); continue; }
+  const gi = html.lastIndexOf('</body>');
+  html = html.slice(0, gi) + '<script id="' + sid + '">\n' + fs.readFileSync(addon, 'utf8') + '\n</script>\n' + html.slice(gi);
+  console.log('OK: ' + fname + ' injected');
+}
+
 // إذن الميكروفون في AndroidManifest.xml (لو مجلد android موجود وقت البناء)
 const MF = path.join('android', 'app', 'src', 'main', 'AndroidManifest.xml');
 if (fs.existsSync(MF)) {
@@ -215,7 +225,7 @@ else console.warn('WARN: لم أجد سطر استرجاع الحفظ عند ا�
 // (1ج) الصوت: تحميل المقاطع المحفوظة (قراءة من IndexedDB + فك ترميز) كان بيحصل فوراً عند الفتح (توقف ~0.5 ثانية + ذاكرة كبيرة على جهاز 2 جيجا).
 //      الجديد: يتأجّل لحد أول استخدام فعلي (تشغيل / تصدير / فتح تبويب الصوت)، وفيه احتياطي بعد 20 ثانية لو ما استُخدم.
 //      لو ضغطت تشغيل قبل ما الصوت يجهز، التشغيل بيستنى التحميل ثم يبدأ تلقائياً.
-const AU_RE = /var list=clips\.slice\(\),n=list\.length,k=0;\s*setAudioMsg\('جارٍ تحميل الصوت 0\/'\+n\+'\.\.\.'\);\s*\(function next\(\)\{\s*var c=list\[k\];\s*if\(!c\)\{setAudioMsg\(''\);timeline\(\);renderTimeline\(\);renderClipList\(\);return;\}\s*idbGet\(c\.id\)\.then\(function\(buf\)\{\s*if\(!buf\)return;\s*return a\.decodeAudioData\(buf\)\.then\(function\(b\)\{bufs\[c\.id\]=b;c\.dur=b\.duration;\}\);\s*\}\)\.catch\(function\(\)\{\}\)\.then\(function\(\)\{\s*k\+\+;setAudioMsg\(k<n\?'جارٍ تحميل الصوت '\+k\+'\/'\+n\+'\.\.\.':''\);\s*setTimeout\(next,0\);\s*\}\);\s*\}\)\(\);/;
+const AU_RE = /var list=clips\.slice\(\),n=list\.length,k=0;\s*setAudioMsg\('جارٍ تحميل الصوت 0\/'\+n\+'\.\.\.'\);\s*\(function next\(\)\{\s*var c=list\[k\];\s*if\(!c\)\{setAudioMsg\(''\);timeline\(\);renderTimeline\(\);renderClipList\(\);return;\}\s*idbGet\(c\.id\)\.then\(function\(buf\)\{\s*if\(!buf\)return;\s*return a\.decodeAudioData\(buf\)\.then\(function\(b\)\{bufs\[c\.id\]=b;if\(!c\.tr\)c\.dur=b\.duration;\}\);\s*\}\)\.catch\(function\(\)\{\}\)\.then\(function\(\)\{\s*k\+\+;setAudioMsg\(k<n\?'جارٍ تحميل الصوت '\+k\+'\/'\+n\+'\.\.\.':''\);\s*setTimeout\(next,0\);\s*\}\);\s*\}\)\(\);/;
 const AU_NEW = `var list=clips.slice(),n=list.length,k=0,cbs=[],started=false;
   window.__rsAuPend=true;window.__rsAuQ=0;renderClipList();
   window.__rsAuThen=function(f,A){if(window.__rsAuQ)return;window.__rsAuQ=1;window.__rsAuLoad(function(){window.__rsAuQ=0;f.apply(null,A);});};
@@ -229,7 +239,7 @@ const AU_NEW = `var list=clips.slice(),n=list.length,k=0,cbs=[],started=false;
       if(!c){window.__rsAuPend=false;setAudioMsg('');timeline();renderTimeline();renderClipList();renderClipProps();var q=cbs.splice(0);q.forEach(function(f){try{f();}catch(e){}});return;}
       idbGet(c.id).then(function(buf){
         if(!buf)return;
-        return a.decodeAudioData(buf).then(function(b){bufs[c.id]=b;c.dur=b.duration;});
+        return a.decodeAudioData(buf).then(function(b){bufs[c.id]=b;if(!c.tr)c.dur=b.duration;});
       }).catch(function(){}).then(function(){
         k++;setAudioMsg(k<n?'جارٍ تحميل الصوت '+k+'/'+n+'...':'');
         setTimeout(next,60);
