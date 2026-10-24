@@ -1,8 +1,14 @@
 /* gemini-studio.js: تعليق صوتي مصري وتفريغ صوتي عبر Gemini (منقول من OmniBoard)
-   يُحقن بواسطة build.js قبل </body>. يعتمد على دوال الصفحة العامة: clips, bufs, scenes, cs, ensureAC, newId,
+   يُحقن بواسطة build.js قبل </body>. يعتمد على window.__rsApp (جسر rs-bridge داخل السكربت الرئيسي): clips, bufs, scenes, selClip, cs, ensureAC, newId,
    idbGet, idbPut, idbDel, audioChanged, timeline, edited, renderScenePane, setTab. */
 (function () {
   if (window.__rsGem) return; window.__rsGem = 1;
+  var A = window.__rsApp;
+  if (!A) console.error('rs-gemini: window.__rsApp غير موجود (جسر rs-bridge ناقص في index.html)');
+  A = A || {};
+  var timeline = A.timeline, edited = A.edited, renderScenePane = A.renderScenePane, setTab = A.setTab,
+      ensureAC = A.ensureAC, newId = A.newId, idbGet = A.idbGet, idbPut = A.idbPut, idbDel = A.idbDel,
+      audioChanged = A.audioChanged, cs = A.cs;
   var KK = 'rassam_gem_key_v1';
   var BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
   /* تُجرَّب بالترتيب؛ عدّلها هنا لو تغيّرت أسماء النماذج */
@@ -12,6 +18,7 @@
     ['Charon', 'شارون (رجالي)'], ['Fenrir', 'فنرير (رجالي)'], ['Puck', 'باك (رجالي)']];
   var SPEEDS = [['0.8', 'بطيء'], ['1', 'عادي'], ['1.3', 'سريع']];
   var busy = false;
+  var last = []; /* آخر توليد: [{pcm, sr}] لزر التحميل */
 
   function $g(id) { return document.getElementById(id); }
   function key() { try { return localStorage.getItem(KK) || ''; } catch (e) { return ''; } }
@@ -79,7 +86,7 @@
     if (!a) throw new Error('تشغيل الصوت غير متاح في هذا المتصفح.');
     var b = a.createBuffer(1, r.f.length, r.sr); b.copyToChannel(r.f, 0);
     var c = { id: newId('a'), name: name.slice(0, 40), kind: 'voice', start: Math.round(start * 10) / 10, vol: 1, loop: false, dur: b.duration };
-    bufs[c.id] = b; clips.push(c); selClip = c.id;
+    A.bufs[c.id] = b; A.clips.push(c); A.selClip = c.id;
     var w = wav(r.pcm, r.sr);
     setTimeout(function () { idbPut(c.id, w); }, 80);
     return c;
@@ -95,32 +102,33 @@
     var o = opts(); lock(true); say('جارٍ توليد الصوت...');
     tts(tx, o.voice, o.speed).then(function (r) {
       timeline(); addVoice(r, 'تعليق Gemini', cs()._s);
-      audioChanged(); setTab('audio'); say('تمت إضافة التعليق عند بداية المشهد الحالي.');
+      last = [{ pcm: r.pcm, sr: r.sr }]; setDl();
+      audioChanged(); setTab('audio'); say('تمت إضافة التعليق عند بداية المشهد الحالي. يمكنك تحميله بزر «حمّل آخر توليد».');
     }).catch(function (e) { say(e.message || 'فشل التوليد.'); }).then(function () { lock(false); });
   }
 
   function genAll() {
     var list = [];
-    scenes.forEach(function (s, i) { var t = String(s.narr || '').trim(); if (t) list.push([i, t]); });
+    A.scenes.forEach(function (s, i) { var t = String(s.narr || '').trim(); if (t) list.push([i, t]); });
     if (!list.length) { say('لا توجد نصوص تعليق في المشاهد. اكتبها من تبويب «المشهد» أو ولّدها من تبويب الذكاء الاصطناعي.'); return; }
-    var o = opts(), k = 0; lock(true);
+    var o = opts(), k = 0; lock(true); last = []; setDl();
     /* نحذف تعليقات Gemini السابقة حتى لا تتكرر عند إعادة التوليد */
-    clips.filter(function (c) { return /^تعليق مشهد \d+/.test(c.name || ''); }).forEach(function (c) {
-      delete bufs[c.id]; idbDel(c.id); clips.splice(clips.indexOf(c), 1);
+    A.clips.filter(function (c) { return /^تعليق مشهد \d+/.test(c.name || ''); }).forEach(function (c) {
+      delete A.bufs[c.id]; idbDel(c.id); A.clips.splice(A.clips.indexOf(c), 1);
     });
     timeline();
     (function next() {
       if (k >= list.length) {
-        audioChanged(); setTab('audio'); lock(false);
-        say('تم توليد ' + list.length + ' مقطع. اضغط «مطابقة مدة المشاهد للتعليق الصوتي» لضبط التوقيت.');
+        audioChanged(); setTab('audio'); lock(false); setDl();
+        say('تم توليد ' + list.length + ' مقطع (يمكنك تحميلها بزر «حمّل آخر توليد»). اضغط «مطابقة مدة المشاهد للتعليق الصوتي» لضبط التوقيت.');
         return;
       }
       var it = list[k]; say('جارٍ توليد التعليق ' + (k + 1) + '/' + list.length + '...');
       tts(it[1], o.voice, o.speed).then(function (r) {
-        addVoice(r, 'تعليق مشهد ' + (it[0] + 1), scenes[it[0]]._s || 0); k++; next();
+        addVoice(r, 'تعليق مشهد ' + (it[0] + 1), A.scenes[it[0]]._s || 0); last.push({ pcm: r.pcm, sr: r.sr }); k++; next();
       }).catch(function (e) {
         if (k) audioChanged();
-        lock(false); say((e.message || 'فشل التوليد.') + (k ? ' (اكتمل ' + k + ' من ' + list.length + ')' : ''));
+        setDl(); lock(false); say((e.message || 'فشل التوليد.') + (k ? ' (اكتمل ' + k + ' من ' + list.length + ')' : ''));
       });
     })();
   }
@@ -142,8 +150,8 @@
   }
 
   function stt() {
-    if (!selClip) { say('اختر مقطعاً صوتياً من قائمة المقاطع أولاً.'); return; }
-    var id = selClip, fusha = $g('gemFusha').checked; lock(true); say('جارٍ قراءة المقطع...');
+    if (!A.selClip) { say('اختر مقطعاً صوتياً من قائمة المقاطع أولاً.'); return; }
+    var id = A.selClip, fusha = $g('gemFusha').checked; lock(true); say('جارٍ قراءة المقطع...');
     idbGet(id).then(function (buf) {
       if (!buf) throw new Error('بيانات هذا المقطع غير محفوظة. أعد رفعه أولاً.');
       if (buf.byteLength > 14 * 1024 * 1024) throw new Error('المقطع كبير للتفريغ (الحد 14 ميغابايت).');
@@ -170,6 +178,43 @@
     say('تم تعيين النص كتعليق للمشهد الحالي' + (t.length > 300 ? ' (قُصّ إلى 300 حرف).' : '.'));
   }
 
+
+  /* ---- تحميل الصوت ---- */
+  function safeName(s) { return String(s || 'صوت').replace(/[\\\/:*?"<>|]+/g, '-').trim().slice(0, 60) || 'صوت'; }
+  function saveBuf(buf, mime, filename) {
+    var u = URL.createObjectURL(new Blob([buf], { type: mime }));
+    var a = document.createElement('a'); a.href = u; a.download = filename; a.style.display = 'none';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(u); }, 20000);
+  }
+  /* دمج عدة مقاطع PCM في ملف WAV واحد بالتتابع مع فاصل 0.3 ثانية */
+  function mergePcm(list) {
+    var sr = list[0].sr, gap = Math.round(sr * 0.3) * 2, total = 0, i, o = 0;
+    for (i = 0; i < list.length; i++) total += list[i].pcm.length + (i ? gap : 0);
+    var all = new Uint8Array(total);
+    for (i = 0; i < list.length; i++) { if (i) o += gap; all.set(list[i].pcm, o); o += list[i].pcm.length; }
+    return wav(all, sr);
+  }
+  function setDl() { var b = $g('gemDl'); if (b) b.disabled = !last.length; }
+  function dlLast() {
+    if (!last.length) { say('ولّد صوتاً أولاً ثم حمّله.'); return; }
+    try {
+      if (last.length === 1) { saveBuf(wav(last[0].pcm, last[0].sr), 'audio/wav', 'تعليق-gemini.wav'); say('تم تحميل الصوت (WAV).'); }
+      else { saveBuf(mergePcm(last), 'audio/wav', 'تعليق-كل-المشاهد.wav'); say('تم تحميل ' + last.length + ' مقطع في ملف WAV واحد.'); }
+    } catch (e) { say('تعذّر تحميل الصوت.'); }
+  }
+  var EXT = { 'audio/wav': 'wav', 'audio/mp3': 'mp3', 'audio/aac': 'm4a', 'audio/ogg': 'ogg', 'audio/flac': 'flac' };
+  function dlSel() {
+    var id = A.selClip;
+    if (!id) { say('اختر مقطعاً صوتياً من قائمة المقاطع أولاً.'); return; }
+    var c = A.clips.filter(function (x) { return x.id === id; })[0];
+    idbGet(id).then(function (buf) {
+      if (!buf) throw new Error('بيانات هذا المقطع غير محفوظة. أعد رفعه أولاً.');
+      var m = mimeOf(buf);
+      saveBuf(buf, m, safeName(c && c.name) + '.' + (EXT[m] || 'mp3')); say('تم تحميل المقطع.');
+    }).catch(function (e) { say(e.message || 'تعذّر تحميل المقطع.'); });
+  }
+
   function build() {
     var pane = $g('pane-audio'); if (!pane || $g('gemBox')) return;
     var d = document.createElement('div'); d.className = 'field'; d.id = 'gemBox';
@@ -182,6 +227,8 @@
       '<button class="btn primary grow" id="gemAll" type="button">ولّد صوتاً لكل المشاهد</button></div>' +
       '<div class="row"><button class="btn grow" id="gemStt" type="button">فرّغ المقطع المحدد</button>' +
       '<button class="btn grow" id="gemSet" type="button">اجعله تعليق المشهد</button></div>' +
+      '<div class="row"><button class="btn grow" id="gemDl" type="button" disabled>حمّل آخر توليد</button>' +
+      '<button class="btn grow" id="gemDlSel" type="button">حمّل المقطع المحدد</button></div>' +
       '<label class="chk2"><input type="checkbox" id="gemFusha"> حوّل التفريغ إلى فصحى</label>' +
       '<p class="note" id="gemMsg" role="status"></p>';
     var f = pane.querySelector('.field'); pane.insertBefore(d, f);
@@ -191,6 +238,8 @@
     $g('gemAll').addEventListener('click', function () { if (!busy) genAll(); });
     $g('gemStt').addEventListener('click', function () { if (!busy) stt(); });
     $g('gemSet').addEventListener('click', function () { if (!busy) setNarr(); });
+    $g('gemDl').addEventListener('click', dlLast);
+    $g('gemDlSel').addEventListener('click', dlSel);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
 })();
