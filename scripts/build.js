@@ -88,7 +88,7 @@ html = html.slice(0, bi) + '<script id="rs-android-extras">\n' + extras + '\n</s
 console.log('OK: android extras injected');
 
 // إضافات مستقلة تُحقن بعد android-extras: Gemini (تعليق/تفريغ) وأنماط السبورة (بطاقة وعنوان)
-for (const [fname, sid] of [['gemini-studio.js', 'rs-gemini'], ['board-styles.js', 'rs-boardstyles'], ['crop-sheet.js', 'rs-cropsheet']]) {
+for (const [fname, sid] of [['gemini-studio.js', 'rs-gemini'], ['board-styles.js', 'rs-boardstyles'], ['crop-sheet.js', 'rs-cropsheet'], ['crash-journal.js', 'rs-journal']]) {
   const addon = path.join(__dirname, fname);
   if (!fs.existsSync(addon)) { console.warn('WARN: ' + fname + ' غير موجود (الميزة غير مفعّلة)'); continue; }
   if (html.includes('id="' + sid + '"')) { console.log('OK: ' + fname + ' موجود أصلاً في index.html'); continue; }
