@@ -1,0 +1,1325 @@
+<!doctype html><html><head><style id="rs-boot-css">html.rs-boot body{visibility:hidden}html.rs-boot{background:#f4f5f7}html.rs-boot::before{content:"جارٍ التحميل…";position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font:600 16px system-ui,sans-serif;color:#667085;z-index:99999;visibility:visible}@media (prefers-color-scheme:dark){html.rs-boot{background:#0f1218}html.rs-boot::before{color:#98a2b3}}</style><script>window.__idle=function(f){var d=0,g=function(){if(d)return;d=1;try{f()}catch(e){console.warn("idle task failed",e)}};if(window.requestIdleCallback)requestIdleCallback(g,{timeout:1200});else setTimeout(g,300);setTimeout(g,2000)};document.documentElement.classList.add("rs-boot");window.__rsReveal=function(){document.documentElement.classList.remove("rs-boot")};setTimeout(window.__rsReveal,6000);</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.tpl-pane-gap{margin:0}#pane-tpl>input#tplSearch,#pane-tpl>select#tplMode{width:100%;margin:0 0 8px}.tpl-ic{display:flex;gap:var(--sp-2);margin-bottom:8px;flex-wrap:wrap}.tpl-ic i{display:block;width:30px;height:30px;font-style:normal}.tpl-ic svg{width:100%;height:100%;display:block}
+</style><script>{{part:js/001.js}}</script><style id="rs-perf-contain">.tl-in,.tb,.scb,.trb,.ab{contain:layout style}</style><style id="rs-hide-plan">/* إخفاء خطة التطوير مع إبقاء صندوق التحديث التلقائي */#plan>:not(#updBox){display:none!important}#plan{margin-top:0}</style>
+</head><body>
+<svg id="rs-icons" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-add" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol><symbol id="i-props" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol><symbol id="i-scene" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M16 4v16M3 9h5M3 15h5M16 9h5M16 15h5"/></symbol><symbol id="i-audio" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></symbol><symbol id="i-tpl" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></symbol><symbol id="i-ws" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol><symbol id="i-qz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/></symbol><symbol id="i-ta" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></symbol><symbol id="i-tg" viewBox="0 0 24 24"><path d="M3 12V4h8l9 9-8 8z"/><path d="M7.5 8h.01"/></symbol><symbol id="i-ai" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></symbol><symbol id="i-brand" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></symbol><symbol id="i-assets" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol><symbol id="i-present" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M10.5 8l4 2-4 2z"/></symbol><symbol id="i-focus" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol><symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l12 8-12 8z" fill="currentColor"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-undo" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 1 2.5 5.8M4 5v7h7"/></symbol></svg>
+
+<title>رسّام السبورة</title>
+<meta name="app-version" content="71">
+<style>{{part:css/002.css}}</style>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Aref+Ruqaa:wght@400;700&family=Lemonada:wght@500;700&family=Cairo:wght@500;700&family=Caveat:wght@600&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Aref+Ruqaa:wght@400;700&family=Lemonada:wght@500;700&family=Cairo:wght@500;700&family=Caveat:wght@600&display=swap"></noscript>
+<style>{{part:css/003.css}}</style>
+
+<div id="app" dir="rtl" lang="ar">
+  <header class="top">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><path d="M6 28l3-9L24 4l6 6L15 25z" fill="var(--accent)"/><path d="M6 28l3-9 6 6z" fill="var(--fg)"/></svg>
+      <h1>رسّام السبورة</h1>
+    </div>
+    <span class="hb"><button class="badge" id="rsExpGo" type="button" title="الانتقال إلى التصدير" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent);font-weight:600"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>تصدير</button><button class="badge" id="hlpBtn" type="button" aria-haspopup="dialog" title="الاختصارات وشرح الأدوات (؟)"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-qz"/></svg>مساعدة</button><button class="badge" id="themeBtn" type="button" title="تبديل المظهر: تلقائي (حسب الجهاز) ← داكن ← فاتح">المظهر: تلقائي</button><span class="badge" id="saveSt" title="الحفظ التلقائي: نسخة على هذا الجهاز كل 3 ثوانٍ، ويعمل التحرير دون إنترنت">الحفظ التلقائي مفعّل</span><span class="badge" id="stgBadge">المرحلة 87</span></span>
+  </header>
+  <details class="rs-about"><summary>ما هذه الأداة؟</summary><p class="lead">أضف نصوصاً ورسومات من مكتبة جاهزة ورسوماً بيانية وملفات SVG وصوراً، قسّمها إلى مشاهد، واضبط الكاميرا والانتقالات والتوقيت على التايم لاين، وأضف التعليق الصوتي والموسيقى، أو اكتب فكرة ودع المساعد يبني المشاهد، ثم شاهدها تُرسم بيد تمسك قلماً وصدّرها كفيديو.</p></details>
+
+  <div class="rsnote" id="rsNote" role="status" hidden></div>
+
+  <main class="layout">
+    <section class="stage-col" aria-label="السبورة">
+      <div class="board">
+        <svg id="stage" viewBox="0 0 1280 720" role="img" aria-label="سبورة بيضاء">
+          <defs id="defs"></defs>
+          <rect width="1280" height="720" fill="#ffffff"/>
+          <g id="items"></g>
+          <text id="emptyMsg" x="640" y="360" text-anchor="middle" font-size="34" fill="#9aa3a0" font-family="'IBM Plex Sans Arabic','Cairo',sans-serif" visibility="hidden" pointer-events="none">هذا المشهد فارغ. أضف نصاً أو رسمة من لوحة الأدوات.</text>
+          <g id="overlay" pointer-events="none"></g>
+          <g id="hand" visibility="hidden" pointer-events="none">
+            <g id="handT">
+              <line x1="5" y1="7" x2="60" y2="84" stroke="#2a323b" stroke-width="13" stroke-linecap="round"/>
+              <line x1="10" y1="14" x2="26" y2="37" stroke="#8b96a1" stroke-width="13" stroke-linecap="round"/>
+              <circle id="penTip" cx="0" cy="0" r="6" fill="#222"/>
+              <path d="M30 54C46 44 68 52 78 70C102 66 126 82 124 112C122 142 98 162 68 154C44 148 32 126 38 104C28 88 24 68 30 54Z" fill="#f2cba8" stroke="#b5835a" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M38 102C46 86 60 78 74 76" fill="none" stroke="#b5835a" stroke-width="3" stroke-linecap="round"/>
+              <path d="M62 70C72 80 76 92 74 104" fill="none" stroke="#b5835a" stroke-width="3" stroke-linecap="round"/>
+            </g>
+          </g>
+<div id="pzBar" hidden>
+          <button class="btn" id="pzPrev" type="button" aria-label="المشهد السابق">›</button>
+          <span id="pzN" role="status"></span>
+          <button class="btn" id="pzNext" type="button" aria-label="المشهد التالي">‹</button>
+          <button class="btn" id="pzLaser" type="button" aria-pressed="false" title="مؤشر ليزر (L)">ليزر</button>
+          <button class="btn" id="pzPen" type="button" aria-pressed="false" title="قلم مؤقت (P)">قلم</button>
+          <button class="btn" id="pzClr" type="button" title="مسح الخطوط (C)">مسح</button>
+          <button class="btn" id="pzExit" type="button" title="خروج (Esc)">خروج</button>
+          <span id="pzHint">← التالي · → السابق · L ليزر · P قلم · C مسح · Esc خروج</span>
+        </div>
+        </svg>
+      </div>
+
+      <div class="transport">
+        <button class="btn primary icon" id="playBtn" aria-label="تشغيل"></button>
+        <button class="btn icon" id="restartBtn" aria-label="إعادة من البداية"></button>
+        <button class="btn" id="pzStart" type="button" title="عرض المشروع مشهداً بعد مشهد بملء الشاشة، بمؤشر ليزر وقلم مؤقت"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-present"/></svg>عرض مباشر</button>
+        <button class="btn icon" id="undoBtn" aria-label="تراجع" title="تراجع (Ctrl+Z)" disabled></button>
+        <button class="btn icon" id="redoBtn" aria-label="إعادة" title="إعادة (Ctrl+Shift+Z)" disabled></button>
+        <input class="scrub" id="scrub" type="range" min="0" max="0" step="1" value="0" aria-label="موضع التشغيل">
+        <span class="time" id="time">0.0 / 0.0</span>
+        <label class="chk"><input type="checkbox" id="handChk" checked> اليد</label>
+        <select id="penSel" class="hsel" aria-label="شكل القلم"><option value="ink">قلم حبر</option><option value="marker">ماركر</option><option value="pencil">قلم رصاص</option><option value="brush">فرشاة</option></select>
+        <select id="skinSel" class="hsel" aria-label="شكل اليد"><option value="light">يد فاتحة</option><option value="wheat">يد قمحية</option><option value="tan">يد سمراء</option><option value="dark">يد داكنة</option><option value="photo">يد حقيقية بقلم حبر (من صورتك)</option><option value="real">يد واقعية بقلم رصاص (مثل الصورة)</option><option value="realw">يد واقعية قمحية</option><option value="glove">قفاز أبيض</option><option value="none">بدون يد (القلم فقط)</option></select>
+        <button class="btn" id="haBtn" type="button" aria-expanded="false" aria-controls="haPanel"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-pen"/></svg>ضبط القلم</button>
+        <label class="chk"><input type="checkbox" id="audioOn" checked> الصوت</label>
+        <button class="btn" id="focusBtn" type="button" aria-pressed="false" title="وضع التركيز: السبورة وشريط التشغيل فقط (F). للخروج اضغط Esc"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-focus"/></svg>تركيز</button>
+        <button class="btn" id="galBtn" type="button" title="اختر صورة أو عدة صور من معرض الجهاز لإضافتها إلى المشهد الحالي">🖼 رفع صور من المعرض</button>
+        <input class="verh" id="galFiles" type="file" accept="image/*,.jpg,.jpeg,.jfif,.png,.gif,.webp,.avif,.bmp,.ico,.svg,.tif,.tiff,.heic,.heif,.apng" multiple hidden aria-label="اختر صوراً من المعرض">
+      </div>
+      <div class="hapanel" id="haPanel" hidden>
+        <p class="note" style="margin:0 0 6px">اضبط مكان رأس القلم على الخط واتجاه اليد. تظهر النتيجة فوراً أثناء التشغيل أو تحريك المؤشر، وتدخل في الفيديو المصدّر.</p>
+        <div class="harow"><label for="haDx">إزاحة أفقية</label><input type="range" id="haDx" min="-60" max="60" step="1"><output id="haDxO"></output></div>
+        <div class="harow"><label for="haDy">إزاحة رأسية</label><input type="range" id="haDy" min="-60" max="60" step="1"><output id="haDyO"></output></div>
+        <div class="harow"><label for="haRot">ميل اليد</label><input type="range" id="haRot" min="-45" max="45" step="1"><output id="haRotO"></output></div>
+        <div class="harow"><label for="haLead">تقديم القلم عن الخط (+) أو تأخيره (−)</label><input type="range" id="haLead" min="-0.15" max="0.15" step="0.01"><output id="haLeadO"></output></div>
+        <div class="harow"><label for="haSc">حجم اليد</label><input type="range" id="haSc" min="0.5" max="1.4" step="0.05"><output id="haScO"></output></div>
+        <label class="chk"><input type="checkbox" id="haAuto"> تميل اليد تلقائياً مع اتجاه الخط</label>
+        <label class="chk"><input type="checkbox" id="haGlide"> تنتقل اليد بانسياب إلى العنصر التالي (بدل القفز)</label>
+        <button class="btn" id="haReset" type="button">إعادة الضبط الافتراضي</button>
+      </div>
+
+      <div class="scenes" id="scenesBar" aria-label="المشاهد"></div>
+
+      <div class="tlwrap">
+        <div class="tlhead">
+          <span class="lbl">التايم لاين</span>
+          <div class="tlzoom">
+            <button class="btn sm" id="tlOut" aria-label="تصغير التايم لاين">−</button>
+            <button class="btn sm" id="tlIn2" aria-label="تكبير التايم لاين">+</button>
+          </div>
+        </div>
+        <div class="tlcut" id="tlCut" role="toolbar" aria-label="أدوات التقسيم والقص">
+          <button class="btn sm" id="tcSplit" type="button" title="يقسّم المقطع الصوتي المحدد إلى مقطعين عند المؤشر">✂ تقسيم</button>
+          <button class="btn sm" id="tcL" type="button" title="يحذف ما قبل المؤشر من المقطع أو الشريط المحدد">قص قبل المؤشر</button>
+          <button class="btn sm" id="tcR" type="button" title="يحذف ما بعد المؤشر من المقطع أو الشريط المحدد">قص بعد المؤشر</button>
+          <button class="btn sm" id="tcSc" type="button" title="يقسّم المشهد إلى مشهدين عند المؤشر">تقسيم المشهد</button>
+          <button class="btn sm" id="tcDel" type="button" title="يحذف المقطع أو الشريط المحدد">حذف المحدد</button>
+        </div>
+        <p class="hint" id="tcMsg" aria-live="polite" hidden></p>
+        <div class="tl" id="tl"><div class="tl-in" id="tlIn"></div></div>
+        <p class="hint">اسحب حافة أي شريط لتغيير مدة رسم العنصر، واسحب الشريط نفسه لتحديد لحظة بدء رسمه (يمكن أن يتداخل مع غيره فيظهر في صف آخر). اسحب المقاطع الصوتية لتحريكها (الأزرق تعليق، الأخضر موسيقى). اضغط على المسطرة للانتقال إلى لحظة معينة. اضغط على أي مقطع أو شريط لوضع المؤشر عند نقطة الضغط، ثم استخدم أزرار «تقسيم» و«قص». اسحب حافتَي المقطع الصوتي لقصّه مباشرة.</p>
+      </div>
+
+      <section class="export" aria-label="تصدير الفيديو">
+        <div class="exhead"><b>تصدير الفيديو</b><span class="note" id="exNote"></span></div>
+        <div class="row">
+          <select id="exRatio" aria-label="مقاس الفيديو"><option value="16:9">أفقي 16:9 (يوتيوب)</option><option value="9:16">عمودي 9:16 (ريلز وقصص)</option><option value="1:1">مربع 1:1 (إنستغرام)</option><option value="4:5">بورتريه 4:5 (منشور)</option></select>
+          <select id="exRes" aria-label="جودة الفيديو"><option value="720">جودة عالية (720)</option><option value="480">جودة خفيفة (480)</option></select>
+          <label class="chk"><input type="checkbox" id="exFill" checked> ملء الإطار (للعمودي والمربع)</label>
+          <button class="btn primary" id="exBtn">ابدأ التصدير</button>
+          <button class="btn" id="exFast" type="button" hidden title="تصدير MP4 أسرع من مدة الفيديو، دون انتظار الصفحة. يحتاج متصفحاً حديثاً.">تصدير سريع (MP4)</button>
+          <button class="btn" id="exTest" type="button" hidden title="يصدّر أول 5 ثوانٍ فقط لتتأكد من التوقيت والصوت قبل التصدير الكامل.">تجربة 5 ثوانٍ</button>
+        </div>
+        <div class="row">
+          <label class="chk" title="يخفّف المعاينة ويخفض دقة التصدير ويبقي الشاشة مضاءة. يُفعَّل تلقائياً على الأجهزة الضعيفة."><input type="checkbox" id="lowPow"> وضع الأجهزة الضعيفة</label>
+          <label class="chk" title="يصغّر اليد في الفيديو المُصدَّر عند الدقة المنخفضة وعند كتابة النص الصغير، حتى لا تغطي الكلام."><input type="checkbox" id="handAuto"> تصغير اليد تلقائياً</label>
+          <button class="btn" id="repBtn" style="width:auto;height:auto;padding:6px 12px;white-space:nowrap" type="button" title="يجمع معلومات الجهاز والأخطاء في نص تنسخه وترسله">نسخ تقرير المشاكل</button>
+        </div>
+        <details class="thbox" id="prDet">
+          <summary>إعدادات تصدير محفوظة</summary>
+          <div class="thin">
+            <div class="row"><select id="prSel" aria-label="الإعدادات المحفوظة"></select>
+            <button class="btn primary" id="prApply" type="button" style="width:auto;height:auto;padding:6px 12px">طبّق</button>
+            <button class="btn" id="prDel" type="button" style="width:auto;height:auto;padding:6px 12px">حذف</button></div>
+            <div class="row"><input id="prName" type="text" maxlength="40" placeholder="اسم جديد، مثل: يوتيوب عالي الجودة" aria-label="اسم الإعدادات" style="flex:1 1 180px;min-width:0">
+            <button class="btn" id="prSave" type="button" style="width:auto;height:auto;padding:6px 12px">احفظ الحالية</button></div>
+            <p class="note" id="prMsg" role="status">يحفظ المقاس والجودة وملء الإطار ووضع الأجهزة الضعيفة وتصغير اليد، ويطبّقها بنقرة. تُحفظ على هذا الجهاز.</p>
+          </div>
+        </details>
+        <textarea id="repTxt" readonly rows="7" hidden aria-label="تقرير المشاكل" style="width:100%;direction:ltr;font:12px/1.5 monospace"></textarea>
+        <div class="exprog" id="exProg" hidden><div id="exBar"></div></div>
+        <p class="note" id="exMsg">يُسجَّل الفيديو أثناء التشغيل بنفس مدته. أبقِ هذه الصفحة مفتوحة وظاهرة حتى ينتهي التسجيل.</p>
+        <div class="row" id="exDone" hidden>
+          <button class="btn primary" id="exSave">حفظ الفيديو</button>
+          <button class="btn" id="exMp4" hidden title="يحمّل أداة التحويل (نحو 30 ميغابايت) مرة واحدة من الإنترنت، ثم يحوّل داخل متصفحك">تحويل إلى MP4</button>
+          <input id="pkTitle" type="text" maxlength="80" placeholder="عنوان الفيديو (للغلاف والوصف)" aria-label="عنوان الفيديو" style="flex:1 1 180px;min-width:0">
+          <button class="btn" id="pubGo" type="button" title="ملف ZIP فيه الفيديو وصورة الغلاف والترجمة SRT ووصف بفصول زمنية">حزمة النشر (ZIP)</button>
+          <span class="note" id="exInfo"></span>
+        </div>
+        <details class="thbox" id="shDet">
+          <summary>مشاركة العرض كملف واحد</summary>
+          <div class="thin">
+            <div class="row"><select id="shMode" aria-label="طريقة العرض"><option value="step">يظهر عنصراً بعد عنصر</option><option value="full">مشهد كامل في كل خطوة</option></select>
+            <label class="chk"><input type="checkbox" id="shCap" checked> أظهر نص التعليق</label></div>
+            <input id="shTitle" type="text" maxlength="60" placeholder="عنوان العرض (اختياري)" aria-label="عنوان العرض">
+            <button class="btn primary" id="shGo" type="button">ابنِ ملف العرض</button>
+            <div class="exprog" id="shProg" hidden><div id="shBar"></div></div>
+            <div class="row" id="shDone" hidden><button class="btn primary" id="shSave" type="button">حفظ ملف العرض (HTML)</button><span class="note" id="shInfo"></span></div>
+            <p class="note" id="shMsg" role="status">يُنتج صفحة واحدة تفتح في أي متصفح بلا تطبيق ولا إنترنت: يتنقل بها من تشاركه بالأسهم أو النقر أو السحب، مع ملء الشاشة. العرض صور لمشاهدك (دون صوت)، فيناسب الإرسال لطالب أو زميل.</p>
+          </div>
+        </details>
+        <details class="thbox" id="srDet">
+          <summary>ترجمة SRT وصور المشاهد</summary>
+          <div class="thin">
+            <div class="row"><button class="btn primary" id="srSrt" type="button">حفظ ملف الترجمة (SRT)</button>
+            <select id="srLen" aria-label="طول السطر"><option value="38">سطر قصير (38 حرفاً)</option><option value="46" selected>سطر متوسط (46 حرفاً)</option><option value="60">سطر طويل (60 حرفاً)</option></select></div>
+            <p class="note" id="srSrtMsg" role="status">تُبنى الترجمة من نص التعليق في كل مشهد بتوقيت المشهد نفسه، وتصلح لرفعها مع الفيديو في يوتيوب.</p>
+            <div class="row"><select id="srScene" aria-label="المشهد"></select>
+            <select id="srRes" aria-label="دقة الصورة"><option value="1">1280×720</option><option value="1.5">1920×1080</option></select>
+            <label class="chk"><input type="checkbox" id="srGrade" checked> طبّق الألوان السينمائية</label></div>
+            <button class="btn primary" id="srPng" type="button">حفظ الصور (PNG)</button>
+            <div class="exprog" id="srProg" hidden><div id="srBar"></div></div>
+            <p class="note" id="srPngMsg" role="status">اختر مشهداً واحداً لصورة PNG، أو «كل المشاهد» لملف ZIP فيه صورة لكل مشهد بعد اكتمال رسمه.</p>
+          </div>
+        </details>
+        <details class="thbox" id="thDet">
+          <summary>صورة مصغّرة لليوتيوب</summary>
+          <div class="thin">
+            <div class="row"><select id="thScene" aria-label="المشهد"></select><select id="thPos" aria-label="مكان العنوان"><option value="top">العنوان أعلى</option><option value="mid">العنوان في الوسط</option><option value="bot" selected>العنوان أسفل</option></select></div>
+            <input id="thTitle" type="text" maxlength="60" placeholder="عنوان الصورة (يُملأ من المشهد)" aria-label="عنوان الصورة المصغّرة">
+            <div class="row"><select id="thStyle" aria-label="شكل العنوان"><option value="band">أبيض على شريط داكن</option><option value="yel">أصفر بحدّ داكن</option><option value="wht">أبيض بحدّ أسود</option></select>
+            <label class="chk"><input type="checkbox" id="thBrand" checked> شعارك واسمك</label></div>
+            <button class="btn primary" id="thGo" type="button">ولّد الصورة</button>
+            <canvas id="thCv" width="1280" height="720" hidden aria-label="معاينة الصورة المصغّرة"></canvas>
+            <div class="row" id="thDone" hidden><button class="btn primary" id="thSave" type="button">حفظ الصورة (PNG)</button></div>
+            <p class="note" id="thMsg" role="status">تُبنى من المشهد الذي تختاره بمقاس 1280×720 المناسب ليوتيوب، مع عنوان كبير مقروء وألوانك السينمائية.</p>
+          </div>
+        </details>
+        <div class="row">
+          <button class="btn" id="pjSave">حفظ المشروع كملف</button>
+          <label class="btn" for="pjFile" style="cursor:pointer;display:inline-flex;align-items:center">فتح مشروع من ملف</label>
+          <input type="file" id="pjFile" accept=".json,application/json" hidden>
+        </div>
+        <div class="row" style="flex-wrap:wrap">
+          <button class="btn primary" id="bkSave" type="button">نسخة احتياطية كاملة (مع الصوت)</button>
+          <label class="btn" for="bkFile" style="cursor:pointer;display:inline-flex;align-items:center">استرجاع نسخة كاملة</label>
+          <input type="file" id="bkFile" hidden>
+        </div>
+        <p class="note" id="bkMsg" role="status">النسخة الكاملة (ملف .rsbak) تحفظ كل المشاريع والصور والرسومات والتعليق الصوتي والموسيقى والإعدادات. الاسترجاع يستبدل كل ما في التطبيق الحالي.</p>
+        <div class="row" style="flex-wrap:wrap;align-items:center">
+          <button class="btn" id="npBtn" type="button">مشروع جديد</button>
+          <select id="npStart" aria-label="بداية المشروع الجديد"><option value="blank">يبدأ بمشهد فارغ</option><option value="frame">مشهد فارغ مع المقدمة والخاتمة</option><option value="sample">المثال التوضيحي</option></select>
+        </div>
+        <div class="row"><button class="btn" id="ckBtn">فحص قبل التصدير</button><button class="btn" id="spBtn">فحص الإملاء</button></div>
+        <div id="spOut" class="note" hidden></div>
+        <div id="ckOut" class="note" hidden></div>
+        <p class="note" id="pjMsg">يُحفظ المشروع بمشاهده وصوره ورسوماته. التعليق الصوتي والموسيقى المرفوعة لا تُحفظ في الملف. عند الفتح تُضاف المشاهد بعد المشهد الحالي.</p>
+      </section>
+    </section>
+
+    <aside class="panel" aria-label="أدوات السبورة">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tab-add" aria-selected="true" data-tab="add"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-add"/></svg>إضافة</button>
+        <button class="tab" role="tab" id="tab-ttv" aria-selected="false" data-tab="ttv"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-present"/></svg>نص لفيديو</button>
+        <button class="tab" role="tab" id="tab-list" aria-selected="false" data-tab="list"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-list"/></svg>العناصر</button>
+        <button class="tab" role="tab" id="tab-props" aria-selected="false" data-tab="props"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-props"/></svg>الخصائص</button>
+        <button class="tab" role="tab" id="tab-scene" aria-selected="false" data-tab="scene"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-scene"/></svg>المشهد</button>
+        <button class="tab" role="tab" id="tab-audio" aria-selected="false" data-tab="audio"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-audio"/></svg>الصوت</button>
+        <button class="tab" role="tab" id="tab-tpl" aria-selected="false" data-tab="tpl"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-tpl"/></svg>قوالب</button>
+        <button class="tab" role="tab" id="tab-ws" aria-selected="false" data-tab="ws"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-ws"/></svg>أوراق عمل</button>
+        <button class="tab" role="tab" id="tab-qz" aria-selected="false" data-tab="qz"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-qz"/></svg>أسئلة</button>
+        <button class="tab" role="tab" id="tab-ta" aria-selected="false" data-tab="ta"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-ta"/></svg>محلل</button>
+        <button class="tab" role="tab" id="tab-tg" aria-selected="false" data-tab="tg"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-tg"/></svg>وسوم</button>
+        <button class="tab" role="tab" id="tab-ai" aria-selected="false" data-tab="ai"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-ai"/></svg>المساعد</button>
+        <button class="tab" role="tab" id="tab-brand" aria-selected="false" data-tab="brand"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-brand"/></svg>الهوية</button>
+        <button class="tab" role="tab" id="tab-assets" aria-selected="false" data-tab="assets"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-assets"/></svg>الأصول</button>
+      </div>
+
+      <div class="pane" id="pane-add" role="tabpanel">
+        <button class="btn primary" type="button" data-tab="ttv" style="width:100%;margin-bottom:8px">نص إلى فيديو: مشاهد وبرومتات وعناصر</button>
+        <div class="field" id="vfxBox">
+          <details id="vfxDet">
+            <summary class="lbl">لمسات بصرية: فقاعة كلام وموصّل وسبورة طباشيرية</summary>
+            <div class="vbin">
+              <span class="lbl">فقاعة كلام</span>
+              <textarea id="vfBubTx" rows="2" maxlength="120" placeholder="اكتب كلام الفقاعة" aria-label="نص الفقاعة"></textarea>
+              <div class="row"><select id="vfBubTail" aria-label="مكان الذيل"><option value="L">الذيل من اليسار</option><option value="R">الذيل من اليمين</option></select>
+              <button class="btn primary" id="vfBubGo" type="button">أضف الفقاعة</button></div>
+              <span class="lbl">موصّل بين عنصرين</span>
+              <div class="row"><select id="vfFrom" aria-label="من العنصر"></select><select id="vfTo" aria-label="إلى العنصر"></select></div>
+              <div class="row"><select id="vfConStyle" aria-label="شكل الموصّل"><option value="line">مستقيم</option><option value="curve">منحنٍ</option><option value="elbow">بزاوية قائمة</option></select>
+              <label class="chk"><input type="checkbox" id="vfConHead" checked> رأس سهم</label>
+              <button class="btn primary" id="vfConGo" type="button">ارسم الموصّل</button></div>
+              <span class="lbl">ستايل السبورة الطباشيرية</span>
+              <div class="row"><button class="btn" id="vfChalkOn" type="button">حوّل المشروع إلى سبورة خضراء</button><button class="btn" id="vfChalkOff" type="button">أعد السبورة البيضاء</button></div>
+              <p class="note" id="vfxMsg" role="status">الموصّل يُرسم بين موضعي العنصرين وقت الإنشاء، فإن حرّكتهما بعدها أعد رسمه. ولانتقال «ممحاة» افتح تبويب «المشهد».</p>
+            </div>
+          </details>
+        </div>
+        <div class="field" id="vbBox">
+          <details id="vbDet">
+            <summary class="lbl">ابنِ فيديو أو عرضاً من أي محتوى (درس، فكرة، PDF، شرائح، مشاهد ذكية، صور)</summary>
+            <div class="vbin">
+              <textarea id="vbTxt" rows="6" maxlength="20000" placeholder="الصق نص الدرس هنا. يُقسَّم إلى مشاهد مترابطة بكاميرا وانتقالات مناسبة لكل مشهد." aria-label="نص الدرس"></textarea>
+              <div class="row">
+                <select id="vbLines" aria-label="أسطر لكل مشهد"><option value="3">3 أسطر لكل مشهد</option><option value="4" selected>4 أسطر لكل مشهد</option><option value="5">5 أسطر لكل مشهد</option></select>
+                <select id="vbStyle" aria-label="نمط الكاميرا"><option value="dyn" selected>نمط ديناميكي</option><option value="calm">نمط هادئ</option><option value="cine">نمط سينمائي</option></select>
+              </div>
+              <div class="row"><select id="vbMode" aria-label="مكان الإضافة"><option value="after">أضف بعد المشهد الحالي</option><option value="replace">استبدل كل المشاهد</option></select>
+        <select id="tplTheme" aria-label="سمة ألوان أوراق العمل" style="width:100%;margin:0 0 8px"><option value="kids">سمة أوراق العمل: مرحة</option><option value="ocean">سمة: بحرية</option><option value="forest">سمة: غابة</option><option value="sunset">سمة: غروب</option></select>
+        <p class="note"><b>قطع جاهزة</b> تُضاف للمشهد الحالي بسمة الألوان المختارة:</p><div id="wsPcs" style="display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px"></div><p class="note" id="wsMsg" role="status"></p></div>
+              <label for="vbFiles" class="lbl" style="font-size:13px">صور اختيارية (تُوضع في مشهد واحد بعد المقدمة، وتُسمّى من أسمائها)</label>
+              <input type="file" id="vbFiles" accept="image/*" multiple aria-label="اختر صوراً">
+              <p class="note" id="vbCnt" style="margin:0"></p>
+              <button class="btn primary" id="vbGo" type="button">ابنِ الفيديو</button>
+              <ol class="ssout" id="vbOut" hidden></ol>
+              <p class="note" id="vbMsg" role="status">الصق الدرس واضغط الزر: يُقسَّم إلى مشاهد، وتُوضع الصور المختارة في مشهد بعد المقدمة، ثم يُختار لكل مشهد كاميرا وانتقال. لمصدر آخر (فكرة، PDF، شرائح، مشاهد ذكية، صور) اختر تبويبه أعلاه.</p>
+            </div>
+            <details id="vbAdv"><summary>خيارات متقدمة (فكرة وسكريبت، نظام المشاهد، مجموعة صور، مكتبة المشاهد)</summary><div id="vbAdvBody" class="vbadv"></div></details>
+          </details>
+        </div>
+        <div class="field">
+          <label for="ideaTxt">فكرة الفيديو (المساعد يكتب السكريبت ويبني المشاهد)</label>
+          <input id="ideaTxt" type="text" maxlength="120" placeholder="مثال: كيف بنى المصريون القدماء الأهرامات">
+          <div class="row"><select id="ideaN" aria-label="عدد المشاهد"><option value="4">4 مشاهد</option><option value="6" selected>6 مشاهد</option><option value="8">8 مشاهد</option></select><button class="btn primary" id="ideaGo" type="button">اكتب السكريبت وابنِ الفيديو</button></div>
+          <p class="note" id="ideaMsg">اكتب فكرة واضغط الزر: يُكتب السكريبت ثم تُبنى المشاهد بتخطيطات متنوعة ورسومات حسب المعنى. ويظهر السكريبت أدناه لتعدّله.</p>
+          <label for="scrTxt">سكريبت الفيديو (تقسيم تلقائي لمشاهد)</label>
+          <textarea id="scrTxt" rows="6" maxlength="20000" placeholder="الصق السكريبت هنا. كل فقرة (سطر فارغ بينها) أو مجموعة جمل تصبح مشهداً."></textarea>
+          <div class="row">
+            <select id="scrLines" aria-label="أسطر لكل مشهد"><option value="3">3 أسطر لكل مشهد</option><option value="4" selected>4 أسطر لكل مشهد</option><option value="5">5 أسطر لكل مشهد</option></select>
+            <select id="scrMode" aria-label="مكان الإضافة"><option value="after">أضف بعد المشهد الحالي</option><option value="replace">استبدل كل المشاهد</option></select>
+          </div>
+          <label class="chk"><input type="checkbox" id="scrShape" checked> أضف رسمة تلقائية لكل مشهد</label>
+          <label class="chk"><input type="checkbox" id="scrSmart" checked> اختر الرسمة حسب معنى كل مشهد (يعمل دون إنترنت، ويستعين بالمساعد للمشاهد الغامضة)</label>
+          <button class="btn primary" id="scrGo" type="button">قسّم إلى مشاهد</button>
+          <p class="note" id="scrMsg">كل فقرة تبدأ مشهداً جديداً، والجمل الطويلة تُقسَّم إلى أسطر قصيرة تلقائياً. يمكنك تعديل أي مشهد بعد ذلك.</p>
+        </div>
+        <div class="field" id="pdBox">
+          <span class="lbl">قراءة ملف PDF وتحويله إلى شرح</span>
+          <input type="file" id="pdFile" accept=".pdf,application/pdf" aria-label="ملف PDF">
+          <div class="row">
+            <input id="pdFrom" type="number" min="1" placeholder="من صفحة" aria-label="من صفحة" style="width:110px">
+            <input id="pdTo" type="number" min="1" placeholder="إلى صفحة" aria-label="إلى صفحة" style="width:110px">
+            <select id="pdOut" aria-label="شكل الناتج"><option value="slides">عرض تعليمي بشرائح</option><option value="scenes">شرح بمشاهد (سكريبت)</option></select>
+          </div>
+          <label class="chk"><input type="checkbox" id="pdAI" checked> اطلب من المساعد كتابة شرح مبسّط للنص قبل التحويل (إن لم يتوفر يُستخدم النص كما ورد)</label>
+          <button class="btn primary" id="pdGo" type="button">اقرأ الملف وحوّله</button>
+          <p class="note" id="pdMsg">يُقرأ نص الملف (حتى 40 صفحة إن لم تحدد المدى) ثم يتحول إلى شرح مبسّط يُبنى منه عرض أو مشاهد. يحتاج قارئ PDF إنترنت مرة واحدة. الملفات الممسوحة ضوئياً (صور بلا نص) لا تُقرأ.</p>
+        </div>
+        <div class="field" id="prBox">
+          <span class="lbl">صانع العروض التعليمية</span>
+          <textarea id="prTxt" rows="6" maxlength="20000" placeholder="الصق نص الدرس هنا. افصل الفقرات بسطر فارغ، وإن كتبت عنواناً قصيراً في سطر مستقل قبل الفقرة صار عنوان شريحتها."></textarea>
+          <input id="prTitle" type="text" maxlength="60" placeholder="عنوان العرض (اختياري)" aria-label="عنوان العرض">
+          <div class="row">
+            <select id="prN" aria-label="عدد الشرائح"><option value="0">عدد الشرائح تلقائي</option><option value="4">4 شرائح</option><option value="6">6 شرائح</option><option value="8">8 شرائح</option><option value="10">10 شرائح</option></select>
+            <select id="prPts" aria-label="نقاط لكل شريحة"><option value="2">نقطتان لكل شريحة</option><option value="3" selected>3 نقاط لكل شريحة</option><option value="4">4 نقاط لكل شريحة</option></select>
+            <select id="prMode" aria-label="مكان الإضافة"><option value="after">أضف بعد المشهد الحالي</option><option value="replace">استبدل كل المشاهد</option></select>
+          </div>
+          <label class="chk"><input type="checkbox" id="prCover" checked> شريحة عنوان في البداية</label>
+          <label class="chk"><input type="checkbox" id="prOut" checked> شريحة «محاور الدرس»</label>
+          <label class="chk"><input type="checkbox" id="prSum" checked> شريحة «الخلاصة» في النهاية</label>
+          <label class="chk"><input type="checkbox" id="prNotes" checked> ملاحظات للشرح في كل شريحة (تُكتب في «نص التعليق» وتظهر كترجمة في الفيديو المصدّر)</label>
+          <label class="chk"><input type="checkbox" id="prImg" checked> اسمح بصور الشخصيات من المكتبة بجانب الرسومات</label>
+          <label class="chk"><input type="checkbox" id="prAI" checked> استعن بالمساعد في التلخيص والملاحظات واختيار الرسومات (إن لم يتوفر يعمل دون إنترنت)</label>
+          <button class="btn primary" id="prGo" type="button">حوّل الدرس إلى عرض</button>
+          <p class="note" id="prBuildMsg" role="status">كل شريحة بعنوان ونقاط قصيرة ورسمة مناسبة لمعناها، وتتبدل الرسمة بين اليمين واليسار. يُفصل ما تداخل تلقائياً، ويمكنك تعديل أي شريحة بعد ذلك.</p>
+        </div>
+        <div class="field" id="ssBox">
+          <span class="lbl">نظام المشاهد الذكي</span>
+          <textarea id="ssTxt" rows="5" maxlength="20000" placeholder="الصق نص الدرس هنا لتقسيمه إلى مشاهد مترابطة، أو اترك الخانة فارغة واضغط «اربط مشاهد المشروع»."></textarea>
+          <div class="row">
+            <select id="ssLines" aria-label="أسطر لكل مشهد"><option value="3">3 أسطر لكل مشهد</option><option value="4" selected>4 أسطر لكل مشهد</option><option value="5">5 أسطر لكل مشهد</option></select>
+            <select id="ssMode" aria-label="مكان الإضافة"><option value="after">أضف بعد المشهد الحالي</option><option value="replace">استبدل كل المشاهد</option></select>
+          </div>
+          <div class="row">
+            <select id="ssStyle" aria-label="نمط الحركة"><option value="dyn" selected>نمط ديناميكي</option><option value="calm">نمط هادئ</option><option value="cine">نمط سينمائي</option></select>
+            <select id="ssScope" aria-label="نطاق الربط"><option value="all">كل مشاهد المشروع</option><option value="from">من المشهد الحالي إلى النهاية</option><option value="cur">المشهد الحالي فقط</option></select>
+          </div>
+          <button class="btn primary" id="ssGo" type="button">قسّم الدرس وابنِ مشاهد مترابطة</button>
+          <button class="btn" id="ssLink" type="button">اربط مشاهدي الحالية (كاميرا وانتقالات)</button>
+          <ol class="ssout" id="ssOut" hidden></ol>
+          <p class="note" id="ssMsg">يقسّم الدرس إلى مشاهد، ثم يختار لكل مشهد حركة كاميرا وانتقالاً يناسب محتواه: تقريب في الافتتاح، وتتبّع للقوائم، وتحريك للعناصر المتباعدة، وابتعاد في الختام، مع تنويع الانتقالات بين المشاهد.</p>
+          <span class="lbl">مكتبة المشاهد (إعادة الاستخدام)</span>
+          <div class="row"><input id="slName" type="text" maxlength="30" placeholder="اسم المشهد في المكتبة (اختياري)" aria-label="اسم المشهد في المكتبة"><button class="btn" id="slAdd" type="button">احفظ المشهد الحالي</button></div>
+          <div class="row"><input id="slSearch" type="search" placeholder="ابحث في المكتبة" aria-label="بحث في مكتبة المشاهد"><button class="btn" id="slExp" type="button">صدّر المكتبة</button><button class="btn" id="slImp" type="button">استورد مكتبة</button><input id="slFile" type="file" accept=".json,application/json" hidden></div>
+          <div class="sllist" id="slList"></div>
+          <p class="note" id="slEmpty">لا توجد مشاهد محفوظة بعد. احفظ مشهداً جيداً (افتتاح، خاتمة، شريحة تعريف) لتدرجه لاحقاً في أي مشروع.</p>
+          <p class="note" id="slMsg" style="margin:0"></p>
+        </div>
+        <div class="field" id="mgBox">
+          <span class="lbl">مجموعة صور في مشهد واحد</span>
+          <input type="file" id="mgFiles" accept="image/*" multiple aria-label="اختر عدة صور">
+          <div class="row">
+            <input id="mgSearch" type="text" placeholder="ابحث عن شخصية في المكتبة (ملكة، كاتب، جندي)" aria-label="بحث في مكتبة الشخصيات">
+            <button class="btn" id="mgMine" type="button">من مكتبتي</button>
+          </div>
+          <div class="mgpick" id="mgPick" hidden></div>
+          <div class="mglist" id="mgList"></div>
+          <p class="note" id="mgCount" style="margin:0"></p>
+          <button class="btn" id="mgClr" type="button" hidden>أفرغ القائمة</button>
+          <input id="mgTitle" type="text" maxlength="50" placeholder="عنوان المشهد (اختياري)" aria-label="عنوان المشهد">
+          <div class="row">
+            <select id="mgLay" aria-label="تخطيط الصور"><option value="grid">شبكة منتظمة</option><option value="row">صف أفقي</option><option value="focus">الأولى كبيرة والباقي بجانبها</option></select>
+            <select id="mgTime" aria-label="طريقة الظهور"><option value="seq">تظهر واحدة بعد الأخرى</option><option value="all">تظهر كلها معاً</option></select>
+          </div>
+          <div class="row">
+            <select id="mgDur" aria-label="مدة كل صورة"><option value="2">2 ثانية لكل صورة</option><option value="3" selected>3 ثوانٍ لكل صورة</option><option value="4">4 ثوانٍ لكل صورة</option></select>
+            <select id="mgMode" aria-label="شكل الصورة"><option value="sketch">ترسم بالقلم</option><option value="color">بألوانها</option></select>
+            <select id="mgWhere" aria-label="مكان الإضافة"><option value="cur">في المشهد الحالي</option><option value="new">في مشهد جديد بعده</option></select>
+          </div>
+          <label class="chk"><input type="checkbox" id="mgCap" checked> اكتب اسم كل صورة تحتها</label>
+          <label class="chk"><input type="checkbox" id="mgTog" checked> يظهر الاسم مع صورته معاً (وإلا بعدها)</label>
+          <button class="btn primary" id="mgGo" type="button" disabled>ضع الصور في المشهد</button>
+          <p class="note" id="mgMsg">اختر عدة صور أو شخصيات، سمِّ كل واحدة ورتّبها، فتُوزَّع في مشهد واحد وتظهر بالتتابع أثناء الشرح (الأولى على اليمين لتناسب القراءة العربية). حتى 12 صورة.</p>
+        </div>
+        <div class="field">
+          <label for="newText">نص جديد</label>
+          <input id="newText" type="text" maxlength="60" placeholder="اكتب النص هنا">
+          <div class="row">
+            <select id="newFont" aria-label="نوع الخط"></select>
+            <button class="btn primary" id="addText">أضف النص</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="listTxt">نص متعدد الأسطر أو قائمة</label>
+          <textarea id="listTxt" rows="4" placeholder="كل سطر في سطر (حتى 8 أسطر)"></textarea>
+          <div class="row">
+            <select id="listBul" aria-label="بداية كل سطر"><option value="dot">نقاط •</option><option value="num">أرقام 1. 2.</option><option value="none">بدون</option></select>
+            <select id="listAl" aria-label="المحاذاة"><option value="start">بداية السطر</option><option value="center">وسط</option></select>
+          </div>
+          <button class="btn primary" id="listBtn" type="button">أضف الأسطر</button>
+          <p class="note" id="listMsg"></p>
+        </div>
+        <div class="field">
+          <span class="lbl">لون القلم</span>
+          <div class="swatches" id="penSw"></div>
+        </div>
+        <div class="field">
+          <span class="lbl">رسم حر بالقلم</span>
+          <button class="btn" id="fdBtn" type="button" aria-pressed="false">ابدأ الرسم الحر</button>
+          <div class="rng"><span>سمك الخط</span><input type="range" id="fdW" min="2" max="20" step="1" value="5" aria-label="سمك الخط"><output id="fdWo">5</output></div>
+          <div class="actions"><button class="btn" id="fdUndo" type="button" disabled>تراجع عن خط</button><button class="btn" id="fdCancel" type="button" disabled>إلغاء</button><button class="btn primary" id="fdDone" type="button" disabled>أضف الرسمة للمشهد</button></div>
+          <p class="note" id="fdMsg">اضغط «ابدأ الرسم الحر» ثم ارسم على السبورة بإصبعك أو بالماوس، وسيعيد القلم رسم خطوطك بنفس الترتيب. بدّل لون القلم بين الخطوط ثم اضغط «أضف الرسمة للمشهد».</p>
+        </div>
+        <div class="field">
+          <span class="lbl">صورة</span>
+          <label class="btn primary" for="fileImg">+ رفع صورة أو أكثر (من المعرض)</label>
+          <input class="verh" id="fileImg" type="file" accept="image/*,.jpg,.jpeg,.jfif,.png,.gif,.webp,.avif,.bmp,.ico,.svg,.tif,.tiff,.heic,.heif,.apng" multiple>
+          <div class="rmbg"><label class="chk2"><input type="checkbox" id="imgRmBg"> إزالة الخلفية عند الرفع</label><select id="imgRmMode" aria-label="نوع الخلفية"><option value="auto">خلفية بلون واحد (تلقائي)</option><option value="green">شاشة خضراء</option></select><label class="rng"><span>الحساسية</span><input type="range" id="imgRmTol" min="10" max="90" step="1" value="40" aria-label="حساسية إزالة الخلفية"><output id="imgRmTolO">40</output></label></div>
+          <p class="note" id="imgMsg">تُرسم الصورة بحركة تلوين تدريجية. الصور البسيطة ذات الخطوط الواضحة تعطي أفضل رسم خطي.</p>
+          <label class="btn" for="fileVid">+ فيديو قصير</label>
+          <input class="verh" id="fileVid" type="file" accept="video/*">
+          <p class="note" id="vidMsg">يظهر الفيديو بعد رسم إطاره ثم يعمل بلا صوت. لا يُحفظ مع المشروع (يبقى إطاره الأول كصورة)، وأعد رفعه في كل جلسة.</p>
+        </div>
+        <div class="field">
+          <span class="lbl">مكتبة الشخصيات التاريخية</span>
+          <div class="libgrid" id="libGrid"></div>
+          <p class="note">اضغط على شخصية لإضافتها للمشهد. الصور مولّدة بالذكاء الاصطناعي والأسماء وصفية وليست توثيقاً لهوية شخصيات محددة.</p>
+        </div>
+        <div class="field">
+          <span class="lbl">مكتبة الأشخاص (معلمون وطلاب ومهن)</span>
+          <div class="libgrid" id="pplGrid"></div>
+          <p class="note">32 شخصاً معاصراً بخلفية شفافة (معلم، طالب، طبيب، مهندس…). اضغط على أي شخص لإضافته للمشهد، فيرسمه القلم ثم يلوّنه. الصور مولّدة بالذكاء الاصطناعي.</p>
+        </div>
+        <div class="field">
+          <span class="lbl">ملف SVG</span>
+          <label class="btn" for="fileSvg">+ رفع ملف SVG</label>
+          <input class="verh" id="fileSvg" type="file" accept=".svg,image/svg+xml">
+          <textarea id="svgCode" rows="3" maxlength="300000" placeholder="أو الصق كود SVG هنا" aria-label="كود SVG"></textarea>
+          <button class="btn" id="svgPaste">أضف من الكود</button>
+          <p class="note" id="svgMsg">يرسم القلم الخطوط والأشكال ثم يلوّنها. لا تُنقل النصوص والصور والمؤثرات داخل الملف.</p>
+        </div>
+        <div class="field">
+          <span class="lbl">مكتبتي (صور وSVG محفوظة)</span>
+          <label class="btn primary" for="myFiles">+ إضافة صور أو SVG إلى مكتبتي</label>
+          <input class="verh" id="myFiles" type="file" accept="image/*,.svg,image/svg+xml" multiple>
+          <div class="libgrid" id="myGrid"></div>
+          <p class="note" id="myMsg">اختر صورة أو أكثر أو ملفات SVG لتُحفظ في الأداة على هذا الجهاز وتبقى بعد إغلاق الصفحة. اضغط أي عنصر لإضافته إلى المشهد، وعلامة × لحذفه من المكتبة.</p>
+        </div>
+        <div class="field">
+          <span class="lbl">رسم بياني</span>
+          <div class="seg"><button data-chart="bar">أعمدة</button><button data-chart="pie">دائري</button><button data-chart="line">خطي</button></div>
+          <p class="note">يرسمه القلم عموداً بعد عمود. عدّل الأرقام من تبويب الخصائص أو الصق بياناتك دفعة واحدة.</p>
+        </div>
+        <div class="field" id="pkBox">
+          <span class="lbl">رسومات مقترحة لمشهدك</span>
+          <button class="btn" id="pkGo" type="button">اقترح رسمات من نص هذا المشهد</button>
+          <button class="btn" id="pkSwap" type="button">بدّل رسمة هذا المشهد (3 بدائل)</button>
+          <div class="shape-grid" id="pkGrid"></div>
+          <p class="note" id="pkMsg" role="status">يقرأ نص المشهد الحالي وتعليقه ويقترح رسمات وصوراً تناسب معناه، دون إنترنت.</p>
+        </div>
+        <div class="field">
+          <span class="lbl">مكتبة الرسومات</span>
+          <input id="libSearch" type="text" maxlength="30" placeholder="ابحث: قلب، سهم، حاسوب..." aria-label="بحث في مكتبة الرسومات">
+          <div class="libcats" id="libCats"></div>
+          <div id="libRecent" hidden></div>
+          <div class="shape-grid" id="shapeGrid"></div>
+          <p class="note" id="libCount"></p>
+        </div>
+        <div class="field svglib">
+          <span class="lbl">الرسومات التعليمية</span>
+          <input id="eduSearch" type="text" maxlength="30" placeholder="ابحث: مجهر، كتاب، علوم..." aria-label="بحث في الرسومات التعليمية">
+          <div class="libcats" id="eduCats"></div>
+          <div class="shape-grid" id="eduGrid"></div>
+          <p class="note" id="eduCount"></p>
+          <p class="note" id="eduMsg">رسومات ملوّنة بأسماء عربية. اضغط رسمة ليُضاف إلى المشهد ويرسمه القلم.</p>
+        </div>
+        <div class="field svglib">
+          <span class="lbl">رسومات عامة</span>
+          <div class="shape-grid" id="histGrid"></div>
+          <p class="note" id="histMsg">11 رسمة ملوّنة فريدة من حزمة الرسومات التاريخية. الحزمة الأصلية (500 رسمة) كانت هذه القوالب نفسها مكررة بألوان مختلفة وبعناوين لا تطابق الرسم، فأبقيت نسخة واحدة من كل قالب وسمّيتها بما تظهره.</p>
+        </div>
+        <div class="field svglib">
+          <span class="lbl">مكتبة SVG الملونة</span>
+          <div class="libcats" id="svgLibCats"></div>
+          <div class="shape-grid" id="svgLibGrid"></div>
+          <p class="note" id="svgLibMsg">732 تصميماً ملوّناً بلا تكرار (من حزمة 6000 ملف). اضغط تصميماً ليُضاف إلى المشهد ويرسمه القلم. الأسماء مرقّمة حسب التصنيف.</p>
+        </div>
+      </div>
+
+      <div class="pane" id="pane-ttv" role="tabpanel" hidden>
+        <div class="field" id="ttvBox">
+          <p class="note" style="margin:0 0 8px"><b>نص إلى فيديو</b>: الصق النص فيُقسَّم إلى مشاهد، ويُكتب لكل مشهد تعليق وبرومت ورقة عناصر (تُولَّد خارج الأداة وتُقصّ تلقائياً) مع اقتراح خرائط ذهنية وجداول.</p>
+          <div class="vbin">
+                <textarea id="ttvTxt" rows="6" maxlength="20000" placeholder="الصق النص كاملاً. يُقسَّم إلى مشاهد، ويُكتب لكل مشهد تعليق وبرومت ورقة عناصر." aria-label="النص"></textarea>
+                <input id="ttvStyle" type="text" maxlength="160" style="width:100%;margin-top:6px" placeholder="الأسلوب الموحّد للصور، مثل: رسم كرتوني مسطّح ملوّن" aria-label="الأسلوب الموحد للصور">
+                <div class="row"><select id="ttvPer" aria-label="جمل لكل مشهد"><option value="1">جملة لكل مشهد</option><option value="2" selected>جملتان لكل مشهد</option><option value="3">3 جمل لكل مشهد</option></select>
+                <select id="ttvCam" aria-label="نمط الكاميرا"><option value="dyn" selected>نمط ديناميكي</option><option value="calm">نمط هادئ</option><option value="cine">نمط سينمائي</option></select></div>
+                <div class="row"><select id="ttvMode" aria-label="ظهور العناصر"><option value="sketch" selected>تُرسم بالقلم ثم تتلوّن</option><option value="color">تظهر ملوّنة مباشرة</option></select>
+                <label class="chk"><input type="checkbox" id="ttvCaps" checked> اكتب اسم كل عنصر تحته</label></div>
+                <button class="btn primary" id="ttvGo" type="button">قسّم النص وأنشئ المشاهد والبرومتات</button>
+                <div id="ttvOut"></div>
+                <button class="btn" id="ttvCopy" type="button" disabled>نسخ كل البرومتات</button>
+                <p class="note" id="ttvMsg" role="status">الصق النص واضغط الزر. لكل مشهد برومت لورقة عناصر منفصلة: انسخه، ولِّد الورقة خارج الأداة، ثم ارفعها من بطاقة المشهد فتُقصّ عناصرها وتوضع في المشهد.</p>
+              </div>
+        </div>
+      </div>
+
+      <div class="pane" id="pane-list" role="tabpanel" hidden>
+        <span class="lbl" id="listHead"></span>
+        <ol class="list" id="list"></ol>
+        <div class="foot"><span id="totalInfo"></span><button class="btn" id="seqBtn" title="يلغي إزاحات البدء فتُرسم العناصر واحداً بعد آخر">إعادة التتابع</button><button class="btn" id="clearBtn">مسح عناصر المشهد</button></div>
+      </div>
+
+      <div class="pane" id="pane-props" role="tabpanel" hidden></div>
+      <div class="pane" id="pane-scene" role="tabpanel" hidden></div>
+
+      <div class="pane" id="pane-audio" role="tabpanel" hidden>
+        <div class="field">
+          <span class="lbl">إضافة صوت</span>
+          <div class="row">
+            <label class="btn grow" for="fileVoice">+ تعليق صوتي</label>
+            <label class="btn grow" for="fileMusic">+ موسيقى</label>
+          </div>
+          <input class="verh" id="fileVoice" type="file" accept="audio/*">
+          <input class="verh" id="fileMusic" type="file" accept="audio/*">
+          <p class="note" id="audioMsg"></p>
+          <div class="row"><button class="btn grow" id="fitVoice" type="button">مطابقة مدة المشاهد للتعليق الصوتي</button><button class="btn" id="fitUndo" type="button" disabled>تراجع</button></div>
+          <p class="note" id="fitMsg">تمدّ المشهد ليتسع للتعليق الصوتي الذي يبدأ فيه، وتُزاح المقاطع اللاحقة تبعاً لذلك. لا تُقصَّر المشاهد.</p>
+        </div>
+        <div class="field">
+          <span class="lbl">المقاطع</span>
+          <ul class="list" id="clipList"></ul>
+        </div>
+        <div class="field" id="clipProps"></div>
+        <div class="field">
+          <span class="lbl">مزامنة المشاهد مع التعليق</span>
+          <button class="btn primary" id="syncBtn" type="button">مزامنة المشاهد مع الصوت</button>
+          <p class="note" id="syncMsg">اكتب نص التعليق لكل مشهد (تبويب «المشهد») وارفع التعليق الصوتي، فتتمدد مدة رسم العناصر أو تنكمش بحسب طول كل نص حتى ينتهي الصوت مع آخر مشهد.</p>
+        </div>
+        <div class="field">
+          <span class="lbl">مؤثرات مولّدة</span>
+          <label class="chk2"><input type="checkbox" id="penOn"> صوت القلم أثناء الرسم</label>
+          <input type="range" id="penVol" min="0" max="1" step="0.05" value="0.5" aria-label="مستوى صوت القلم">
+          <label class="chk2"><input type="checkbox" id="genOn"> موسيقى هادئة مولّدة</label>
+          <input type="range" id="genVol" min="0" max="1" step="0.05" value="0.35" aria-label="مستوى الموسيقى المولّدة">
+          <span class="lbl" style="margin-top:10px;display:block">مستوى المؤثرات الصوتية</span>
+          <input type="range" id="sfxVol" min="0" max="1" step="0.05" value="0.7" aria-label="مستوى المؤثرات الصوتية">
+          <p class="note">تختار مؤثر الظهور لكل عنصر من تبويب خصائصه، ومؤثر بداية المشهد من تبويب المشهد. تدخل في الفيديو المصدّر.</p>
+        </div>
+      </div>
+      <div class="pane" id="pane-tpl" role="tabpanel" hidden>
+        <p class="note">قوالب كاملة في التعليم والتسويق والقصص والأعمال والمحتوى. اضغط قالباً فتُبنى مشاهده وتُعرض، ثم عدّل النصوص والرسومات كما تشاء. يمكنك التراجع بـ Ctrl+Z.</p>
+        <input id="tplSearch" type="text" maxlength="30" placeholder="ابحث في القوالب: درس، إعلان، قصة..." aria-label="بحث في القوالب">
+        <div class="libcats" id="tplCats"></div>
+        <select id="tplMode" aria-label="مكان إضافة القالب"><option value="after">أضف بعد المشهد الحالي</option><option value="replace">استبدل كل المشاهد</option></select>
+        <div id="tplList" class="tpl-list"></div>
+        <p class="note" id="tplCount"></p>
+        <p class="note" id="tplMsg" role="status"></p>
+        <div class="tpl-sec"><div class="field"><label for="mmCenter">خريطة ذهنية</label><input id="mmCenter" maxlength="28" placeholder="الفكرة المركزية"><textarea id="mmBranches" rows="4" placeholder="كل فرع في سطر. للفروع الفرعية: الفرع: نقطة 1، نقطة 2"></textarea></div><button class="btn primary" id="mmBtn">ارسم الخريطة</button></div>
+        <div class="tpl-sec"><div class="field"><label for="tbRows">جدول أو مقارنة</label>
+          <input id="tbTitle" maxlength="40" placeholder="عنوان الجدول (اختياري)">
+          <textarea id="tbRows" rows="5" placeholder="كل صف في سطر، وافصل بين الخلايا بالرمز | أو بفاصلة. السطر الأول هو العناوين. اكتب نعم أو لا لتُرسم علامة صح أو خطأ."></textarea>
+          <select id="tbMode" aria-label="نوع الجدول" style="width:100%;margin-top:6px"><option value="table">جدول بصف عناوين</option><option value="cmp">مقارنة بأعمدة ملوّنة</option><option value="plain">جدول بلا صف عناوين</option></select></div>
+          <div class="actions"><button class="btn primary grow" id="tbBtn" type="button">ارسم الجدول</button><button class="btn" id="tbSample" type="button">مثال جاهز</button></div><p class="note" id="tbMsg" role="status"></p></div>
+        <div class="tpl-sec"><div class="field"><label for="trTopic">خريطة ذهنية شجرية تلقائية (تحتاج إنترنت)</label>
+          <input id="trTopic" maxlength="60" placeholder="عنوان الخريطة (اختياري إن كانت من الدرس)">
+          <select id="trSrc" aria-label="مصدر الخريطة" style="width:100%;margin-top:6px"><option value="lesson">من مشاهد الدرس</option><option value="topic">من العنوان فقط</option></select>
+          <button class="btn primary" id="trAuto" type="button" style="margin-top:6px" disabled>ولّد الخريطة الشجرية</button>
+          <p class="note" id="trMsg" role="status">يبني المساعد عنواناً رئيسياً وفروعاً ونقاطاً، ويرسمها القلم بعد عنوانها.</p></div></div>
+        <div class="tpl-sec"><div class="field"><label for="fcSteps">مخطط انسيابي</label><textarea id="fcSteps" rows="4" placeholder="كل خطوة في سطر (من 2 إلى 6)"></textarea></div><button class="btn primary" id="fcBtn">ارسم المخطط</button></div>
+        <div class="tpl-sec"><div class="field"><label for="qzQ">سؤال واختبار قصير</label>
+          <input id="qzTopic" maxlength="60" placeholder="موضوع السؤال (اختياري، ليقترحه المساعد)">
+          <button class="btn" id="qzAi" type="button" style="margin-top:6px">اقترح سؤالاً</button>
+          <input id="qzQ" maxlength="80" placeholder="السؤال">
+          <textarea id="qzOpts" rows="4" placeholder="كل خيار في سطر (من 2 إلى 4)"></textarea>
+          <select id="qzAns" aria-label="الإجابة الصحيحة" style="width:100%;margin-top:6px"><option value="1">الصحيح: الخيار 1</option><option value="2">الصحيح: الخيار 2</option><option value="3">الصحيح: الخيار 3</option><option value="4">الصحيح: الخيار 4</option></select>
+          <input id="qzExp" maxlength="90" placeholder="تفسير قصير بعد الإجابة (اختياري)"></div>
+          <button class="btn primary" id="qzBtn" type="button">ابنِ مشهدي السؤال والإجابة</button><p class="note" id="qzMsg"></p>
+          <div class="field" style="margin-top:12px"><span class="lbl">أسئلة الدرس تلقائياً (تحتاج إنترنت)</span>
+            <select id="qzN" aria-label="عدد الأسئلة" style="width:100%"><option value="5">5 أسئلة</option><option value="8">8 أسئلة</option><option value="10" selected>10 أسئلة</option></select>
+            <button class="btn primary" id="qzAuto" type="button" style="margin-top:6px" disabled>ولّد أسئلة من الدرس</button>
+            <p class="note" id="qzAutoMsg" role="status">يقرأ المساعد مشاهد درسك ويكتب أسئلة من محتواه فقط، وتُضاف قبل الخاتمة.</p></div></div>
+        <div class="tpl-sec"><div class="field"><label for="cnFrom">عدّاد أرقام متحرك</label>
+          <input id="cnFrom" type="number" value="0" placeholder="يبدأ من" aria-label="يبدأ من">
+          <input id="cnTo" type="number" value="1000" placeholder="ينتهي عند" aria-label="ينتهي عند">
+          <input id="cnPre" maxlength="8" placeholder="قبل الرقم (مثال: $)">
+          <input id="cnSuf" maxlength="12" placeholder="بعد الرقم (مثال: % أو عميل)">
+          <input id="cnDur" type="number" min="1" max="10" value="3" placeholder="مدة العدّ بالثواني" aria-label="مدة العدّ بالثواني"></div>
+          <button class="btn primary" id="cnBtn" type="button">أضف العدّاد للمشهد</button>
+          <button class="btn" id="cnDown" type="button">أضف عدّاً تنازلياً 5 ← 0</button><p class="note" id="cnMsg"></p></div>
+        <div class="tpl-sec"><div class="field"><label for="csvIn">بيانات CSV إلى مشاهد</label>
+          <textarea id="csvIn" rows="5" placeholder="ألصق بياناتك: السطر الأول عناوين، والعمود الأول تسميات، وكل عمود رقمي بعده يصبح مشهداً برسم بياني وأعلى قيمة وأدناها."></textarea>
+          <select id="csvType" aria-label="نوع الرسم" style="width:100%;margin-top:6px"><option value="bar">رسم أعمدة</option><option value="line">رسم خطي</option><option value="pie">رسم دائري</option></select>
+          <input id="csvFile" type="file" accept=".csv,.tsv,.txt,text/csv,text/plain" aria-label="اختر ملف CSV" style="margin-top:6px"></div>
+          <div class="actions"><button class="btn primary grow" id="csvBtn" type="button">ابنِ المشاهد</button><button class="btn" id="csvSample" type="button">مثال جاهز</button></div><p class="note" id="csvMsg" role="status"></p></div>
+        <p class="note" id="dgMsg"></p>
+      </div>
+      <div class="pane" id="pane-ws" role="tabpanel" hidden></div>
+      <div class="pane" id="pane-qz" role="tabpanel" hidden></div>
+      <div class="pane" id="pane-ta" role="tabpanel" hidden></div>
+      <div class="pane" id="pane-tg" role="tabpanel" hidden></div>
+      <div class="pane" id="pane-ai" role="tabpanel" hidden>
+        <div class="field aibox" id="aiProvBox">
+          <label for="aiProv">مصدر المساعد</label>
+          <select id="aiProv" style="width:100%"><option value="net">إنترنت مجاني (بدون Claude)</option><option value="local">نموذج محلي في المتصفح</option><option value="claude">Claude (الأفضل، داخل Claude)</option></select>
+          <p class="note" id="aiProvNote"></p>
+          <details id="aiAdv"><summary>إعدادات متقدمة للإنترنت (اختياري)</summary>
+            <input id="aiUrl" type="url" dir="ltr" placeholder="https://text.pollinations.ai/openai" style="width:100%;margin-top:6px" aria-label="رابط الخدمة المتوافقة مع OpenAI">
+            <input id="aiModel" type="text" dir="ltr" placeholder="openai" style="width:100%;margin-top:6px" aria-label="اسم النموذج">
+            <input id="aiKey" type="password" dir="ltr" placeholder="مفتاح API (يُحفظ على جهازك فقط)" style="width:100%;margin-top:6px" aria-label="مفتاح API">
+          </details>
+        </div>
+        <div class="field">
+          <label for="aiIdea">فكرة الفيديو</label>
+          <textarea id="aiIdea" maxlength="400" rows="4" placeholder="مثال: شرح فوائد شرب الماء للمبتدئين في خطوات بسيطة"></textarea>
+        </div>
+        <div class="field">
+          <span class="lbl">عدد المشاهد</span>
+          <div class="seg c4"><button data-aicount="3" aria-pressed="false">3</button><button data-aicount="4" aria-pressed="true">4</button><button data-aicount="5" aria-pressed="false">5</button><button data-aicount="6" aria-pressed="false">6</button></div>
+        </div>
+        <div class="field">
+          <span class="lbl">الأسلوب</span>
+          <div class="seg"><button data-aitone="edu" aria-pressed="true">تعليمي</button><button data-aitone="plain" aria-pressed="false">بسيط</button><button data-aitone="promo" aria-pressed="false">تسويقي</button></div>
+        </div>
+        <div class="actions"><button class="btn primary grow" id="aiBuild" disabled>ابنِ المشاهد</button><button class="btn" id="aiStop" hidden>إيقاف</button></div>
+        <div class="field aibox">
+          <span class="lbl">تحسين الكتابة</span>
+          <button class="btn" id="aiPolish" disabled>حسّن نصوص المشهد الحالي</button>
+        </div>
+        <div class="field aibox" id="rvBox">
+          <span class="lbl">مراجعة المخرج (تحتاج إنترنت)</span>
+          <button class="btn primary" id="rvGo" type="button" disabled>راجع مشروعي</button>
+          <div id="rvOut" class="note" role="status" hidden></div>
+        </div>
+        <div class="field aibox" id="cmdBox">
+          <span class="lbl">أمر تحرير</span>
+          <textarea id="cmdTxt" rows="2" maxlength="200" placeholder="مثال: اجعل كل العناوين بالأحمر، أو احذف المشاهد الفارغة"></textarea>
+          <div class="actions"><button class="btn primary grow" id="cmdGo" type="button" disabled>حلّل الأمر</button><button class="btn" id="cmdMic" type="button" hidden>إملاء</button></div>
+          <span class="lbl" style="margin-top:10px;display:block">أوامر سريعة (تعمل دون إنترنت)</span>
+          <div class="seg c2" id="cmdQuick"></div>
+          <div class="cmd-prev" id="cmdPrev" hidden>
+            <span class="lbl">سيحدث ما يلي</span>
+            <ul id="cmdLog"></ul>
+            <div class="actions"><button class="btn primary grow" id="cmdOk" type="button">نفّذ</button><button class="btn" id="cmdNo" type="button">إلغاء</button></div>
+          </div>
+          <p class="note" id="cmdMsg" role="status">اكتب ما تريد تعديله في المشاريع الكبيرة بجملة عادية، ثم راجع التغييرات قبل التنفيذ. يعمل التراجع بـ Ctrl+Z.</p>
+        </div>
+        <button class="btn" id="aiUndo" hidden>تراجع عن آخر تغيير للمساعد</button>
+        <p class="note" id="aiMsg" role="status"></p>
+        <p class="note">تُضاف المشاهد بعد المشهد الحالي دون حذف شيء من مشروعك. اختر مصدر المساعد من أعلى التبويب.</p>
+      </div>
+
+      <div class="pane" id="pane-assets" role="tabpanel" hidden>
+        <p class="note">كل الصور والمقاطع الصوتية المحفوظة في هذا المتصفح لمشروعك. نظّف ما لم يعد مستخدماً وقلّل حجم الصور الكبيرة ليخفّ المشروع ويُحفظ ويُصدَّر أسرع.</p>
+        <div class="field">
+          <span class="lbl">ملخص التخزين</span>
+          <div id="asSum">اضغط «تحديث» لفحص الأصول.</div>
+          <div class="row" style="margin-top:8px">
+            <button class="btn grow" id="asRefresh" type="button">تحديث</button>
+            <button class="btn grow" id="asClean" type="button" disabled>لا يوجد غير مستخدم</button>
+          </div>
+          <div class="row" style="margin-top:6px"><button class="btn primary grow" id="asShrink" type="button">ضغط الصور الكبيرة</button></div>
+          <p class="note" id="asMsg"></p>
+        </div>
+        <div class="field"><span class="lbl">الصور</span><ul class="list" id="asImgs"></ul></div>
+        <div class="field"><span class="lbl">الصوت</span><ul class="list" id="asAud"></ul></div>
+      </div>
+
+      <div class="pane" id="pane-brand" role="tabpanel" hidden>
+        <p class="note">اضبط اسم علامتك وشعارها وألوانها مرة واحدة، فتظهر على كل مشهد وفي الفيديو المصدّر، ثم طبّق الألوان والخلفية والخط على مشاهدك بنقرة.</p>
+        <div class="field"><label for="bName">اسم العلامة</label><input id="bName" type="text" maxlength="30" placeholder="مثال: أكاديمية النور"></div>
+        <div class="field"><span class="lbl">الشعار</span>
+          <div class="row"><label class="btn grow" for="bLogo">+ رفع شعار</label><button class="btn" id="bLogoDel" type="button" disabled>إزالة</button></div>
+          <input class="verh" id="bLogo" type="file" accept="image/*">
+          <p class="note" id="bMsg">يُفضَّل شعار PNG بخلفية شفافة.</p></div>
+        <div class="field"><span class="lbl">مكان العلامة</span>
+          <div class="seg c2"><button type="button" data-bpos="tr">أعلى اليمين</button><button type="button" data-bpos="tl">أعلى اليسار</button><button type="button" data-bpos="br">أسفل اليمين</button><button type="button" data-bpos="bl">أسفل اليسار</button></div>
+          <label class="chk2"><input type="checkbox" id="bWm" checked> إظهار العلامة على كل مشهد وفي الفيديو</label>
+          <p class="note">الأسفل يتقاطع مع شريط الترجمة عند وجود نص تعليق.</p></div>
+        <div class="field" id="cbBox"><span class="lbl">شارة المنهج</span>
+          <input id="cbG" type="text" maxlength="30" placeholder="الصف، مثال: الصف الثاني الإعدادي" aria-label="الصف">
+          <input id="cbU" type="text" maxlength="30" placeholder="الوحدة، مثال: الوحدة الرابعة" aria-label="الوحدة" style="margin-top:6px">
+          <input id="cbL" type="text" maxlength="30" placeholder="الدرس، مثال: الدرس الأول" aria-label="الدرس" style="margin-top:6px">
+          <input id="cbP" type="text" maxlength="30" placeholder="الجزء، مثال: الجزء الثاني" aria-label="الجزء" style="margin-top:6px">
+          <div class="row" style="margin-top:8px"><label for="cbC" class="lbl" style="margin:0">لون الشارة</label><input id="cbC" type="color" value="#1d3557" aria-label="لون الشارة"></div>
+          <div class="seg c2" style="margin-top:8px"><button type="button" data-cbpos="tr">أعلى اليمين</button><button type="button" data-cbpos="tl">أعلى اليسار</button><button type="button" data-cbpos="br">أسفل اليمين</button><button type="button" data-cbpos="bl">أسفل اليسار</button></div>
+          <label class="chk2"><input type="checkbox" id="cbShow" checked> إظهار الشارة على كل مشهد وفي الفيديو</label>
+          <p class="note">تظهر الشارة عند كتابة حقل واحد على الأقل. إن كانت العلامة في نفس الزاوية تنزل الشارة تحتها.</p></div>
+        <div class="field" id="tkBox"><span class="lbl">شخصية تتحدث</span>
+          <label class="chk2"><input type="checkbox" id="tkOn"> إظهار شخصية بجانب السبورة يتحرك فمها مع التعليق</label>
+          <select id="tkStyle" aria-label="شكل الشخصية" style="width:100%;margin-top:6px"><option value="p">الشاب بالنظارة (من صورتك)</option><option value="t">معلم بنظارة</option><option value="f">معلمة بحجاب</option><option value="x">وجه مرح</option></select>
+          <select id="tkSkin" aria-label="لون البشرة" style="width:100%;margin-top:6px"><option value="0">بشرة فاتحة</option><option value="1">بشرة قمحية</option><option value="2">بشرة سمراء</option><option value="3">بشرة داكنة</option></select>
+          <select id="tkMood" aria-label="تعبير الشخصية في هذا المشهد" style="width:100%;margin-top:6px"><option value="">تعبير عادي</option><option value="h">سعيد</option><option value="s">متفاجئ</option><option value="k">يفكّر</option></select>
+          <label style="display:flex;gap:8px;align-items:center;margin-top:6px"><input type="checkbox" id="tkPoint"> تشير بيدها إلى العنصر أثناء رسمه</label>
+          <div class="row" style="margin-top:8px"><label for="tkCol" class="lbl" style="margin:0">لون الملابس</label><input id="tkCol" type="color" value="#2a6fb0" aria-label="لون الملابس"></div>
+          <div class="row" style="margin-top:8px"><label for="tkSize" class="lbl" style="margin:0">الحجم</label><input id="tkSize" type="range" min="60" max="150" step="5" value="100" aria-label="حجم الشخصية"></div>
+          <div class="seg c2" style="margin-top:8px"><button type="button" data-tkpos="bl">أسفل اليسار</button><button type="button" data-tkpos="br">أسفل اليمين</button><button type="button" data-tkpos="tl">أعلى اليسار</button><button type="button" data-tkpos="tr">أعلى اليمين</button></div>
+          <p class="note">يتحرك الفم مع شدة صوت مقطع التعليق المرفوع في تبويب الصوت. دون مقطع صوتي يتحرك بإيقاع تقريبي أثناء التشغيل مع نص التعليق.</p></div>
+        <div class="field"><span class="lbl">ألوان جاهزة</span><div class="seg c2" id="bPre"></div></div>
+        <div class="field"><span class="lbl">ألوان العلامة</span>
+          <div class="bcols"><label class="bcol"><input type="color" id="bC1" aria-label="اللون الأساسي"><span>أساسي</span></label><label class="bcol"><input type="color" id="bC2" aria-label="اللون الثانوي"><span>ثانوي</span></label><label class="bcol"><input type="color" id="bC3" aria-label="اللون الإضافي"><span>إضافي</span></label><label class="bcol"><input type="color" id="bBg" aria-label="لون الخلفية"><span>الخلفية</span></label></div>
+          <p class="note">اختر خلفية فاتحة لتبقى النصوص والرسوم البيانية واضحة.</p></div>
+        <div class="field"><label for="bFont">خط العلامة</label><select id="bFont"></select></div>
+        <div class="field"><span class="lbl">طبّق على كل المشاهد</span>
+          <label class="chk2"><input type="checkbox" id="bAc" checked> الألوان (العنوان بالأساسي والباقي بالثانوي)</label>
+          <label class="chk2"><input type="checkbox" id="bAb" checked> خلفية المشاهد</label>
+          <label class="chk2"><input type="checkbox" id="bAf"> الخط</label>
+          <button class="btn primary" id="bApply" type="button">طبّق الهوية</button>
+          <p class="note" id="bApplyMsg" role="status">يمكنك التراجع بـ Ctrl+Z.</p></div>
+        <div class="field" id="frameBox"><span class="lbl">مقدمة وخاتمة ثابتتان</span>
+          <p class="note">اكتب نصّيهما مرة واحدة، فيُضافان كمشهدين بألوان وخط هويتك في أول المشروع وآخره. تبقى الكتابة محفوظة على هذا الجهاز لكل مشاريعك.</p>
+          <label class="chk2"><input type="checkbox" id="frIn" checked> مقدمة في أول الفيديو</label>
+          <input id="frInT" type="text" maxlength="40" placeholder="عنوان المقدمة (مثال: قناة النور التعليمية)" aria-label="عنوان المقدمة">
+          <input id="frInS" type="text" maxlength="50" placeholder="سطر تحته (اختياري، مثال: دروس مبسطة لكل الأعمار)" aria-label="سطر المقدمة">
+          <label class="chk2"><input type="checkbox" id="frOut" checked> خاتمة في آخر الفيديو</label>
+          <input id="frOutT" type="text" maxlength="40" placeholder="عنوان الخاتمة (مثال: شكراً لمشاهدتكم)" aria-label="عنوان الخاتمة">
+          <input id="frOutS" type="text" maxlength="50" placeholder="سطر تحته (اختياري)" aria-label="سطر الخاتمة">
+          <input id="frOutC" type="text" maxlength="40" placeholder="دعوة للتفاعل مع جرس (مثال: اشترك وفعّل الجرس)" aria-label="دعوة الخاتمة">
+          <label class="chk2"><input type="checkbox" id="frAuto" checked> أضفهما تلقائياً عند التصدير إن لم تكونا موجودتين</label>
+          <div class="actions"><button class="btn primary grow" id="frApply" type="button">أضف أو حدّث المقدمة والخاتمة</button><button class="btn" id="frDel" type="button">إزالتهما</button></div>
+          <p class="note" id="frMsg" role="status">يمكنك التراجع بـ Ctrl+Z.</p></div>
+      </div>
+    </aside>
+  </main>
+
+<dialog id="hlpDlg" aria-labelledby="hlpTtl">
+  <div class="hlp">
+    <div class="hlph"><h2 id="hlpTtl">المساعدة والاختصارات</h2><button class="btn" id="hlpX" type="button" aria-label="إغلاق">×</button></div>
+    <input id="hlpQ" type="search" placeholder="ابحث عن أداة أو اختصار (تراجع، كاميرا، صوت، تصدير)" aria-label="بحث في المساعدة">
+    <div class="actions"><button class="btn primary" id="hlpTour" type="button">ابدأ جولة قصيرة</button></div>
+    <h3>الاختصارات</h3>
+    <ul class="hlpl" id="hlpKeys"></ul>
+    <h3>أين أجد ماذا؟</h3>
+    <ul class="hlpl" id="hlpTools"></ul>
+    <p class="note" id="hlpNone" hidden>لا نتائج. جرّب كلمة أخرى.</p>
+  </div>
+</dialog>
+<div class="tourcard" id="tourCard" role="dialog" aria-label="جولة قصيرة" hidden>
+  <b id="tourT"></b><p id="tourP"></p>
+  <div class="actions"><button class="btn" id="tourPrev" type="button">السابق</button><span class="note" id="tourN" style="margin:0"></span><button class="btn primary" id="tourNext" type="button">التالي</button><button class="btn" id="tourEnd" type="button">إنهاء</button></div>
+</div>
+<section class="plan" id="plan" aria-label="خطة التطوير المستقبلية">
+    <h2>خطة التطوير المستقبلية</h2>
+    <p class="sub">المراحل القادمة مرتبة مرحلة بعد مرحلة. غيّر حالة أي مرحلة، أو أضف فكرتك، وتُحفظ تعديلاتك على هذا الجهاز.</p>
+    <div class="plan-bar">
+      <span class="seg" role="group" aria-label="طريقة العرض">
+        <button type="button" id="planMapB" aria-pressed="true">خريطة</button>
+        <button type="button" id="planTblB" aria-pressed="false">جدول</button>
+      </span>
+      <select id="planFilt" aria-label="تصفية بالحالة"><option value="">كل الحالات</option><option value="todo">مخطط</option><option value="doing">قيد العمل</option><option value="done">منجز</option><option value="hold">مؤجل</option></select>
+      <span class="sum" id="planSum" role="status"></span>
+    </div>
+    <div class="plan-prog" aria-hidden="true"><i id="planBar"></i></div>
+    <div id="planView"></div>
+    <form class="plan-add" id="planForm">
+      <input type="text" id="planNew" maxlength="80" placeholder="أضف فكرة لمرحلة قادمة" aria-label="عنوان الفكرة">
+      <select id="planNewH" aria-label="الأفق"><option value="1">قريباً</option><option value="2">لاحقاً</option><option value="3">مستقبلاً</option></select>
+      <button class="btn" type="submit">إضافة</button>
+    </form>
+    <div class="upd-box" id="updBox">
+      <h3>التحديث التلقائي</h3>
+      <p class="note" style="margin:0">الإصدار الحالي <b id="updVer"></b>. يفحص التطبيق وجود إصدار أحدث عند الفتح وكل ساعة، فإن وجده ظهر شريط يعرض التحديث. مشروعك يُحفظ قبل أي تحديث. عند فتحه من الرابط الرسمي يتحدث تلقائياً مع كل نشر جديد، وإن كنت تستخدم نسخة محمّلة فافتح الرابط الرسمي للحصول على الأحدث.</p>
+      <label class="chk2"><input type="checkbox" id="updOn" checked> فحص التحديثات تلقائياً</label>
+      <div class="row2"><input type="text" id="updUrl" placeholder="https://example.com/rassam.html (اختياري)" aria-label="رابط ملف التطبيق للتحديث"><button class="btn" type="button" id="updNow">افحص الآن</button></div>
+      <p class="note" id="updMsg" role="status" style="margin:0"></p>
+    </div>
+  </section>
+</div>
+
+<script>{{part:js/004.js}}</script>
+<script>{{part:js/005.js}}</script>
+<script>function __U(d){try{var c=__UC[d];if(c)return c;var i=d.indexOf(','),m=/^data:([^;,]+)/.exec(d),b=atob(d.slice(i+1)),n=b.length,u=new Uint8Array(n);for(var k=0;k<n;k++)u[k]=b.charCodeAt(k);return __UC[d]=URL.createObjectURL(new Blob([u],{type:m?m[1]:'image/webp'}));}catch(e){return d;}}var __UC={};var __BC={};function __B(i){var v=__BC[i];if(v===undefined){var e=document.getElementById('rsblob_'+i);v=__BC[i]=e?e.textContent:'';}return v;}</script><script type="text/plain" id="rsblob_0">{{part:data/006-rsblob_0.txt}}</script><script type="text/plain" id="rsblob_1">{{part:data/007-rsblob_1.txt}}</script><script type="text/plain" id="rsblob_2">{{part:data/008-rsblob_2.txt}}</script><script type="text/plain" id="rsblob_3">{{part:data/009-rsblob_3.txt}}</script><script type="text/plain" id="rsblob_4">{{part:data/010-rsblob_4.txt}}</script><script type="text/plain" id="rsblob_5">{{part:data/011-rsblob_5.txt}}</script><script type="text/plain" id="rsblob_6">{{part:data/012-rsblob_6.txt}}</script><script type="text/plain" id="rsblob_7">{{part:data/013-rsblob_7.txt}}</script><script type="text/plain" id="rsblob_8">{{part:data/014-rsblob_8.txt}}</script><script type="text/plain" id="rsblob_9">{{part:data/015-rsblob_9.txt}}</script><script type="text/plain" id="rsblob_10">{{part:data/016-rsblob_10.txt}}</script><script type="text/plain" id="rsblob_11">{{part:data/017-rsblob_11.txt}}</script><script type="text/plain" id="rsblob_12">{{part:data/018-rsblob_12.txt}}</script><script type="text/plain" id="rsblob_13">{{part:data/019-rsblob_13.txt}}</script><script type="text/plain" id="rsblob_14">{{part:data/020-rsblob_14.txt}}</script><script type="text/plain" id="rsblob_15">{{part:data/021-rsblob_15.txt}}</script><script type="text/plain" id="rsblob_16">{{part:data/022-rsblob_16.txt}}</script><script type="text/plain" id="rsblob_17">{{part:data/023-rsblob_17.txt}}</script><script type="text/plain" id="rsblob_18">{{part:data/024-rsblob_18.txt}}</script><script type="text/plain" id="rsblob_19">{{part:data/025-rsblob_19.txt}}</script><script type="text/plain" id="rsblob_20">{{part:data/026-rsblob_20.txt}}</script><script type="text/plain" id="rsblob_21">{{part:data/027-rsblob_21.txt}}</script><script type="text/plain" id="rsblob_22">{{part:data/028-rsblob_22.txt}}</script><script type="text/plain" id="rsblob_23">{{part:data/029-rsblob_23.txt}}</script><script type="text/plain" id="rsblob_24">{{part:data/030-rsblob_24.txt}}</script><script type="text/plain" id="rsblob_25">{{part:data/031-rsblob_25.txt}}</script><script type="text/plain" id="rsblob_26">{{part:data/032-rsblob_26.txt}}</script><script type="text/plain" id="rsblob_27">{{part:data/033-rsblob_27.txt}}</script><script type="text/plain" id="rsblob_28">{{part:data/034-rsblob_28.txt}}</script><script type="text/plain" id="rsblob_29">{{part:data/035-rsblob_29.txt}}</script><script type="text/plain" id="rsblob_30">{{part:data/036-rsblob_30.txt}}</script><script type="text/plain" id="rsblob_31">{{part:data/037-rsblob_31.txt}}</script><script type="text/plain" id="rsblob_32">{{part:data/038-rsblob_32.txt}}</script><script type="text/plain" id="rsblob_33">{{part:data/039-rsblob_33.txt}}</script><script type="text/plain" id="rsblob_34">{{part:data/040-rsblob_34.txt}}</script><script type="text/plain" id="rsblob_35">{{part:data/041-rsblob_35.txt}}</script><script type="text/plain" id="rsblob_36">{{part:data/042-rsblob_36.txt}}</script><script type="text/plain" id="rsblob_37">{{part:data/043-rsblob_37.txt}}</script><script type="text/plain" id="rsblob_38">{{part:data/044-rsblob_38.txt}}</script><script type="text/plain" id="rsblob_39">{{part:data/045-rsblob_39.txt}}</script><script type="text/plain" id="rsblob_40">{{part:data/046-rsblob_40.txt}}</script><script type="text/plain" id="rsblob_41">{{part:data/047-rsblob_41.txt}}</script><script type="text/plain" id="rsblob_42">{{part:data/048-rsblob_42.txt}}</script><script type="text/plain" id="rsblob_43">{{part:data/049-rsblob_43.txt}}</script><script type="text/plain" id="rsblob_44">{{part:data/050-rsblob_44.txt}}</script><script type="text/plain" id="rsblob_45">{{part:data/051-rsblob_45.txt}}</script><script type="text/plain" id="rsblob_46">{{part:data/052-rsblob_46.txt}}</script><script type="text/plain" id="rsblob_47">{{part:data/053-rsblob_47.txt}}</script><script type="text/plain" id="rsblob_48">{{part:data/054-rsblob_48.txt}}</script><script type="text/plain" id="rsblob_49">{{part:data/055-rsblob_49.txt}}</script><script type="text/plain" id="rsblob_50">{{part:data/056-rsblob_50.txt}}</script><script type="text/plain" id="rsblob_51">{{part:data/057-rsblob_51.txt}}</script><script type="text/plain" id="rsblob_52">{{part:data/058-rsblob_52.txt}}</script><script type="text/plain" id="rsblob_53">{{part:data/059-rsblob_53.txt}}</script><script type="text/plain" id="rsblob_54">{{part:data/060-rsblob_54.txt}}</script><script type="text/plain" id="rsblob_55">{{part:data/061-rsblob_55.txt}}</script><script type="text/plain" id="rsblob_56">{{part:data/062-rsblob_56.txt}}</script><script type="text/plain" id="rsblob_57">{{part:data/063-rsblob_57.txt}}</script><script type="text/plain" id="rsblob_58">{{part:data/064-rsblob_58.txt}}</script><script type="text/plain" id="rsblob_59">{{part:data/065-rsblob_59.txt}}</script><script type="text/plain" id="rsblob_60">{{part:data/066-rsblob_60.txt}}</script><script type="text/plain" id="rsblob_61">{{part:data/067-rsblob_61.txt}}</script><script type="text/plain" id="rsblob_62">{{part:data/068-rsblob_62.txt}}</script><script type="text/plain" id="rsblob_63">{{part:data/069-rsblob_63.txt}}</script><script type="text/plain" id="rsblob_64">{{part:data/070-rsblob_64.txt}}</script><script type="text/plain" id="rsblob_65">{{part:data/071-rsblob_65.txt}}</script><script>{{part:js/072.js}}</script>
+
+
+<style id="rs-polish">{{part:css/073-rs-polish.css}}</style>
+<style id="rs-fold-css">
+.lbl.rs-fold{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);padding:6px 8px;margin:-2px -4px;border-radius:var(--r-ctl);user-select:none}
+.lbl.rs-fold:hover{background:var(--surface2)}
+.lbl.rs-fold::after{content:"";width:8px;height:8px;border-inline-end:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .15s;margin-inline-end:4px;flex:none}
+.field.rs-col>.lbl.rs-fold::after{transform:rotate(-45deg)}
+[dir=rtl] .field.rs-col>.lbl.rs-fold::after{transform:rotate(135deg)}
+.field.rs-col>*:not(:first-child){display:none!important}
+.field.rs-col{gap:0;border-bottom:1px solid var(--line);padding-bottom:2px}
+.rs-foldall{width:auto!important;padding:0 12px;margin:-6px 0 10px;font-size:var(--fs-sm)}
+</style>
+<style id="rs-qbar-css">
+/* المرحلة 92: شريط الاختصارات */
+#qbar{position:fixed;inset-inline:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin-inline:auto;width:max-content;max-width:calc(100vw - 24px);z-index:40;display:flex;gap:var(--sp-2);padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 8px 24px rgba(0,0,0,.22)}
+#qbar.off{display:none}
+#qbar .qb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:56px;min-height:48px;padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--surface2);color:var(--fg);cursor:pointer}
+#qbar .qb span{font-size:var(--fs-xl);line-height:1}
+#qbar .qb small{font-size:var(--fs-xs);font-weight:600}
+#qbar .qb:disabled{opacity:.35;cursor:default}
+#qbar .qb[hidden]{display:none}
+#qbar .qb[data-q=del]{color:var(--accent)}
+body{padding-bottom:calc(48px + 76px)}
+/* المرحلة 95 */
+.seg.c4 button[data-tr]{font-size:var(--fs-sm);padding-inline:4px;white-space:nowrap}
+@media(min-width:920px){#qbar{inset-inline:auto;inset-inline-start:20px;margin-inline:0}}
+</style>
+<style id="rs-mob-css">
+/* المرحلة 99: وضع الجوال */
+.sheet-h{display:none}
+@media (max-width:919px){
+  body.mob{padding-bottom:calc(var(--peek,160px) + 96px)}
+  body.mob #qbar{bottom:calc(var(--peek,160px) + 10px + env(safe-area-inset-bottom,0px))}
+  body.mob .stage-col>.board{position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+  body.mob aside.panel{position:fixed;inset-inline:0;bottom:0;z-index:45;margin:0;height:min(64dvh,calc(100dvh - 58vw - 24px));min-height:260px;overflow-y:auto;overscroll-behavior:contain;
+    border-radius:var(--r) 20px 0 0;border-bottom:0;padding:0 12px calc(12px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 30px rgba(0,0,0,.25);transform:translateY(calc(100% - var(--peek,160px)));transition:transform .22s ease}
+  body.mob aside.panel.sh-open{transform:none}
+  body.mob aside.panel.sh-drag{transition:none}}
+  body.mob .sheet-h{display:flex;justify-content:center;align-items:center;height:28px;position:sticky;top:0;z-index:3;background:var(--surface);cursor:grab;touch-action:none;margin:0 -12px 2px}
+  body.mob .sheet-h i{display:block;width:44px;height:5px;border-radius:var(--r-pill);background:var(--line)}
+  body.mob .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-1);position:sticky;top:28px;z-index:3}
+  body.mob .tab{height:38px;padding:0 2px;font-size:var(--fs-sm)}
+  body.mob .btn{min-height:40px}
+  body:has(.board.pz) aside.panel{display:none}
+}
+</style>
+<style id="rs-cloud-css">
+#cloudDlg{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--fg);padding:0;width:min(560px,calc(100vw - 24px));max-height:85vh}
+#cloudDlg::backdrop{background:rgba(0,0,0,.4)}
+#cloudDlg .cl{padding:14px;display:flex;flex-direction:column;gap:var(--sp-4)}
+#cloudDlg .clh{display:flex;align-items:center;justify-content:space-between}#cloudDlg h2{margin:0;font-size:17px}
+#cloudDlg .clnew{display:flex;gap:var(--sp-2);flex-wrap:wrap}#cloudDlg .clnew input{flex:1 1 160px;min-width:0}
+#cloudDlg .cll{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--sp-3);max-height:46vh;overflow:auto}
+#cloudDlg .cll li{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center;border:1px solid var(--line);border-radius:var(--r-ctl);padding:8px}
+#cloudDlg .cll li span{flex:1 1 100%;font-size:var(--fs-md)}
+#cloudDlg .cll li .btn{flex:1 1 0;min-width:0;white-space:nowrap;padding-inline:4px}
+</style>
+<style id="rs-hist-css">
+#histDlg{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--fg);padding:0;width:min(520px,calc(100vw - 24px));max-height:85vh}
+#histDlg::backdrop{background:rgba(0,0,0,.4)}
+#histDlg .hs{padding:14px;display:flex;flex-direction:column;gap:var(--sp-4)}
+#histDlg .hsh{display:flex;align-items:center;justify-content:space-between}#histDlg h2{margin:0;font-size:17px}
+#histDlg .hsl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--sp-2);max-height:60vh;overflow:auto}
+#histDlg .hsl .btn{width:100%;text-align:start;justify-content:flex-start;white-space:normal;font-size:var(--fs-md)}
+
+
+.rmbg{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:6px 0}.rmbg select{max-width:100%}.rmbg .rng{flex:1 1 200px}
+.fold>h2{cursor:pointer;display:flex;align-items:center;gap:var(--sp-3);user-select:none}
+.fold>h2::after{content:"▾";margin-inline-start:auto;font-size:var(--fs-base);transition:transform .15s}
+.fold.closed>h2::after{transform:rotate(90deg)}
+.fold>h2 .fcnt{font-size:var(--fs-sm);font-weight:400;color:var(--muted)}
+.fold.closed>:not(h2):not(.upd-box){display:none!important}
+</style>
+<script>
+/* طي أقسام خريطة المراحل وخطة التطوير (محفوظ على الجهاز) */
+(function(){
+var K='rassam_fold_v1',st={};try{st=JSON.parse(localStorage.getItem(K)||'{}');}catch(e){}
+function save(){try{localStorage.setItem(K,JSON.stringify(st));}catch(e){}}
+[['roadmap',function(sec){var n=sec.querySelectorAll('.road > li').length;return n+' بطاقة منجزة';}],
+ ['plan',function(sec){var el=document.getElementById('planSum');return el?el.textContent:'';}]].forEach(function(p){
+  var sec=document.getElementById(p[0]),h=sec&&sec.querySelector('h2');if(!h)return;
+  sec.classList.add('fold');
+  var c=document.createElement('span');c.className='fcnt';h.appendChild(c);
+  function upd(){c.textContent='('+p[1](sec)+')';var cl=sec.classList.contains('closed');h.setAttribute('aria-expanded',cl?'false':'true');}
+  function tog(open){var cl=typeof open==='boolean'?!open:!sec.classList.contains('closed');sec.classList.toggle('closed',cl);st[p[0]]=cl?0:1;save();upd();}
+  h.tabIndex=0;h.setAttribute('role','button');
+  sec.classList.toggle('closed',st[p[0]]!==1);
+  h.addEventListener('click',function(){tog();});
+  h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();tog();}});
+  upd();
+  var sum=document.getElementById('planSum');
+  if(p[0]==='plan'&&sum)new MutationObserver(upd).observe(sum,{childList:true,characterData:true,subtree:true});
+});
+})();
+</script>
+<style>
+/* وضع التركيز: السبورة وشريط التشغيل فقط */
+body.focus header.top,body.focus p.lead,body.focus #rsNote,body.focus aside.panel,body.focus #haPanel,body.focus #scenesBar,body.focus .tlwrap,body.focus section.export,body.focus .rs-hero,body.focus #gradeBar,body.focus #holoBar,body.focus #roadmap,body.focus #plan,body.focus #tourCard,body.focus .transport .hsel,body.focus #haBtn{display:none!important}
+body.focus main.layout{grid-template-columns:minmax(0,1fr)}
+body.focus #app{gap:var(--sp-5)}
+body.focus .stage-col{width:100%;max-width:min(100%,calc((100vh - 250px)*16/9));max-width:min(100%,calc((100dvh - 250px)*16/9));margin-inline:auto}
+body.focus #focusBtn{background:var(--accent);color:var(--on-media);border-color:var(--accent)}
+#focusHint{display:none}
+body.focus #focusHint{display:block;text-align:center;font-size:var(--fs-sm);color:var(--muted);margin:0}
+</style>
+<script>
+/* وضع التركيز: زر «تركيز» أو المفتاح F، والخروج بـ Esc */
+(function(){
+var b=document.getElementById('focusBtn'),app=document.getElementById('app'),y=0;
+if(!b||!app)return;
+var hint=document.createElement('p');hint.id='focusHint';hint.setAttribute('aria-hidden','true');hint.textContent='وضع التركيز: اضغط Esc أو F للخروج';
+app.appendChild(hint);
+function on(){return document.body.classList.contains('focus');}
+function set(v){
+  if(v===on())return;
+  if(v)y=window.scrollY||0;
+  document.body.classList.toggle('focus',v);
+  b.setAttribute('aria-pressed',v?'true':'false');
+  b.textContent=v?'إنهاء التركيز':'تركيز';
+  window.scrollTo(0,v?0:y);
+  try{window.dispatchEvent(new Event('resize'));}catch(e){}
+}
+b.addEventListener('click',function(){set(!on());});
+document.addEventListener('keydown',function(e){
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  if(document.querySelector('.board.pz')||document.querySelector('dialog[open]'))return;
+  var t=e.target,tag=t&&t.tagName;
+  if(e.code==='KeyF'){
+    if(tag==='TEXTAREA'||tag==='INPUT'||tag==='SELECT'||(t&&t.isContentEditable))return;
+    e.preventDefault();set(!on());
+  }else if(e.key==='Escape'&&on()){set(false);}
+});
+})();
+</script>
+<script>
+/* المظهر: تلقائي (حسب الجهاز) أو داكن أو فاتح، محفوظ على الجهاز */
+(function(){
+var K='rassam_theme_v1',M=['auto','dark','light'],L={auto:'تلقائي',dark:'داكن',light:'فاتح'},root=document.documentElement,b=document.getElementById('themeBtn'),cur='auto';
+try{var v=localStorage.getItem(K);if(M.indexOf(v)>=0)cur=v;}catch(e){}
+function apply(){
+  if(cur==='auto')root.removeAttribute('data-theme');else root.setAttribute('data-theme',cur);
+  if(b){b.textContent='المظهر: '+L[cur];b.setAttribute('aria-label','المظهر: '+L[cur]+'، اضغط للتبديل');}
+}
+apply();
+if(b)b.addEventListener('click',function(){
+  cur=M[(M.indexOf(cur)+1)%M.length];
+  try{localStorage.setItem(K,cur);}catch(e){}
+  apply();
+});
+})();
+</script>
+<script>{{part:js/074.js}}</script>
+<style id="rs-studio-css">{{part:css/075-rs-studio-css.css}}</style>
+<style id="rs-m113-css">
+button,.tab,.gb,select,summary{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body.mob #rsStudio .gb{min-height:52px}
+body.mob .tabs.rs-sub .tab{min-height:48px}
+body.mob .btn{min-height:44px}
+body.mob input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=color]),body.mob select,body.mob textarea{font-size:var(--fs-lg)}
+#rsSwipe{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);inset-inline:0;margin-inline:auto;width:max-content;z-index:60;padding:7px 16px;border-radius:var(--r-pill);background:var(--fg);color:var(--bg);font-size:var(--fs-md);font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.3);opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .2s,transform .2s}
+#rsSwipe.on{opacity:1;transform:none}
+</style>
+<script id="rs-m113-js">{{part:js/076-rs-m113-js.js}}</script>
+<script id="rs-skin-js">{{part:js/077-rs-skin-js.js}}</script>
+<style id="rs-cmd-css">
+#rsCmd{position:fixed;inset:0;z-index:9999;display:none;align-items:flex-start;justify-content:center;padding:12vh 12px 0;background:rgba(0,0,0,.45);backdrop-filter:blur(3px)}
+#rsCmd.on{display:flex}
+#rsCmd .bx{width:min(560px,100%);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 24px 60px rgba(0,0,0,.35);overflow:hidden}
+#rsCmd input{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;padding:16px 18px;font-size:var(--fs-lg);outline:none}
+#rsCmd ul{list-style:none;margin:0;padding:6px;max-height:52vh;overflow-y:auto}
+#rsCmd li{display:flex;justify-content:space-between;gap:var(--sp-4);align-items:center;padding:10px 12px;border-radius:var(--r-ctl);cursor:pointer;font-size:var(--fs-base)}
+#rsCmd li small{color:var(--muted);font-size:11.5px;white-space:nowrap}
+#rsCmd li[aria-selected="true"]{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+#rsCmd .ft{padding:8px 14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+#rsStudio .ck{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:var(--r-pill);padding:3px 10px;font-size:var(--fs-sm);cursor:pointer}
+.rs-flash{outline:3px solid var(--accent)!important;outline-offset:3px;transition:outline-color .6s}
+</style>
+<script id="rs-cmd-js">{{part:js/078-rs-cmd-js.js}}</script>
+<style id="rs-hero-css">{{part:css/079-rs-hero-css.css}}</style>
+<script id="rs-studio-js">{{part:js/080-rs-studio-js.js}}</script>
+<script>{{part:js/081.js}}</script>
+<style id="rs-mobile">{{part:css/082-rs-mobile.css}}</style>
+<style id="rs-ux2">
+/* مفتاح المستوى كان يرث مقاس دائرة الألوان (30px) فيُقصّ نصه */
+#rsStudio .md .sw{width:auto;height:auto;border:0;box-shadow:none;border-radius:var(--r-pill);flex:0 0 auto}
+#rsStudio .md .sw button{white-space:nowrap}
+.rs-quick{display:flex;gap:var(--sp-2);overflow-x:auto;scrollbar-width:none;padding:2px 0 8px;position:sticky;top:0;z-index:2;background:var(--surface)}
+.rs-quick::-webkit-scrollbar{display:none}
+.rs-quick button{flex:0 0 auto;min-height:40px;padding:0 14px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--surface2);color:var(--fg);font:inherit;font-size:var(--fs-md);font-weight:600;cursor:pointer}
+.rs-quick button:active{transform:scale(.96)}
+#pane-add .field,#pane-add label,#pane-add .lbl{scroll-margin-top:56px}
+details.rs-adv{border:1px dashed var(--line);border-radius:var(--r-card);padding:6px 10px;margin:0 0 10px}
+details.rs-adv>summary{cursor:pointer;font-weight:700;min-height:40px;display:flex;align-items:center}
+@media (max-width:919px){
+  /* مقبض واحد بدل اثنين، وهامش سفلي كي لا يغطي الشريط آخر العناصر */
+  body.sheet-open aside.panel .sheet-h{display:none}
+  aside.panel{padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
+  .sh-handle{touch-action:none}
+  #rsStudio .md kbd,#rsStudio .md .kb{display:none}
+  .tabs.rs-sub .tab{min-height:48px}
+  input[type=range]{min-height:32px}
+}
+</style>
+<script id="rs-ux2-js">{{part:js/083-rs-ux2-js.js}}</script>
+<style id="rs-fix-sheet">
+/* إصلاح: لوحة الأدوات على الجوال كانت تحت طبقة التعتيم فلا تستقبل اللمس */
+@media (max-width:919px){
+  body.sheet-open aside.panel,body.mob.sheet-open aside.panel{z-index:60;bottom:calc(70px + env(safe-area-inset-bottom,0px));transform:none;visibility:visible;max-height:66dvh;height:auto;min-height:0;pointer-events:auto}
+  body.sheet-open #rsStudio .sg{z-index:30}
+}
+</style>
+<div class="sh-back" id="mbBack"></div>
+<div id="mbBar" role="toolbar" aria-label="شريط أدوات الجوال">
+<button type="button" id="mbTools" aria-expanded="false"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-props"/></svg>أدوات</button>
+<button type="button" id="mbPlay" class="pri"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-play"/></svg>تشغيل</button>
+<button type="button" id="mbUndo" aria-label="تراجع"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-undo"/></svg></button>
+<button type="button" id="mbScene"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-plus"/></svg>مشهد</button>
+<button type="button" id="mbExp" aria-label="تصدير الفيديو"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>تصدير</button><button type="button" id="mbInst">تثبيت</button>
+</div>
+<script>{{part:js/084.js}}</script>
+<style id="rs-wave">
+/* المرحلة 352 (١١٤-أ): موجة صوتية على التايم لاين */
+.ab{overflow:hidden}
+.ab canvas.wf{position:absolute;top:0;inset-inline-start:0;height:100%;pointer-events:none;opacity:.5}
+.ab>span{position:relative;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+</style>
+
+<style id="rs-modern">{{part:css/085-rs-modern.css}}</style>
+
+<script id="rs-modern-js">{{part:js/086-rs-modern-js.js}}</script>
+
+<style id="rs-modern-s2">
+/* المرحلة 2: تنقل أوضح بين الأقسام */
+#rsStudio .gb{border:0;background:transparent;border-radius:var(--r-card);box-shadow:none;transition:background .15s,color .15s}
+#rsStudio .gb:hover{transform:none;background:var(--surface2)}
+#rsStudio .gb[aria-selected="true"]{background:color-mix(in srgb,var(--accent) 12%,var(--surface))!important;color:var(--accent);box-shadow:none}
+#rsStudio .sg{background:var(--surface2);border-radius:var(--r);padding:4px}
+.tabs.rs-sub:not(.rs-single){display:flex!important;overflow-x:auto;scrollbar-width:none;gap:var(--sp-1)}
+.tabs.rs-sub::-webkit-scrollbar{display:none}
+.tabs.rs-sub .tab{flex:0 0 auto;min-width:68px}
+@media (max-width:919px){
+ #rsStudio .sg{position:fixed;inset-inline:0;bottom:0;z-index:40;border-radius:0;border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:2px;background:color-mix(in srgb,var(--surface) 92%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+ body{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+ aside.panel{scroll-margin-top:8px}
+}
+body.focus #rsStudio .sg{display:none!important}
+</style>
+<script id="rs-modern-s2-js">
+(function(){try{
+var sg=document.querySelector('#rsStudio .sg');
+if(sg)sg.addEventListener('click',function(e){
+ if(innerWidth>=920||!e.target.closest('.gb'))return;
+ setTimeout(function(){var a=document.querySelector('aside.panel');if(a)a.scrollIntoView({behavior:'smooth',block:'start'})},60)});
+}catch(err){console.error('rs-modern-s2',err)}})();
+</script>
+
+<style id="rs-modern-s4">
+/* المرحلة 4: تجربة عمل مركّزة */
+.board{position:relative}
+.rs-wel{position:absolute;inset:0;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:5;padding:10px}
+.rs-wel.on{display:flex}
+.rs-wel>div{pointer-events:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;text-align:center;box-shadow:0 12px 32px rgba(16,24,40,.12);max-width:100%}
+.rs-wel b{display:block;font-size:var(--fs-lg);margin-bottom:10px}
+.rs-wel .rs-wb{display:flex;gap:var(--sp-3);flex-wrap:wrap;justify-content:center}
+.rs-wel .btn{min-height:40px}
+.rs-wel.on~#stage #emptyMsg,.rs-wel.on+#stage #emptyMsg{display:none}
+.rs-chip{position:absolute;inset-inline-start:10px;bottom:10px;z-index:6;display:none;box-shadow:0 4px 14px rgba(16,24,40,.16)!important}
+.rs-chip.on{display:inline-flex}
+.rs-tlt{margin-inline-start:auto}
+.tlhead{gap:var(--sp-3)}
+.tlwrap.rs-col>*:not(.tlhead){height:0!important;overflow:hidden!important;margin:0!important;padding:0!important;border:0!important;visibility:hidden}
+.tlwrap.rs-col{gap:0}
+</style>
+<script id="rs-modern-s4-js">{{part:js/087-rs-modern-s4-js.js}}</script>
+<script>(function(){function r(){requestAnimationFrame(function(){requestAnimationFrame(window.__rsReveal)})}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",r);else r()})();</script>
+<style id="rs-p1">
+/* المرحلة 1: تنظيف سريع */
+.rs-fx{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:8px 14px}
+.rs-fx>summary{cursor:pointer;color:var(--muted);font-size:var(--fs-md);margin:0}
+.rs-fx[open]>summary{margin-bottom:8px}
+.rs-fx>.transport{border:0;padding:6px 0;background:none}
+.rs-pop-body .rs-about{border:0;padding:0;background:none}
+.rs-pop-body .rs-about p{margin:6px 0 0;font-size:var(--fs-md);color:var(--muted);line-height:1.6}
+body.focus .rs-fx{display:none!important}
+#mbUndo{display:none!important}
+.rs-ex>summary{font-weight:600;color:var(--fg)}
+.rs-ex>section.export{border:0;padding:0;background:none;box-shadow:none;margin:0}
+.rs-ex .exhead b{display:none}
+@media (max-width:919px){#qbar{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;top:auto!important}}
+</style>
+<script id="rs-p1-js">
+(function(){try{
+var $=function(q){return document.querySelector(q)};
+var g=$('#gradeBar'),h=$('#holoBar');
+if(g||h){var d=document.createElement('details');d.className='rs-fx';
+ d.innerHTML='<summary>مؤثرات بصرية متقدمة (ألوان سينمائية، هولوجرام)</summary>';
+ (g||h).parentNode.insertBefore(d,g||h);if(g)d.appendChild(g);if(h)d.appendChild(h)}
+var ab=$('.rs-about'),mb=$('.rs-menu .rs-pop-body');
+if(ab&&mb)mb.appendChild(ab);
+}catch(e){console.error('rs-p1',e)}})();
+(function(){try{
+var ex=document.querySelector('section.export');
+if(ex){var d=document.createElement('details');d.className='rs-fx rs-ex';
+ d.innerHTML='<summary>تصدير الفيديو</summary>';
+ ex.parentNode.insertBefore(d,ex);d.appendChild(ex);
+ ['exBtn','exFast','exTest'].forEach(function(id){var b=document.getElementById(id);if(b)b.addEventListener('click',function(){d.open=true},true)})}
+}catch(e){console.error('rs-p1b',e)}})();
+</script>
+
+<style id="rs-p4">{{part:css/088-rs-p4.css}}</style>
+<style id="rs-s1">
+/* المرحلة 1: طيّ لوحة الإضافة إلى مجموعات */
+.rs-g{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:10px 14px;margin:0 0 12px}
+.rs-g>summary{cursor:pointer;font-weight:600;font-size:var(--fs-base);display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);list-style:none}
+.rs-g>summary::-webkit-details-marker{display:none}
+.rs-g>summary::after{content:"+";color:var(--muted);font-size:var(--fs-xl);line-height:1}
+.rs-g[open]>summary::after{content:"\2212"}
+.rs-g[open]>summary{margin-bottom:12px}
+.rs-g>.field:last-child{margin-bottom:0}
+</style>
+<script id="rs-s1-js">
+(function(){try{
+var pane=document.getElementById('pane-add');
+if(!pane||pane.querySelector('.rs-g'))return;
+var of=HTMLElement.prototype.focus;
+HTMLElement.prototype.focus=function(o){var d=this.closest&&this.closest('details.rs-g:not([open])');if(d)d.open=true;return of.call(this,o)};
+function top(id){var e=document.getElementById(id);while(e&&e.parentNode!==pane)e=e.parentNode;return e}
+var chart=Array.prototype.find.call(pane.children,function(c){return c.classList.contains('field')&&c.textContent.trim().indexOf('رسم بياني')===0});
+var G=[
+{t:'بناء فيديو أو عرض كامل (فكرة، PDF، شرائح، مشاهد ذكية)',ids:['vbBox','ideaTxt','pdBox','prBox','ssBox','mgBox']},
+{t:'مكتبات الرسومات والشخصيات',ids:['libGrid','pplGrid','myFiles','pkBox','libSearch','eduSearch','histGrid','svgLibCats']},
+{t:'أدوات إضافية (لمسات بصرية، SVG، رسم بياني)',ids:['vfxBox','fileSvg'],els:[chart]}
+];
+G.forEach(function(g){
+ var els=g.ids.map(top).concat(g.els||[]).filter(function(e,i,a){return e&&a.indexOf(e)===i});
+ if(!els.length)return;
+ els.sort(function(a,b){return a.compareDocumentPosition(b)&4?-1:1});
+ var d=document.createElement('details');d.className='rs-g';
+ var s=document.createElement('summary');s.textContent=g.t;d.appendChild(s);
+ els[0].parentNode.insertBefore(d,els[0]);
+ els.forEach(function(e){d.appendChild(e)});
+});
+}catch(e){console.error('rs-s1',e)}})();
+</script>
+<style id="rs-s2">
+/* المرحلة 2: نظام تصميم موحّد (ألوان، خط، زوايا، ظلال) */
+/* خط واحد للواجهة؛ خطوط الخط اليدوي تبقى للسبورة فقط */
+button,input,select,textarea,.brand h1,.tab,.chip,.badge{font-family:var(--font-ui)}
+.brand h1{font-weight:700}
+/* زوايا بثلاثة مستويات: عنصر تحكم 10، بطاقة 12، لوحة كبيرة 16، كبسولة */
+input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),select,textarea,.btn,.hsel{border-radius:var(--r-ctl)!important}
+.rs-g,.rs-fx,.rs-about,.rs-more,.rs-wel,.tourcard,#hlpDlg,.libgrid button,.rsnote,#rsCmd{border-radius:var(--r-card)!important}
+.chip,.badge{border-radius:var(--r-pill)!important}
+/* لون تمييز واحد بلا تدرجات */
+.btn.primary,#rsStudio .gb[aria-selected="true"],:root[data-skin] .btn.primary,:root[data-skin] #rsStudio .gb[aria-selected="true"]{background:var(--accent)!important;background-image:none!important;color:var(--accent-fg)!important;border-color:transparent}
+/* ظلّان فقط: خفيف للبطاقات، وأوضح للنوافذ العائمة */
+.panel,.transport,.tlwrap,.rs-g,.rs-fx,.rs-about,.rs-more{box-shadow:var(--sh-1)!important}
+.tourcard,.rs-pop-body,#hlpDlg,#rsCmd{box-shadow:var(--sh-2)!important}
+/* حقول بحدّ وخلفية موحّدين */
+input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),select,textarea{background:var(--surface);border:1px solid var(--line)}
+</style>
+<style id="rs-s3">
+/* المرحلة 3: تخطيط يركّز على السبورة */
+@media (min-width:920px){
+ .layout.rs-nopanel{grid-template-columns:minmax(0,1fr)}
+ .layout.rs-nopanel>aside.panel{display:none}
+ #app:has(.layout.rs-nopanel){max-width:1400px}
+}
+.rs-pt{position:absolute;inset-block-start:10px;inset-inline-end:10px;z-index:6;width:auto!important;padding:0 12px;opacity:.9;box-shadow:var(--sh-1)!important}
+.rs-pt:hover{opacity:1}
+@media (max-width:919px){.rs-pt{display:none!important}}
+.board.pz .rs-pt{display:none!important}
+/* تبويب الخصائص يظهر فقط عند تحديد عنصر */
+body:has(#stage:not(.has-sel)) aside.panel .tabs .tab[data-tab="props"]:not(.tourhl){display:none!important}
+</style>
+<script id="rs-s3-js">
+(function(){try{
+var lay=document.querySelector('main.layout'),board=document.querySelector('.board'),stage=document.getElementById('stage'),KEY='rs_panel_hide';
+if(!lay||!board||!stage||document.getElementById('rsPT'))return;
+var hid=false;try{hid=localStorage.getItem(KEY)==='1'}catch(e){}
+var b=document.createElement('button');b.type='button';b.id='rsPT';b.className='btn sm rs-pt';
+function ap(){lay.classList.toggle('rs-nopanel',hid);b.textContent=hid?'إظهار اللوحة':'إخفاء اللوحة';b.setAttribute('aria-pressed',hid?'true':'false')}
+function set(v,save){hid=v;ap();if(save){try{localStorage.setItem(KEY,v?'1':'0')}catch(e){}}}
+b.addEventListener('click',function(){set(!hid,true)});
+board.insertBefore(b,board.firstChild);ap();
+/* زر «خصائص العنصر» يُظهر اللوحة مؤقتاً إن كانت مخفية */
+document.addEventListener('click',function(e){if(hid&&e.target.closest&&e.target.closest('.rs-chip'))set(false,false)},true);
+/* عند إلغاء التحديد والخصائص مفتوحة، نرجع إلى تبويب المشهد */
+var tabs=document.querySelector('aside.panel .tabs');
+if(tabs)new MutationObserver(function(){
+ if(stage.classList.contains('has-sel'))return;
+ var p=tabs.querySelector('[data-tab="props"]');
+ if(p&&p.getAttribute('aria-selected')==='true'){var a=tabs.querySelector('[data-tab="scene"]');if(a)a.click()}
+}).observe(stage,{attributes:true,attributeFilter:['class']});
+}catch(e){console.error('rs-s3',e)}})();
+</script>
+<style id="rs-s4">
+/* السبورة تبقى ظاهرة فوق لوحة الأدوات على الجوال */
+@media (max-width:919px){
+ body.sheet-open .sh-back{opacity:0!important;pointer-events:none!important}
+ body.sheet-open .stage-col>.board{position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+}
+</style>
+<script id="rs-s4-js">
+(function(){try{
+if(window.__rsS4)return;window.__rsS4=1;
+var B=document.body,panel=document.querySelector('aside.panel'),board=document.querySelector('.board'),sc=document.querySelector('.stage-col');
+if(!panel||!board||!sc)return;
+var was=false;
+function fit(){
+ if(innerWidth>=920||!B.classList.contains('sheet-open')){panel.style.removeProperty('max-height');return}
+ var bot=parseFloat(getComputedStyle(panel).bottom)||0;
+ var top=8+board.offsetHeight+8;
+ var h=Math.max(200,Math.min(innerHeight-bot-top,Math.round(innerHeight*0.45)));
+ panel.style.setProperty('max-height',h+'px','important');
+}
+new MutationObserver(function(){
+ var o=B.classList.contains('sheet-open');
+ if(o&&!was&&innerWidth<920){var y=sc.getBoundingClientRect().top+scrollY-8;scrollTo({top:Math.max(0,y),behavior:'smooth'})}
+ was=o;fit();
+}).observe(B,{attributes:true,attributeFilter:['class']});
+addEventListener('resize',fit);addEventListener('orientationchange',fit);
+if(window.ResizeObserver)new ResizeObserver(fit).observe(board);
+}catch(e){console.error('rs-s4',e)}})();
+</script>
+<style id="rs-icons-css">
+/* نظام الأيقونات الموحّد (المرحلة 354): قياس 24، خط 1.8، أطراف دائرية، يرث اللون */
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.tab .ic{width:20px;height:20px}
+.badge .ic,.btn .ic{width:16px;height:16px;margin-inline-end:var(--sp-2);vertical-align:-3px}
+.badge:has(>.ic),.btn:has(>.ic){display:inline-flex;align-items:center;justify-content:center}
+.btn.icon svg,.btn.icon .ic{margin:0}
+#mbBar button:has(>.ic){display:inline-flex;align-items:center;justify-content:center}
+#mbBar .ic{width:18px;height:18px;margin-inline-end:var(--sp-2)}
+#mbUndo .ic{margin:0}
+</style>
+<style id="rs-dd-css">
+.shape-btn[data-shape]{cursor:grab}
+.dd-ghost{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;width:76px;margin:-38px 0 0 -38px;padding:var(--sp-3);background:var(--surface);color:var(--fg);border:1px solid var(--accent);border-radius:var(--r-ctl);box-shadow:var(--sh-2);opacity:.94;font-size:var(--fs-xs);text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--sp-1)}
+.dd-ghost svg{width:40px;height:40px}
+body.dd-active{cursor:grabbing;user-select:none;-webkit-user-select:none}
+.board.dd-over{outline:2px dashed var(--accent);outline-offset:-3px}
+#list li.item .n{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;min-width:28px;min-height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--r-sm);background:var(--surface2)}
+#list li.item.dd-row{opacity:.55}
+#list li.item.dd-before{box-shadow:0 -2px 0 var(--accent)}
+#list li.item.dd-after{box-shadow:0 2px 0 var(--accent)}
+</style>
+<script id="rs-dd-js">{{part:js/089-rs-dd-js.js}}</script>
+<style id="rs-ease-css">
+#rsEaseBox{display:flex;flex-direction:column;gap:6px;margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface2)}
+#rsEaseBox label{font-size:13px;font-weight:600}
+#rsEaseBox select{min-height:40px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg);padding:0 10px;font:inherit}
+#rsEaseBox canvas{width:100%;height:56px;display:block}
+#rsEaseBox .note{margin:0;font-size:12px;color:var(--muted)}
+</style>
+<script id="rs-ease-js">{{part:js/090-rs-ease-js.js}}</script>
+<style id="rs-legend-css">
+.rs-leg{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:12px;color:var(--muted);margin:0 0 2px}
+.rs-leg span{display:inline-flex;align-items:center;gap:6px}
+.rs-leg i{width:14px;height:10px;border-radius:3px;display:inline-block}
+</style>
+<script id="rs-legend-js">
+/* المرحلة 354: دليل ألوان مسارات التايم لاين */
+(function(){try{
+var w=document.querySelector('.tlwrap');if(!w||w.querySelector('.rs-leg'))return;
+var tl=w.querySelector('.tl');if(!tl)return;
+var d=document.createElement('div');d.className='rs-leg';d.setAttribute('aria-label','دليل مسارات التايم لاين');
+d.innerHTML='<span><i style="background:var(--surface2);border:1px solid var(--accent)"></i>المشهد</span><span><i style="background:linear-gradient(90deg,#1f2933,#e8590c,#2563eb)"></i>عنصر (بلونه)</span><span><i style="background:var(--voice)"></i>تعليق صوتي</span><span><i style="background:var(--music)"></i>موسيقى</span><span><i style="background:repeating-linear-gradient(135deg,var(--line) 0 3px,transparent 3px 6px)"></i>انتقال</span>';
+tl.parentNode.insertBefore(d,tl);
+}catch(e){}})();
+</script>
+<script id="rs-fit-js">
+/* المرحلة 355: ملاءمة الخط الزمني للعرض */
+(function(){try{
+var z=document.querySelector('.tlzoom'),tl=document.getElementById('tl'),inn=document.getElementById('tlIn'),o=document.getElementById('tlOut'),i2=document.getElementById('tlIn2');
+if(!z||!tl||!inn||!o||!i2||document.getElementById('tlFit'))return;
+var b=document.createElement('button');b.type='button';b.className='btn sm';b.id='tlFit';b.textContent='ملاءمة';b.title='يضبط التكبير ليظهر المشروع كله في العرض';b.setAttribute('aria-label','ملاءمة الخط الزمني للعرض');
+z.appendChild(b);
+function w(){return parseFloat(inn.style.width)||inn.scrollWidth;}
+b.addEventListener('click',function(){
+  var avail=tl.clientWidth-4,n=0,last;
+  while(w()>avail&&n++<12){last=w();o.click();if(w()===last)break;}
+  n=0;
+  while(n++<12){last=w();i2.click();if(w()===last)break;if(w()>avail){o.click();break;}}
+  tl.scrollLeft=0;
+});
+}catch(e){}})();
+</script>
+<style id="rs-hover-css">
+#tlFit{width:auto!important;min-width:64px;white-space:nowrap;padding-inline:12px}
+#tlHov{position:absolute;top:0;bottom:0;width:0;border-left:1px dashed var(--muted);pointer-events:none;z-index:2;display:none}
+#tlHovT{position:absolute;top:2px;transform:translateX(6px);background:var(--fg);color:var(--bg);font-size:11px;line-height:1.3;padding:3px 8px;border-radius:8px;white-space:nowrap;pointer-events:none;display:none;z-index:4;direction:rtl;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+</style>
+<script id="rs-hover-js">
+/* المرحلة 356: دليل التمرير على الخط الزمني: الزمن واسم المشهد */
+(function(){try{
+var tl=document.getElementById('tl'),inn=document.getElementById('tlIn');if(!tl||!inn||document.getElementById('tlHov'))return;
+var g=document.createElement('div');g.id='tlHov';var t=document.createElement('div');t.id='tlHovT';
+tl.appendChild(g);tl.appendChild(t);
+function pxPerSec(){var k=inn.querySelectorAll('.tick');if(k.length>1){var a=parseFloat(k[1].style.left)||0,b=parseFloat(k[0].style.left)||0;if(a>b)return a-b;}return 64;}
+function hide(){g.style.display='none';t.style.display='none';}
+tl.addEventListener('pointermove',function(e){
+  if(e.pointerType==='touch'||e.buttons)return hide();
+  var r=tl.getBoundingClientRect(),x=e.clientX-r.left+tl.scrollLeft;if(x<0)return hide();
+  var sec=x/pxPerSec(),name='';
+  var sb=inn.querySelectorAll('.scb');
+  for(var i=0;i<sb.length;i++){var l=parseFloat(sb[i].style.left)||0,w=parseFloat(sb[i].style.width)||0;if(x>=l&&x<=l+w){name=sb[i].textContent;break;}}
+  g.style.left=x+'px';g.style.display='block';
+  t.textContent=sec.toFixed(1)+' ث'+(name?' · '+name:'');t.style.display='block';
+  var tw=t.offsetWidth,left=x;if(left+tw+12>tl.scrollLeft+tl.clientWidth)left=x-tw-12;t.style.left=left+'px';
+});
+tl.addEventListener('pointerleave',hide);
+tl.addEventListener('pointerdown',hide);
+}catch(e){}})();
+</script>
+<style id="rs-s357-css">{{part:css/091-rs-s357-css.css}}</style>
+<script id="rs-s357-js">{{part:js/092-rs-s357-js.js}}</script>
+<style id="rs-s358-css">{{part:css/093-rs-s358-css.css}}</style>
+<script id="rs-s358-js">{{part:js/094-rs-s358-js.js}}</script>
+<style id="rs-s359-css">
+#rs359 .vrow{display:flex;gap:8px;align-items:center;margin-top:8px}
+#rs359 .vrow label{min-width:54px;font-size:12px;color:var(--muted,#667085)}
+#rs359 .vrow input[type=range]{flex:1;min-width:0}
+#rs359 .vrow output{min-width:34px;text-align:center;font-variant-numeric:tabular-nums;font-size:12px}
+#rs359 .vrow button{flex:0 0 auto;width:auto!important;min-width:0!important;white-space:nowrap;min-height:36px;padding:0 14px}
+#rs359 .vrow input[type=text]{flex:1 1 auto;width:auto;min-width:0}
+#rs359 select,#rs359 input[type=text]{width:100%;box-sizing:border-box;min-height:36px}
+#rs359 .pl{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#rs359 .pl .chipx{display:inline-flex;align-items:stretch;border:1px solid rgba(100,116,139,.45);border-radius:999px;overflow:hidden}
+#rs359 .pl .chipx button{min-height:34px;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:0 12px}
+#rs359 .pl .chipx button.x{padding:0 9px;opacity:.7;border-inline-start:1px solid rgba(100,116,139,.35)}
+#rs359 .pl .chipx button:hover{background:rgba(100,116,139,.15)}
+#rs359 .pl .chipx button:focus-visible{outline:2px solid var(--accent,#4f46e5);outline-offset:-2px}
+#rs359 small.n{display:block;margin-top:8px;color:var(--muted,#667085);font-size:11.5px;line-height:1.5}
+</style>
+<script id="rs-s359-js">{{part:js/095-rs-s359-js.js}}</script>
+<style id="rs-ui8-css">{{part:css/096-rs-ui8-css.css}}</style>
+<script id="rs-ui8-js">{{part:js/097-rs-ui8-js.js}}</script>
+<style id="rs-img-hub-css">
+.ih-tabs{margin:2px 0 6px}
+.ih-pane[hidden]{display:none!important}
+.ih-pane{display:flex;flex-direction:column;gap:var(--sp-3);min-width:0}
+.ih-pane>.field>.lbl:first-child{display:none}
+.ih-pane>.field{margin:0;padding:0;border:0;box-shadow:none;background:none}
+</style>
+<script id="rs-img-hub">{{part:js/098-rs-img-hub.js}}</script>
+<style id="rs-lib-hub-css">
+.seg.ih-wrap{display:flex;flex-wrap:wrap;gap:var(--sp-1);border:0;overflow:visible;border-radius:0}
+.seg.ih-wrap button{flex:1 1 28%;min-width:0;border:1px solid var(--line);border-radius:var(--r-ctl);background:var(--bg);color:inherit;padding:0 6px}
+.seg.ih-wrap button[aria-pressed="true"]{border-color:var(--accent);background:var(--surface2);color:inherit;font-weight:600}
+</style>
+<script id="rs-lib-hub">{{part:js/099-rs-lib-hub.js}}</script>
+<script id="rs-build-hub">{{part:js/100-rs-build-hub.js}}</script>
+<style id="rs-img-pick-css">{{part:css/101-rs-img-pick-css.css}}</style>
+<script id="rs-img-pick">{{part:js/102-rs-img-pick.js}}</script>
+<style id="rs-qk-css">
+#rsQk{position:fixed;inset:0;z-index:9998;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.42)}
+#rsQk[hidden]{display:none}
+#rsQk .qk{width:min(520px,100%);max-height:82vh;background:var(--surface);color:var(--fg);border-radius:18px 18px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 30px rgba(0,0,0,.28);display:flex;flex-direction:column;gap:10px;direction:rtl}
+@media (min-width:920px){#rsQk{align-items:center}#rsQk .qk{border-radius:16px}}
+#rsQk .hd{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700}
+#rsQk .hd .tt{flex:1}
+#rsQk .hd button{border:0;background:none;font-size:22px;line-height:1;cursor:pointer;color:inherit;padding:4px 10px}
+#rsQk .bd{overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:14px;min-height:0}
+</style>
+<script id="rs-quick-pick">{{part:js/103-rs-quick-pick.js}}</script>
+<style id="rs-mob-board">
+/* جوال: لوحة الأدوات أقصر (حتى 45% من الشاشة) فلا تغطي السبورة، والسبورة أعرض بتقليل الهوامش الجانبية */
+@media (max-width:919px){
+  .stage-col>.board{margin-inline:-10px!important}
+  body.sheet-open aside.panel,body.mob.sheet-open aside.panel{max-height:min(45dvh,calc(100dvh - 190px))!important}
+}
+</style>
+<script id="rs-gemini">{{part:js/104-rs-gemini.js}}</script>
+<script id="rs-boardstyles">{{part:js/105-rs-boardstyles.js}}</script>
+<script id="rs-cropsheet">{{part:js/106-rs-cropsheet.js}}</script>
+</body></html>
