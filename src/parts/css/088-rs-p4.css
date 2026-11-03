@@ -1,0 +1,31 @@
+
+/* المرحلة 4: تجربة الجوال: أهداف لمس لا تقل عن 44px */
+@media (max-width:919px),(pointer:coarse){
+ .btn,.badge,.chip,.tab,select,.hsel,summary,#mbBar button,.sh-handle,#qbar button{min-height:44px!important}
+ .btn.sm,.btn.icon{min-width:44px!important}
+ summary{display:flex;align-items:center}
+ select,.hsel{font-size:var(--fs-lg)!important;height:auto!important}
+ input[type=text],input[type=number],input[type=search],textarea{font-size:var(--fs-lg)!important;min-height:44px}
+ input[type=checkbox],input[type=radio]{width:22px;height:22px;flex:0 0 22px}
+ .chk{min-height:44px;gap:var(--sp-4)}
+ input[type=range]{min-height:44px;touch-action:pan-x}
+ .scrub{min-height:44px!important}
+ #scenesBar{overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;scrollbar-width:none}
+ #scenesBar::-webkit-scrollbar{display:none}
+ #scenesBar .chip{flex:0 0 auto;scroll-snap-align:center}
+ #mbBar{gap:var(--sp-2)}
+ button,summary,.chip,.tab{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+}
+
+@media (max-width:919px),(pointer:coarse){
+ .ck,.sw button,.rs-quick{min-height:44px!important;min-width:44px}
+ .sk{position:relative}
+ .sk::after{content:"";position:absolute;inset:-10px}
+ .sk{margin:0 6px}
+ #exRatio,#exRes,.export select{flex:1 1 150px;min-width:140px!important;width:auto}
+}
+@media (max-width:919px),(pointer:coarse){.rs-quick button{min-height:44px!important;height:44px!important}}
+@media (max-width:919px){
+ body.sheet-open #mbBar{bottom:calc(78px + env(safe-area-inset-bottom,0px))!important}
+ body.sheet-open aside.panel,body.mob.sheet-open aside.panel{bottom:calc(146px + env(safe-area-inset-bottom,0px))!important;max-height:calc(100dvh - 190px)!important}
+}
